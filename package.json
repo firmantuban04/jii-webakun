@@ -1,0 +1,1 @@
+{"name": "jember-islamic-institute","version": "1.0.0","description": "Portal Resmi & SIM Santri Jember Islamic Institute","main": "index.html","scripts": {"start": "npx serve -s . -l $PORT"},"dependencies": {"serve": "^14.2.0"}}
