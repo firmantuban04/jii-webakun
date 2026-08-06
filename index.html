@@ -1634,11 +1634,26 @@
             onSnapshot(santriCol, async (snapshot) => {
                 if (!snapshot.empty) {
                     const cloudList = [];
+                    const cloudNisSet = new Set();
                     snapshot.forEach(docSnap => {
-                        cloudList.push(docSnap.data());
+                        const data = docSnap.data();
+                        cloudList.push(data);
+                        if (data.nis) cloudNisSet.add(data.nis);
                     });
                     
-                    // Cloud Database becomes the absolute master truth across all devices
+                    // Gabungkan data lokal yang belum sempat terunggah ke cloud agar tidak hilang saat sync
+                    for (const localSantri of masterSantriData) {
+                        if (localSantri.nis && !cloudNisSet.has(localSantri.nis)) {
+                            cloudList.push(localSantri);
+                            try {
+                                const santriDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'santri', localSantri.nis);
+                                setDoc(santriDocRef, localSantri);
+                            } catch (e) {
+                                console.error("Error auto-uploading local santri to cloud:", e);
+                            }
+                        }
+                    }
+
                     masterSantriData = cloudList;
                     saveSantriToLocalStorage(masterSantriData);
                 } else {
@@ -1701,6 +1716,11 @@
             const uangMakan = Number(document.getElementById('newUangMakan').value);
             const statusBayar = document.getElementById('newStatusBayar').value;
 
+            if (!nis || !nama) {
+                alert("NIS dan Nama Santri wajib diisi!");
+                return;
+            }
+
             if (masterSantriData.some(s => s.nis === nis)) {
                 alert(`NIS ${nis} sudah terdaftar di sistem! Silakan gunakan NIS lain.`);
                 return;
@@ -1708,25 +1728,31 @@
 
             const newSantriObj = {
                 nis,
-                password,
+                password: password || '123456',
                 nama,
-                kelas,
-                kamar,
-                status,
-                hafalanJuz,
-                hafalanSurah,
-                spp,
-                uangMakan,
-                statusBayar,
+                kelas: kelas || '10 MA Tahfidz',
+                kamar: kamar || 'Al-Farabi 01',
+                status: status || 'AKTIFF',
+                hafalanJuz: hafalanJuz || 0,
+                hafalanSurah: hafalanSurah || 'An-Nas',
+                spp: spp || 350000,
+                uangMakan: uangMakan || 100000,
+                statusBayar: statusBayar || 'Belum Lunas',
                 hafalanData: [
-                    { tanggal: new Date().toLocaleDateString('id-ID'), jenis: 'Ziyadah (Baru)', surah: `Surah ${hafalanSurah}`, juz: hafalanJuz, nilai: 'A (Sangat Mutqin)', ustadz: 'Ust. Abdullah' }
+                    { tanggal: new Date().toLocaleDateString('id-ID'), jenis: 'Ziyadah (Baru)', surah: `Surah ${hafalanSurah || 'An-Nas'}`, juz: hafalanJuz || 0, nilai: 'A (Sangat Mutqin)', ustadz: 'Ust. Abdullah' }
                 ],
                 paymentData: [
-                    { id: 'TRX-' + Math.floor(Math.random() * 89999 + 10000), tanggal: new Date().toLocaleDateString('id-ID'), uraian: 'Setoran Awal Registration', nominal: spp + uangMakan, status: statusBayar }
+                    { id: 'TRX-' + Math.floor(Math.random() * 89999 + 10000), tanggal: new Date().toLocaleDateString('id-ID'), uraian: 'Setoran Awal Registration', nominal: (spp || 350000) + (uangMakan || 100000), status: statusBayar || 'Belum Lunas' }
                 ]
             };
 
-            // Write directly to Cloud Database so ALL other devices see it in real-time
+            // 1. Simpan langsung ke memori lokal & LocalStorage agar UI langsung terupdate secara instan
+            masterSantriData.push(newSantriObj);
+            saveSantriToLocalStorage(masterSantriData);
+            window.filterMasterSantri();
+            window.updateMasterSummary();
+
+            // 2. Sinkronkan data baru ke Cloud Firestore di latar belakang
             try {
                 const user = await ensureAuth();
                 if (user) {
@@ -1734,14 +1760,10 @@
                     await setDoc(santriDocRef, newSantriObj);
                 }
             } catch (err) {
-                console.error("Cloud sync fail (tersimpan secara lokal):", err);
-                masterSantriData.push(newSantriObj);
-                saveSantriToLocalStorage(masterSantriData);
-                window.filterMasterSantri();
-                window.updateMasterSummary();
+                console.error("Cloud sync fail (tetap tersimpan secara lokal):", err);
             }
 
-            alert(`Berhasil menambahkan santri "${nama}" dan menerbitkan akun SIM (NIS: ${nis}). Data otomatis tersinkronisasi ke semua HP!`);
+            alert(`Berhasil menambahkan santri "${nama}" dan menerbitkan akun SIM (NIS: ${nis}). Data telah disimpan!`);
             window.closeAddSantriModal();
             event.target.reset();
         };
@@ -1764,6 +1786,12 @@
                 statusBayar: document.getElementById('editStatusBayar').value
             };
 
+            // Update memori lokal
+            Object.assign(santri, updatedData);
+            saveSantriToLocalStorage(masterSantriData);
+            window.filterMasterSantri();
+            window.updateMasterSummary();
+
             try {
                 const user = await ensureAuth();
                 if (user) {
@@ -1772,12 +1800,8 @@
                 }
             } catch (err) {
                 console.error("Cloud sync fail (tersimpan secara lokal):", err);
-                Object.assign(santri, updatedData);
-                saveSantriToLocalStorage(masterSantriData);
-                window.filterMasterSantri();
-                window.updateMasterSummary();
             }
-            alert(`Data santri ${updatedData.nama} berhasil diperbarui di semua perangkat!`);
+            alert(`Data santri ${updatedData.nama} berhasil diperbarui!`);
             window.closeEditSantriModal();
         };
 
@@ -1786,6 +1810,11 @@
             if (!santri) return;
 
             if (confirm(`Apakah Anda yakin ingin menghapus santri "${santri.nama}" (NIS: ${nis}) dari sistem?`)) {
+                masterSantriData = masterSantriData.filter(s => s.nis !== nis);
+                saveSantriToLocalStorage(masterSantriData);
+                window.filterMasterSantri();
+                window.updateMasterSummary();
+
                 try {
                     const user = await ensureAuth();
                     if (user) {
@@ -1794,12 +1823,8 @@
                     }
                 } catch (err) {
                     console.error("Cloud sync fail (penghapusan lokal berhasil):", err);
-                    masterSantriData = masterSantriData.filter(s => s.nis !== nis);
-                    saveSantriToLocalStorage(masterSantriData);
-                    window.filterMasterSantri();
-                    window.updateMasterSummary();
                 }
-                alert("Santri telah berhasil dihapus secara permanen dari semua perangkat.");
+                alert("Santri telah berhasil dihapus secara permanen.");
             }
         };
 
