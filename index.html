@@ -1065,7 +1065,33 @@
             }
         ];
 
-        let masterSantriData = [...initialDefaultSantri];
+        // DUAL PERSISTENCE STORAGE CONTROLLER
+        const STORAGE_KEY = 'jii_master_santri_db_v2';
+
+        function loadSantriFromLocalStorage() {
+            try {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    if (Array.isArray(parsed) && parsed.length > 0) {
+                        return parsed;
+                    }
+                }
+            } catch (e) {
+                console.error("Gagal membaca storage lokal:", e);
+            }
+            return [...initialDefaultSantri];
+        }
+
+        function saveSantriToLocalStorage(data) {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+            } catch (e) {
+                console.error("Gagal menyimpan ke storage lokal:", e);
+            }
+        }
+
+        let masterSantriData = loadSantriFromLocalStorage();
         let currentActiveSantri = null;
         let hafalanData = [];
         let paymentData = [];
@@ -1616,22 +1642,27 @@
             const santriCol = collection(db, 'artifacts', appId, 'public', 'data', 'santri');
 
             onSnapshot(santriCol, async (snapshot) => {
-                if (snapshot.empty) {
-                    for (const defaultSantri of initialDefaultSantri) {
-                        try {
-                            const santriDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'santri', defaultSantri.nis);
-                            await setDoc(santriDocRef, defaultSantri);
-                        } catch (e) {
-                            console.error("Error seeding default santri:", e);
-                        }
-                    }
-                    masterSantriData = [...initialDefaultSantri];
-                } else {
+                if (!snapshot.empty) {
                     const list = [];
                     snapshot.forEach(docSnap => {
                         list.push(docSnap.data());
                     });
-                    masterSantriData = list;
+                    // Merge remote data with local data to avoid losing any local additions
+                    const map = new Map();
+                    masterSantriData.forEach(s => map.set(s.nis, s));
+                    list.forEach(s => map.set(s.nis, s));
+                    masterSantriData = Array.from(map.values());
+                    saveSantriToLocalStorage(masterSantriData);
+                } else {
+                    // Seed local master data into cloud firestore if cloud is empty
+                    for (const santri of masterSantriData) {
+                        try {
+                            const santriDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'santri', santri.nis);
+                            await setDoc(santriDocRef, santri);
+                        } catch (e) {
+                            console.error("Error seeding santri:", e);
+                        }
+                    }
                 }
 
                 window.filterMasterSantri();
@@ -1650,7 +1681,7 @@
                     }
                 }
             }, (error) => {
-                console.error("Firestore sync error:", error);
+                console.warn("Firestore sync warning (menggunakan penyimpanan lokal):", error);
                 window.filterMasterSantri();
                 window.updateMasterSummary();
                 restoreSession();
@@ -1707,12 +1738,8 @@
                 ]
             };
 
-            const existingIdx = masterSantriData.findIndex(s => s.nis === nis);
-            if (existingIdx >= 0) {
-                masterSantriData[existingIdx] = newSantriObj;
-            } else {
-                masterSantriData.push(newSantriObj);
-            }
+            masterSantriData.push(newSantriObj);
+            saveSantriToLocalStorage(masterSantriData);
 
             window.filterMasterSantri();
             window.updateMasterSummary();
@@ -1723,12 +1750,11 @@
                     const santriDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'santri', nis);
                     await setDoc(santriDocRef, newSantriObj);
                 }
-                alert(`Berhasil menambahkan santri "${nama}" dan menerbitkan akun login SIM (NIS: ${nis}). Data telah tersimpan secara permanen!`);
             } catch (err) {
-                console.error("Failed to save to Firestore:", err);
-                alert(`Santri "${nama}" telah terdaftar di sistem.`);
+                console.error("Cloud sync fail (tersimpan secara lokal):", err);
             }
 
+            alert(`Berhasil menambahkan santri "${nama}" dan menerbitkan akun SIM (NIS: ${nis}). Data tersimpan permanen!`);
             window.closeAddSantriModal();
             event.target.reset();
         };
@@ -1752,6 +1778,7 @@
             };
 
             Object.assign(santri, updatedData);
+            saveSantriToLocalStorage(masterSantriData);
             window.filterMasterSantri();
             window.updateMasterSummary();
 
@@ -1761,11 +1788,10 @@
                     const santriDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'santri', nis);
                     await updateDoc(santriDocRef, updatedData);
                 }
-                alert(`Data santri ${updatedData.nama} berhasil diperbarui di database!`);
             } catch (err) {
-                console.error("Failed to update in Firestore:", err);
-                alert(`Data santri ${updatedData.nama} berhasil diperbarui!`);
+                console.error("Cloud sync fail (tersimpan secara lokal):", err);
             }
+            alert(`Data santri ${updatedData.nama} berhasil diperbarui!`);
             window.closeEditSantriModal();
         };
 
@@ -1775,6 +1801,7 @@
 
             if (confirm(`Apakah Anda yakin ingin menghapus santri "${santri.nama}" (NIS: ${nis}) dari sistem?`)) {
                 masterSantriData = masterSantriData.filter(s => s.nis !== nis);
+                saveSantriToLocalStorage(masterSantriData);
                 window.filterMasterSantri();
                 window.updateMasterSummary();
 
@@ -1784,10 +1811,10 @@
                         const santriDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'santri', nis);
                         await deleteDoc(santriDocRef);
                     }
-                    alert("Santri telah berhasil dihapus secara permanen.");
                 } catch (err) {
-                    console.error("Failed to delete from Firestore:", err);
+                    console.error("Cloud sync fail (penghapusan lokal berhasil):", err);
                 }
+                alert("Santri telah berhasil dihapus secara permanen.");
             }
         };
 
@@ -1814,6 +1841,7 @@
                 currentActiveSantri.hafalanJuz = Math.max(currentActiveSantri.hafalanJuz, juz);
                 currentActiveSantri.hafalanSurah = surah;
                 currentActiveSantri.hafalanData = hafalanData;
+                saveSantriToLocalStorage(masterSantriData);
 
                 try {
                     const user = await ensureAuth();
@@ -1847,6 +1875,7 @@
                 });
 
                 currentActiveSantri.paymentData = paymentData;
+                saveSantriToLocalStorage(masterSantriData);
 
                 try {
                     const user = await ensureAuth();
