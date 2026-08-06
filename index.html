@@ -1512,7 +1512,7 @@
 
             onSnapshot(santriCol, async (snapshot) => {
                 if (!snapshot.empty) {
-                    // Cloud memiliki data -> Cloud adalah SINGLE SOURCE OF TRUTH
+                    // Cloud memiliki data -> Ambil dan gabungkan dengan memori lokal
                     const cloudSantriList = [];
                     snapshot.forEach(docSnap => {
                         const data = docSnap.data();
@@ -1520,7 +1520,13 @@
                             cloudSantriList.push(data);
                         }
                     });
-                    masterSantriData = cloudSantriList;
+
+                    // Gabungkan data cloud dengan lokal agar data baru lokal tidak tertimpa sebelum sinkron
+                    const mergedMap = new Map();
+                    masterSantriData.forEach(s => { if (s && s.nis) mergedMap.set(s.nis, s); });
+                    cloudSantriList.forEach(s => { mergedMap.set(s.nis, s); });
+
+                    masterSantriData = Array.from(mergedMap.values());
                     saveSantriToLocalStorage(masterSantriData);
                     updateCloudBadge(true);
                 } else {
@@ -1608,7 +1614,13 @@
                 ]
             };
 
-            // Simpan ke Cloud Server secara langsung
+            // Tambahkan langsung ke memori lokal & perbarui tampilan tabel seketika
+            masterSantriData.unshift(newSantriObj);
+            saveSantriToLocalStorage(masterSantriData);
+            window.filterMasterSantri();
+            window.updateMasterSummary();
+
+            // Simpan ke Cloud Server secara paralel
             try {
                 const user = await ensureAuth();
                 if (user) {
@@ -1619,7 +1631,7 @@
                 console.error("Cloud sync error:", err);
             }
 
-            showToast(`Berhasil menambahkan santri "${nama}" (NIS: ${nis}) ke Server Cloud!`, 'success');
+            showToast(`Berhasil menambahkan santri "${nama}" (NIS: ${nis})!`, 'success');
             window.closeAddSantriModal();
             event.target.reset();
         };
@@ -1642,6 +1654,11 @@
                 statusBayar: document.getElementById('editStatusBayar').value
             };
 
+            Object.assign(santri, updatedData);
+            saveSantriToLocalStorage(masterSantriData);
+            window.filterMasterSantri();
+            window.updateMasterSummary();
+
             try {
                 const user = await ensureAuth();
                 if (user) {
@@ -1652,7 +1669,7 @@
                 console.error("Cloud sync fail:", err);
             }
 
-            showToast(`Data santri ${updatedData.nama} berhasil diperbarui di Cloud!`, 'success');
+            showToast(`Data santri ${updatedData.nama} berhasil diperbarui!`, 'success');
             window.closeEditSantriModal();
         };
 
@@ -1662,8 +1679,13 @@
 
             showConfirmDialog(
                 "Hapus Santri Secara Permanen",
-                `Apakah Anda yakin ingin menghapus santri "${santri.nama}" (NIS: ${nis}) dari sistem Cloud?`,
+                `Apakah Anda yakin ingin menghapus santri "${santri.nama}" (NIS: ${nis}) dari sistem?`,
                 async () => {
+                    masterSantriData = masterSantriData.filter(s => s.nis !== nis);
+                    saveSantriToLocalStorage(masterSantriData);
+                    window.filterMasterSantri();
+                    window.updateMasterSummary();
+
                     try {
                         const user = await ensureAuth();
                         if (user) {
@@ -1673,7 +1695,7 @@
                     } catch (err) {
                         console.error("Cloud sync fail:", err);
                     }
-                    showToast("Santri telah berhasil dihapus dari Cloud.", 'success');
+                    showToast("Santri telah berhasil dihapus.", 'success');
                 }
             );
         };
