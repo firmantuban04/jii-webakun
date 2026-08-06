@@ -1056,7 +1056,6 @@
             }
         ];
 
-        // DUAL PERSISTENCE STORAGE CONTROLLER
         const STORAGE_KEY = 'jii_master_santri_db_v2';
 
         function loadSantriFromLocalStorage() {
@@ -1634,24 +1633,22 @@
 
             onSnapshot(santriCol, async (snapshot) => {
                 if (!snapshot.empty) {
-                    const list = [];
+                    const cloudList = [];
                     snapshot.forEach(docSnap => {
-                        list.push(docSnap.data());
+                        cloudList.push(docSnap.data());
                     });
-                    // Merge remote data with local data to avoid losing any local additions
-                    const map = new Map();
-                    masterSantriData.forEach(s => map.set(s.nis, s));
-                    list.forEach(s => map.set(s.nis, s));
-                    masterSantriData = Array.from(map.values());
+                    
+                    // Cloud Database becomes the absolute master truth across all devices
+                    masterSantriData = cloudList;
                     saveSantriToLocalStorage(masterSantriData);
                 } else {
-                    // Seed local master data into cloud firestore if cloud is empty
+                    // Seed initial default data into Cloud Database if completely empty
                     for (const santri of masterSantriData) {
                         try {
                             const santriDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'santri', santri.nis);
                             await setDoc(santriDocRef, santri);
                         } catch (e) {
-                            console.error("Error seeding santri:", e);
+                            console.error("Error seeding initial santri:", e);
                         }
                     }
                 }
@@ -1729,12 +1726,7 @@
                 ]
             };
 
-            masterSantriData.push(newSantriObj);
-            saveSantriToLocalStorage(masterSantriData);
-
-            window.filterMasterSantri();
-            window.updateMasterSummary();
-
+            // Write directly to Cloud Database so ALL other devices see it in real-time
             try {
                 const user = await ensureAuth();
                 if (user) {
@@ -1743,9 +1735,13 @@
                 }
             } catch (err) {
                 console.error("Cloud sync fail (tersimpan secara lokal):", err);
+                masterSantriData.push(newSantriObj);
+                saveSantriToLocalStorage(masterSantriData);
+                window.filterMasterSantri();
+                window.updateMasterSummary();
             }
 
-            alert(`Berhasil menambahkan santri "${nama}" dan menerbitkan akun SIM (NIS: ${nis}). Data tersimpan permanen!`);
+            alert(`Berhasil menambahkan santri "${nama}" dan menerbitkan akun SIM (NIS: ${nis}). Data otomatis tersinkronisasi ke semua HP!`);
             window.closeAddSantriModal();
             event.target.reset();
         };
@@ -1768,11 +1764,6 @@
                 statusBayar: document.getElementById('editStatusBayar').value
             };
 
-            Object.assign(santri, updatedData);
-            saveSantriToLocalStorage(masterSantriData);
-            window.filterMasterSantri();
-            window.updateMasterSummary();
-
             try {
                 const user = await ensureAuth();
                 if (user) {
@@ -1781,8 +1772,12 @@
                 }
             } catch (err) {
                 console.error("Cloud sync fail (tersimpan secara lokal):", err);
+                Object.assign(santri, updatedData);
+                saveSantriToLocalStorage(masterSantriData);
+                window.filterMasterSantri();
+                window.updateMasterSummary();
             }
-            alert(`Data santri ${updatedData.nama} berhasil diperbarui!`);
+            alert(`Data santri ${updatedData.nama} berhasil diperbarui di semua perangkat!`);
             window.closeEditSantriModal();
         };
 
@@ -1791,11 +1786,6 @@
             if (!santri) return;
 
             if (confirm(`Apakah Anda yakin ingin menghapus santri "${santri.nama}" (NIS: ${nis}) dari sistem?`)) {
-                masterSantriData = masterSantriData.filter(s => s.nis !== nis);
-                saveSantriToLocalStorage(masterSantriData);
-                window.filterMasterSantri();
-                window.updateMasterSummary();
-
                 try {
                     const user = await ensureAuth();
                     if (user) {
@@ -1804,8 +1794,12 @@
                     }
                 } catch (err) {
                     console.error("Cloud sync fail (penghapusan lokal berhasil):", err);
+                    masterSantriData = masterSantriData.filter(s => s.nis !== nis);
+                    saveSantriToLocalStorage(masterSantriData);
+                    window.filterMasterSantri();
+                    window.updateMasterSummary();
                 }
-                alert("Santri telah berhasil dihapus secara permanen.");
+                alert("Santri telah berhasil dihapus secara permanen dari semua perangkat.");
             }
         };
 
@@ -1832,7 +1826,6 @@
                 currentActiveSantri.hafalanJuz = Math.max(currentActiveSantri.hafalanJuz, juz);
                 currentActiveSantri.hafalanSurah = surah;
                 currentActiveSantri.hafalanData = hafalanData;
-                saveSantriToLocalStorage(masterSantriData);
 
                 try {
                     const user = await ensureAuth();
@@ -1846,6 +1839,7 @@
                     }
                 } catch (err) {
                     console.error("Firestore error:", err);
+                    saveSantriToLocalStorage(masterSantriData);
                 }
             }
 
@@ -1866,7 +1860,6 @@
                 });
 
                 currentActiveSantri.paymentData = paymentData;
-                saveSantriToLocalStorage(masterSantriData);
 
                 try {
                     const user = await ensureAuth();
@@ -1879,13 +1872,14 @@
                     }
                 } catch (err) {
                     console.error("Firestore error:", err);
+                    saveSantriToLocalStorage(masterSantriData);
                 }
 
                 loadSantriIntoHeader(currentActiveSantri);
                 window.renderPaymentTable();
             }
 
-            alert("Pembayaran berhasil dikonfirmasi LUNAS!");
+            alert("Pembayaran berhasil dikonfirmasi LUNAS dan tersimpan ke cloud!");
             window.closePaymentModal();
         };
     </script>
