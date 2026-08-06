@@ -1634,31 +1634,20 @@
             onSnapshot(santriCol, async (snapshot) => {
                 if (!snapshot.empty) {
                     const cloudList = [];
-                    const cloudNisSet = new Set();
                     snapshot.forEach(docSnap => {
                         const data = docSnap.data();
-                        cloudList.push(data);
-                        if (data.nis) cloudNisSet.add(data.nis);
+                        if (data && data.nis) {
+                            cloudList.push(data);
+                        }
                     });
                     
-                    // Gabungkan data lokal yang belum sempat terunggah ke cloud agar tidak hilang saat sync
-                    for (const localSantri of masterSantriData) {
-                        if (localSantri.nis && !cloudNisSet.has(localSantri.nis)) {
-                            cloudList.push(localSantri);
-                            try {
-                                const santriDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'santri', localSantri.nis);
-                                setDoc(santriDocRef, localSantri);
-                            } catch (e) {
-                                console.error("Error auto-uploading local santri to cloud:", e);
-                            }
-                        }
-                    }
-
+                    // Cloud Firestore adalah otoritas tunggal untuk semua perangkat
                     masterSantriData = cloudList;
                     saveSantriToLocalStorage(masterSantriData);
                 } else {
-                    // Seed initial default data into Cloud Database if completely empty
-                    for (const santri of masterSantriData) {
+                    // Hanya jika database Cloud benar-benar kosong pertama kali, isi dengan data bawaan awal
+                    const defaults = loadSantriFromLocalStorage();
+                    for (const santri of defaults) {
                         try {
                             const santriDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'santri', santri.nis);
                             await setDoc(santriDocRef, santri);
@@ -1684,7 +1673,7 @@
                     }
                 }
             }, (error) => {
-                console.warn("Firestore sync warning (menggunakan penyimpanan lokal):", error);
+                console.warn("Firestore sync warning (menggunakan cache lokal):", error);
                 window.filterMasterSantri();
                 window.updateMasterSummary();
                 restoreSession();
@@ -1746,13 +1735,7 @@
                 ]
             };
 
-            // 1. Simpan langsung ke memori lokal & LocalStorage agar UI langsung terupdate secara instan
-            masterSantriData.push(newSantriObj);
-            saveSantriToLocalStorage(masterSantriData);
-            window.filterMasterSantri();
-            window.updateMasterSummary();
-
-            // 2. Sinkronkan data baru ke Cloud Firestore di latar belakang
+            // 1. Simpan langsung ke Cloud Firestore agar semua HP serentak menerima data
             try {
                 const user = await ensureAuth();
                 if (user) {
@@ -1760,10 +1743,21 @@
                     await setDoc(santriDocRef, newSantriObj);
                 }
             } catch (err) {
-                console.error("Cloud sync fail (tetap tersimpan secara lokal):", err);
+                console.error("Cloud sync error:", err);
             }
 
-            alert(`Berhasil menambahkan santri "${nama}" dan menerbitkan akun SIM (NIS: ${nis}). Data telah disimpan!`);
+            // 2. Perbarui state lokal
+            const existingIndex = masterSantriData.findIndex(s => s.nis === nis);
+            if (existingIndex >= 0) {
+                masterSantriData[existingIndex] = newSantriObj;
+            } else {
+                masterSantriData.push(newSantriObj);
+            }
+            saveSantriToLocalStorage(masterSantriData);
+            window.filterMasterSantri();
+            window.updateMasterSummary();
+
+            alert(`Berhasil menambahkan santri "${nama}" dan menerbitkan akun SIM (NIS: ${nis}). Data telah disinkronkan ke seluruh perangkat!`);
             window.closeAddSantriModal();
             event.target.reset();
         };
