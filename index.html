@@ -30,7 +30,7 @@
                     }
                 }
             }
-        }
+        };
     </script>
     <style>
         .font-arabic { font-family: 'Amiri', serif; }
@@ -100,7 +100,6 @@
             </div>
         </div>
 
-        <!-- Mobile Menu Dropdown -->
         <div id="mobileMenu" class="hidden md:hidden bg-emerald-950 border-t border-emerald-800 px-4 py-3 space-y-2 text-sm">
             <div id="mobilePublicLinks" class="space-y-2">
                 <a href="#beranda" onclick="showPublicView('beranda'); toggleMobileMenu();" class="block py-2 text-emerald-100 hover:text-amber-300">Beranda</a>
@@ -125,7 +124,6 @@
 
     <main class="flex-grow">
 
-        <!-- PUBLIC VIEW SECTION -->
         <div id="publicContainer" class="space-y-16 pb-16">
             
             <!-- Hero Banner Section -->
@@ -217,7 +215,6 @@
                 </div>
             </section>
 
-            <!-- Program Tahfidz & Keunggulan -->
             <section id="program" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center max-w-3xl mx-auto space-y-3 mb-10">
                     <span class="text-xs font-bold text-emerald-700 uppercase tracking-widest bg-emerald-100 px-3 py-1 rounded-full">Program Unggulan</span>
@@ -226,7 +223,6 @@
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <!-- Card 1 -->
                     <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition space-y-3">
                         <div class="w-12 h-12 bg-emerald-100 text-emerald-800 rounded-xl flex items-center justify-center text-xl font-bold">
                             <i class="fa-solid fa-quran"></i>
@@ -234,7 +230,6 @@
                         <h3 class="font-bold text-lg text-slate-900">Ziyadah & Muraja'ah Intensif</h3>
                         <p class="text-slate-600 text-xs leading-relaxed">Setoran hafalan baru setiap ba'da Subuh dan pengulangan hafalan (Muraja'ah) ba'da Maghrib disimak langsung oleh Musyrif/Musyrifah bertaraf Sanad.</p>
                     </div>
-                    <!-- Card 2 -->
                     <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition space-y-3">
                         <div class="w-12 h-12 bg-amber-100 text-amber-800 rounded-xl flex items-center justify-center text-xl font-bold">
                             <i class="fa-solid fa-book-open-reader"></i>
@@ -242,7 +237,6 @@
                         <h3 class="font-bold text-lg text-slate-900">Kajian Kitab Kuning & Turats</h3>
                         <p class="text-slate-600 text-xs leading-relaxed">Pendalaman ilmu syariah meliputi Fiqih, Nahwu-Shorof, Hadits, dan Akhlak menggunakan naskah klasik teruji dari ulama Ahlussunnah wal Jama'ah.</p>
                     </div>
-                    <!-- Card 3 -->
                     <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition space-y-3">
                         <div class="w-12 h-12 bg-blue-100 text-blue-800 rounded-xl flex items-center justify-center text-xl font-bold">
                             <i class="fa-solid fa-laptop-code"></i>
@@ -327,7 +321,6 @@
 
         </div>
 
-        <!-- DASHBOARD VIEW SECTION (SETELAH LOGIN) -->
         <div id="dashboardContainer" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
             
             <!-- Dashboard Executive Top Summary -->
@@ -442,10 +435,6 @@
                                     <option value="belum_lunas">Ada Tanggungan</option>
                                     <option value="khatam">Target Hafalan Tinggi (>20 Juz)</option>
                                 </select>
-                                <button onclick="openDataShareModal()" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-3 py-2 rounded-xl text-xs shadow transition flex items-center space-x-1.5">
-                                    <i class="fa-solid fa-share-nodes"></i>
-                                    <span>Sync / Bagikan Data</span>
-                                </button>
                                 <button id="btnOpenAddSantri" onclick="openAddSantriModal()" class="bg-emerald-700 hover:bg-emerald-800 text-white font-bold px-4 py-2 rounded-xl text-xs shadow transition flex items-center space-x-2">
                                     <i class="fa-solid fa-user-plus"></i>
                                     <span>+ Tambah Santri & Buat Akun</span>
@@ -618,7 +607,7 @@
 
     <!-- MODAL 1: LOGIN SIM SANTRI & PENGURUS -->
     <div id="loginModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
-        <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden animate-fade-in">
+        <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden">
             <div class="bg-emerald-900 text-white p-6 text-center relative">
                 <button onclick="closeLoginModal()" class="absolute right-4 top-4 text-emerald-300 hover:text-white">
                     <i class="fa-solid fa-xmark text-lg"></i>
@@ -961,57 +950,12 @@
         </div>
     </div>
 
-    <!-- MODAL 7: BAGIKAN & IMPOR DATA ANTAR HP -->
-    <div id="dataShareModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
-        <div class="bg-white w-full max-w-lg rounded-2xl shadow-2xl p-6 space-y-4">
-            <div class="flex justify-between items-center border-b pb-3">
-                <div class="flex items-center space-x-2">
-                    <div class="p-2 bg-emerald-100 text-emerald-800 rounded-lg">
-                        <i class="fa-solid fa-arrows-rotate text-lg"></i>
-                    </div>
-                    <div>
-                        <h3 class="font-bold text-slate-900 text-base">Sinkronisasi / Impor Data Santri</h3>
-                        <p class="text-[11px] text-slate-500">Salin & Tempel Data Antar-HP secara Langsung</p>
-                    </div>
-                </div>
-                <button onclick="closeDataShareModal()" class="text-slate-400 hover:text-slate-600">
-                    <i class="fa-solid fa-xmark text-lg"></i>
-                </button>
-            </div>
-
-            <div class="space-y-3 text-xs">
-                <div class="p-3 bg-emerald-50 rounded-xl border border-emerald-200">
-                    <label class="block font-bold text-emerald-900 mb-1">1. Salin Kode Data Santri (Dari HP Ini)</label>
-                    <p class="text-[11px] text-emerald-700 mb-2">Klik tombol di bawah untuk menyalin seluruh data santri terkini, lalu kirimkan via WhatsApp ke HP lain.</p>
-                    <button onclick="copySantriDataToClipboard()" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-2 rounded-xl shadow flex items-center justify-center space-x-2">
-                        <i class="fa-solid fa-copy"></i>
-                        <span>Salin Teks Data Santri</span>
-                    </button>
-                </div>
-
-                <div class="p-3 bg-amber-50 rounded-xl border border-amber-200 space-y-2">
-                    <label class="block font-bold text-amber-900">2. Tempel / Masukkan Kode Data (Di HP Tujuan)</label>
-                    <textarea id="importDataInput" rows="3" placeholder="Tempelkan kode teks data santri di sini..." class="w-full p-2 border border-amber-300 rounded-xl font-mono text-[10px] focus:outline-none focus:ring-2 focus:ring-amber-500 bg-white"></textarea>
-                    <button onclick="processImportSantriData()" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold py-2 rounded-xl shadow flex items-center justify-center space-x-2">
-                        <i class="fa-solid fa-file-import"></i>
-                        <span>Terapkan & Update Data di HP Ini</span>
-                    </button>
-                </div>
-            </div>
-
-            <div class="pt-2 text-right">
-                <button onclick="closeDataShareModal()" class="px-4 py-2 bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold">Tutup</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- JAVASCRIPT LOGIC ENGINE WITH CLOUD STORAGE -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, updateDoc, deleteDoc, onSnapshot, collection } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // MENGUNCI ID APLIKASI TERPUSAT AGAR SEMUA HP MEMBACA PATH DATABASE YANG SAMA
+        // APP DATABASE ID
         const appId = 'jember-islamic-institute-global-db';
         
         const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
@@ -1339,8 +1283,6 @@
         window.closeModalAddHafalan = function() { document.getElementById('addHafalanModal')?.classList.add('hidden'); };
         window.openPaymentModal = function() { document.getElementById('paymentModal')?.classList.remove('hidden'); };
         window.closePaymentModal = function() { document.getElementById('paymentModal')?.classList.add('hidden'); };
-        window.openDataShareModal = function() { document.getElementById('dataShareModal')?.classList.remove('hidden'); };
-        window.closeDataShareModal = function() { document.getElementById('dataShareModal')?.classList.add('hidden'); };
         window.toggleMobileMenu = function() { document.getElementById('mobileMenu')?.classList.toggle('hidden'); };
         window.toggleUserDropdown = function() {};
 
@@ -1731,55 +1673,6 @@
             }
         };
 
-        window.copySantriDataToClipboard = function() {
-            const jsonString = JSON.stringify(masterSantriData);
-            const tempInput = document.createElement('textarea');
-            tempInput.value = jsonString;
-            document.body.appendChild(tempInput);
-            tempInput.select();
-            document.execCommand('copy');
-            document.body.removeChild(tempInput);
-            alert("Teks data santri telah berhasil disalin ke Clipboard! Silakan kirimkan kode ini via WhatsApp atau pesan ke HP tujuan.");
-        };
-
-        window.processImportSantriData = async function() {
-            const rawVal = document.getElementById('importDataInput')?.value.trim();
-            if (!rawVal) {
-                alert("Masukkan atau tempelkan teks kode data santri terlebih dahulu!");
-                return;
-            }
-
-            try {
-                const parsed = JSON.parse(rawVal);
-                if (!Array.isArray(parsed) || parsed.length === 0) {
-                    alert("Format kode data tidak valid!");
-                    return;
-                }
-
-                masterSantriData = parsed;
-                saveSantriToLocalStorage(masterSantriData);
-                window.filterMasterSantri();
-                window.updateMasterSummary();
-
-                try {
-                    const user = await ensureAuth();
-                    if (user) {
-                        for (const santri of masterSantriData) {
-                            const santriDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'santri', santri.nis);
-                            await setDoc(santriDocRef, santri);
-                        }
-                    }
-                } catch (e) {
-                    console.warn("Cloud update warning:", e);
-                }
-
-                alert(`Berhasil memperbarui ${parsed.length} data santri di HP ini!`);
-                window.closeDataShareModal();
-            } catch (e) {
-                alert("Terjadi kesalahan saat memproses data. Pastikan teks yang ditempelkan utuh dan benar.");
-            }
-        };
-
         function updateCloudBadge(isOnline) {
             const badge = document.getElementById('cloudStatusBadge');
             if (!badge) return;
@@ -1797,29 +1690,38 @@
             const santriCol = collection(db, 'artifacts', appId, 'public', 'data', 'santri');
 
             onSnapshot(santriCol, async (snapshot) => {
+                const localData = loadSantriFromLocalStorage();
+                const mergedMap = new Map();
+
+                // 1. Muat data lokal terlebih dahulu
+                localData.forEach(s => {
+                    if (s && s.nis) mergedMap.set(s.nis, s);
+                });
+
+                // 2. Gabungkan dengan data dari Cloud (Cloud overwrite/update)
                 if (!snapshot.empty) {
-                    const cloudList = [];
                     snapshot.forEach(docSnap => {
                         const data = docSnap.data();
                         if (data && data.nis) {
-                            cloudList.push(data);
+                            mergedMap.set(data.nis, data);
                         }
                     });
-                    
-                    masterSantriData = cloudList;
-                    saveSantriToLocalStorage(masterSantriData);
-                    updateCloudBadge(true);
-                } else {
-                    const defaults = loadSantriFromLocalStorage();
-                    for (const santri of defaults) {
+                }
+
+                masterSantriData = Array.from(mergedMap.values());
+                saveSantriToLocalStorage(masterSantriData);
+                updateCloudBadge(true);
+
+                // 3. Kirim data lokal yang belum ada di Cloud ke server
+                for (const localSantri of localData) {
+                    if (snapshot.empty || !snapshot.docs.some(d => d.id === localSantri.nis)) {
                         try {
-                            const santriDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'santri', santri.nis);
-                            await setDoc(santriDocRef, santri);
+                            const santriDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'santri', localSantri.nis);
+                            await setDoc(santriDocRef, localSantri);
                         } catch (e) {
-                            console.error("Error seeding initial santri:", e);
+                            console.error("Error syncing local santri to cloud:", e);
                         }
                     }
-                    updateCloudBadge(true);
                 }
 
                 window.filterMasterSantri();
@@ -1840,6 +1742,7 @@
             }, (error) => {
                 console.warn("Menggunakan mode lokal / offline fallback:", error);
                 updateCloudBadge(false);
+                masterSantriData = loadSantriFromLocalStorage();
                 window.filterMasterSantri();
                 window.updateMasterSummary();
                 window.restoreSession();
