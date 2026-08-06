@@ -40,7 +40,6 @@
 </head>
 <body class="bg-slate-100 font-sans text-slate-800 antialiased min-h-screen flex flex-col">
 
-    <!-- HEADER & NAVIGATION -->
     <header class="bg-emerald-900 text-white sticky top-0 z-40 shadow-md border-b border-emerald-800/50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-20">
@@ -74,7 +73,13 @@
                 <div id="userNav" class="hidden items-center space-x-3">
                     <div class="hidden sm:flex flex-col text-right">
                         <span id="navUserName" class="text-sm font-bold text-white leading-tight">Ketua Umum</span>
-                        <span id="navUserRole" class="text-[10px] text-amber-300 font-semibold uppercase">Pengurus Utama</span>
+                        <div class="flex items-center justify-end space-x-1.5 mt-0.5">
+                            <span id="navUserRole" class="text-[10px] text-amber-300 font-semibold uppercase">Pengurus Utama</span>
+                            <span id="cloudStatusBadge" class="text-[9px] px-1.5 py-0.5 rounded font-bold bg-amber-400 text-slate-950 flex items-center space-x-1" title="Status Sinkronisasi Server">
+                                <i class="fa-solid fa-arrows-rotate animate-spin"></i>
+                                <span>Menghubungkan...</span>
+                            </span>
+                        </div>
                     </div>
                     <div onclick="toggleUserDropdown()" class="w-10 h-10 rounded-xl bg-amber-500 text-slate-950 font-black flex items-center justify-center text-sm shadow cursor-pointer border border-amber-300">
                         <span id="navUserAvatar">KU</span>
@@ -120,9 +125,7 @@
 
     <main class="flex-grow">
 
-        <!-- ========================================== -->
-        <!-- PUBLIC VIEW SECTION (SEBELUM LOGIN) -->
-        <!-- ========================================== -->
+        <!-- PUBLIC VIEW SECTION -->
         <div id="publicContainer" class="space-y-16 pb-16">
             
             <!-- Hero Banner Section -->
@@ -324,9 +327,7 @@
 
         </div>
 
-        <!-- ========================================== -->
         <!-- DASHBOARD VIEW SECTION (SETELAH LOGIN) -->
-        <!-- ========================================== -->
         <div id="dashboardContainer" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
             
             <!-- Dashboard Executive Top Summary -->
@@ -402,9 +403,8 @@
 
                 <div class="p-6">
                     
-                    <!-- TAB 1: MASTER SANTRI (KHUSUS KETUA UMUM, BENDAHARA, SEKRETARIS) -->
+                    <!-- TAB 1: MASTER SANTRI -->
                     <div id="tabMasterSantri" class="dash-tab-content space-y-6">
-                        <!-- Executive Overview Banner -->
                         <div class="bg-gradient-to-r from-emerald-900 via-emerald-800 to-slate-900 text-white p-6 rounded-2xl shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                             <div>
                                 <span class="inline-block px-3 py-0.5 bg-amber-400 text-slate-950 font-bold text-[10px] rounded-full uppercase tracking-wider mb-2">Panel Pengurus Harian</span>
@@ -442,6 +442,10 @@
                                     <option value="belum_lunas">Ada Tanggungan</option>
                                     <option value="khatam">Target Hafalan Tinggi (>20 Juz)</option>
                                 </select>
+                                <button onclick="openDataShareModal()" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-3 py-2 rounded-xl text-xs shadow transition flex items-center space-x-1.5">
+                                    <i class="fa-solid fa-share-nodes"></i>
+                                    <span>Sync / Bagikan Data</span>
+                                </button>
                                 <button id="btnOpenAddSantri" onclick="openAddSantriModal()" class="bg-emerald-700 hover:bg-emerald-800 text-white font-bold px-4 py-2 rounded-xl text-xs shadow transition flex items-center space-x-2">
                                     <i class="fa-solid fa-user-plus"></i>
                                     <span>+ Tambah Santri & Buat Akun</span>
@@ -526,7 +530,6 @@
                             </button>
                         </div>
 
-                        <!-- Financial Status Cards -->
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div class="p-4 bg-white rounded-xl border border-slate-200 space-y-2 shadow-sm">
                                 <span class="text-xs font-bold text-slate-500 uppercase">Tanggungan SPP & Syahriyah</span>
@@ -545,7 +548,6 @@
                             </div>
                         </div>
 
-                        <!-- Payment History Table -->
                         <div class="overflow-x-auto border border-slate-200 rounded-xl">
                             <table class="w-full text-left border-collapse text-xs">
                                 <thead>
@@ -614,10 +616,6 @@
 
     </main>
 
-    <!-- ========================================== -->
-    <!-- MODAL DIALOGS -->
-    <!-- ========================================== -->
-
     <!-- MODAL 1: LOGIN SIM SANTRI & PENGURUS -->
     <div id="loginModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
         <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden animate-fade-in">
@@ -655,7 +653,7 @@
         </div>
     </div>
 
-    <!-- MODAL 2: TAMBAH SANTRI BARU & BUAT AKUN (KHUSUS PENGURUS) -->
+    <!-- MODAL 2: TAMBAH SANTRI BARU & BUAT AKUN -->
     <div id="addSantriModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4 overflow-y-auto">
         <div class="bg-white w-full max-w-lg rounded-2xl shadow-2xl p-6 space-y-4 my-8">
             <div class="flex justify-between items-center border-b pb-3">
@@ -674,7 +672,6 @@
             </div>
 
             <form onsubmit="handleAddSantriSubmit(event)" class="space-y-4 text-xs">
-                <!-- Group 1: Akun Login SIM Santri -->
                 <div class="p-3 bg-emerald-50/70 rounded-xl border border-emerald-200 space-y-3">
                     <div class="font-bold text-emerald-900 text-xs border-b border-emerald-200 pb-1 flex items-center space-x-1">
                         <i class="fa-solid fa-key"></i>
@@ -692,7 +689,6 @@
                     </div>
                 </div>
 
-                <!-- Group 2: Identitas Santri -->
                 <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
                     <div class="font-bold text-slate-800 text-xs border-b pb-1">
                         <span>2. Identitas & Penempatan Santri</span>
@@ -720,7 +716,6 @@
                     </div>
                 </div>
 
-                <!-- Group 3: Hafalan & Tanggungan Awal -->
                 <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
                     <div class="font-bold text-slate-800 text-xs border-b pb-1">
                         <span>3. Target Hafalan & Tanggungan Awal</span>
@@ -769,7 +764,7 @@
         </div>
     </div>
 
-    <!-- MODAL 3: EDIT DATA SANTRI & TANGGUNGAN (KHUSUS PENGURUS) -->
+    <!-- MODAL 3: EDIT DATA SANTRI -->
     <div id="editSantriModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4 overflow-y-auto">
         <div class="bg-white w-full max-w-lg rounded-2xl shadow-2xl p-6 space-y-4 my-8">
             <div class="flex justify-between items-center border-b pb-3">
@@ -790,7 +785,6 @@
             <form onsubmit="handleEditSantriSubmit(event)" class="space-y-4 text-xs">
                 <input type="hidden" id="editSantriNis" />
 
-                <!-- Group 1: Identitas & Keaktifan -->
                 <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
                     <div class="font-bold text-slate-800 text-xs border-b pb-1">
                         <span>1. Identitas & Status Keaktifan</span>
@@ -820,7 +814,6 @@
                     </div>
                 </div>
 
-                <!-- Group 2: Capaian Hafalan -->
                 <div class="p-3 bg-emerald-50/60 rounded-xl border border-emerald-200 space-y-3">
                     <div class="font-bold text-emerald-900 text-xs border-b border-emerald-200 pb-1">
                         <span>2. Capaian Hafalan Al-Qur'an</span>
@@ -837,7 +830,6 @@
                     </div>
                 </div>
 
-                <!-- Group 3: Tanggungan Keuangan -->
                 <div class="p-3 bg-rose-50/60 rounded-xl border border-rose-200 space-y-3">
                     <div class="font-bold text-rose-900 text-xs border-b border-rose-200 pb-1">
                         <span>3. Tanggungan Syahriyah, Uang Makan & Status Bayar</span>
@@ -917,7 +909,7 @@
         </div>
     </div>
 
-    <!-- MODAL 5: SIMULASI PEMBAYARAN TANGGUNGAN -->
+    <!-- MODAL 5: PEMBAYARAN TANGGUNGAN -->
     <div id="paymentModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
         <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl p-6 space-y-4">
             <div class="flex justify-between items-center border-b pb-3">
@@ -936,60 +928,92 @@
                 <div class="p-3 bg-amber-50 rounded-xl border border-amber-200 text-amber-900">
                     Total Tagihan: <strong class="text-slate-900 text-sm" id="payModalTotalAmount">Rp 450.000</strong>
                 </div>
-            </div>
-            <div class="flex space-x-2 pt-2">
-                <button onclick="closePaymentModal()" class="w-1/2 bg-slate-200 text-slate-700 font-semibold py-2.5 rounded-xl text-xs">Tutup</button>
-                <button onclick="simulasikanBayarLunas()" class="w-1/2 bg-emerald-700 text-white font-bold py-2.5 rounded-xl text-xs shadow">Konfirmasi Bayar</button>
+                <button onclick="simulasikanBayarLunas()" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-2.5 rounded-xl shadow transition text-xs">
+                    Konfirmasi Pembayaran Telah Transfer
+                </button>
             </div>
         </div>
     </div>
 
-    <!-- MODAL 6: GANTI PASSWORD AKUN -->
+    <!-- MODAL 6: GANTI PASSWORD -->
     <div id="changePasswordModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
         <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl p-6 space-y-4">
             <div class="flex justify-between items-center border-b pb-3">
-                <div class="flex items-center space-x-2">
-                    <div class="p-2 bg-amber-100 text-amber-800 rounded-lg">
-                        <i class="fa-solid fa-key text-lg"></i>
-                    </div>
-                    <h3 class="font-bold text-slate-900 text-base">Ganti Password Akun</h3>
-                </div>
+                <h3 class="font-bold text-slate-900 text-base">Ganti Password Akses</h3>
                 <button onclick="closeChangePasswordModal()" class="text-slate-400 hover:text-slate-600">
                     <i class="fa-solid fa-xmark text-lg"></i>
                 </button>
             </div>
-
             <form onsubmit="handleChangePasswordSubmit(event)" class="space-y-3 text-xs">
                 <div>
-                    <label class="block font-semibold text-slate-700 mb-1">Password Saat Ini</label>
-                    <input type="password" id="oldPassword" required placeholder="Masukkan password lama..." class="w-full px-3 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
+                    <label class="block font-semibold text-slate-700 mb-1">Password Lama</label>
+                    <input type="password" id="oldPasswordInput" required class="w-full px-3 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
                 </div>
                 <div>
                     <label class="block font-semibold text-slate-700 mb-1">Password Baru</label>
-                    <input type="password" id="newAccountPassword" required placeholder="Masukkan password baru..." class="w-full px-3 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
+                    <input type="password" id="newPasswordInput" required class="w-full px-3 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
                 </div>
-                <div>
-                    <label class="block font-semibold text-slate-700 mb-1">Konfirmasi Password Baru</label>
-                    <input type="password" id="confirmNewPassword" required placeholder="Ulangi password baru..." class="w-full px-3 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
-                </div>
-
                 <div class="flex space-x-2 pt-2">
-                    <button type="button" onclick="closeChangePasswordModal()" class="w-1/2 bg-slate-200 text-slate-700 font-semibold py-2.5 rounded-xl">Batal</button>
-                    <button type="submit" class="w-1/2 bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold py-2.5 rounded-xl shadow">Simpan Password</button>
+                    <button type="button" onclick="closeChangePasswordModal()" class="w-1/2 bg-slate-200 text-slate-700 font-semibold py-2 rounded-xl">Batal</button>
+                    <button type="submit" class="w-1/2 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-2 rounded-xl">Simpan</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- ========================================== -->
+    <!-- MODAL 7: BAGIKAN & IMPOR DATA ANTAR HP -->
+    <div id="dataShareModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+        <div class="bg-white w-full max-w-lg rounded-2xl shadow-2xl p-6 space-y-4">
+            <div class="flex justify-between items-center border-b pb-3">
+                <div class="flex items-center space-x-2">
+                    <div class="p-2 bg-emerald-100 text-emerald-800 rounded-lg">
+                        <i class="fa-solid fa-arrows-rotate text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-900 text-base">Sinkronisasi / Impor Data Santri</h3>
+                        <p class="text-[11px] text-slate-500">Salin & Tempel Data Antar-HP secara Langsung</p>
+                    </div>
+                </div>
+                <button onclick="closeDataShareModal()" class="text-slate-400 hover:text-slate-600">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <div class="space-y-3 text-xs">
+                <div class="p-3 bg-emerald-50 rounded-xl border border-emerald-200">
+                    <label class="block font-bold text-emerald-900 mb-1">1. Salin Kode Data Santri (Dari HP Ini)</label>
+                    <p class="text-[11px] text-emerald-700 mb-2">Klik tombol di bawah untuk menyalin seluruh data santri terkini, lalu kirimkan via WhatsApp ke HP lain.</p>
+                    <button onclick="copySantriDataToClipboard()" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-2 rounded-xl shadow flex items-center justify-center space-x-2">
+                        <i class="fa-solid fa-copy"></i>
+                        <span>Salin Teks Data Santri</span>
+                    </button>
+                </div>
+
+                <div class="p-3 bg-amber-50 rounded-xl border border-amber-200 space-y-2">
+                    <label class="block font-bold text-amber-900">2. Tempel / Masukkan Kode Data (Di HP Tujuan)</label>
+                    <textarea id="importDataInput" rows="3" placeholder="Tempelkan kode teks data santri di sini..." class="w-full p-2 border border-amber-300 rounded-xl font-mono text-[10px] focus:outline-none focus:ring-2 focus:ring-amber-500 bg-white"></textarea>
+                    <button onclick="processImportSantriData()" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold py-2 rounded-xl shadow flex items-center justify-center space-x-2">
+                        <i class="fa-solid fa-file-import"></i>
+                        <span>Terapkan & Update Data di HP Ini</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="pt-2 text-right">
+                <button onclick="closeDataShareModal()" class="px-4 py-2 bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold">Tutup</button>
+            </div>
+        </div>
+    </div>
+
     <!-- JAVASCRIPT LOGIC ENGINE WITH CLOUD STORAGE -->
-    <!-- ========================================== -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, updateDoc, deleteDoc, onSnapshot, collection } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'jember-islamic-institute';
+        // MENGUNCI ID APLIKASI TERPUSAT AGAR SEMUA HP MEMBACA PATH DATABASE YANG SAMA
+        const appId = 'jember-islamic-institute-global-db';
+        
         const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
             apiKey: "AIzaSyDummyKeyForFallback",
             authDomain: "jember-islamic.firebaseapp.com",
@@ -1007,7 +1031,6 @@
         let isLoggedIn = false;
         let currentRole = 'ketua'; // 'ketua', 'bendahara', 'sekretaris', or 'santri'
 
-        // MANAGEMENT ACCOUNTS
         const managementAccounts = {
             'ketua': { id: 'KETUA-UMUM', password: '123456', name: 'K.H. Ahmad Dahlan, M.A.', role: 'Ketua Umum', avatar: 'KU' },
             'bendahara': { id: 'BENDAHARA', password: '123456', name: 'H. Ridwan, S.E.', role: 'Bendahara Pondok', avatar: 'BD' },
@@ -1057,6 +1080,7 @@
         ];
 
         const STORAGE_KEY = 'jii_master_santri_db_v2';
+        const SESSION_KEY = 'jii_active_session_v2';
 
         function loadSantriFromLocalStorage() {
             try {
@@ -1301,6 +1325,8 @@
         window.showPublicView = function() {
             document.getElementById('publicContainer')?.classList.remove('hidden');
             document.getElementById('dashboardContainer')?.classList.add('hidden');
+            document.getElementById('publicNav')?.classList.remove('hidden');
+            document.getElementById('userNav')?.classList.add('hidden');
         };
 
         window.openLoginModal = function() { document.getElementById('loginModal')?.classList.remove('hidden'); };
@@ -1313,6 +1339,8 @@
         window.closeModalAddHafalan = function() { document.getElementById('addHafalanModal')?.classList.add('hidden'); };
         window.openPaymentModal = function() { document.getElementById('paymentModal')?.classList.remove('hidden'); };
         window.closePaymentModal = function() { document.getElementById('paymentModal')?.classList.add('hidden'); };
+        window.openDataShareModal = function() { document.getElementById('dataShareModal')?.classList.remove('hidden'); };
+        window.closeDataShareModal = function() { document.getElementById('dataShareModal')?.classList.add('hidden'); };
         window.toggleMobileMenu = function() { document.getElementById('mobileMenu')?.classList.toggle('hidden'); };
         window.toggleUserDropdown = function() {};
 
@@ -1477,13 +1505,8 @@
                 }
                 currentRole = matchedRole;
                 currentActiveSantri = null;
-
-                sessionStorage.setItem('jii_sim_session', JSON.stringify({
-                    role: matchedRole,
-                    nis: mgmtAcc.id
-                }));
-
                 setLoggedInUser(mgmtAcc.name, mgmtAcc.role, mgmtAcc.avatar, mgmtAcc.id, 'Pengurus Utama', 'Kantor Pusat');
+                sessionStorage.setItem(SESSION_KEY, JSON.stringify({ role: currentRole, nis: mgmtAcc.id }));
             } else if (matchedSantri) {
                 if (passwordInput !== (matchedSantri.password || '123456')) {
                     alert('Password salah untuk akun santri!');
@@ -1491,203 +1514,97 @@
                 }
                 currentRole = 'santri';
                 currentActiveSantri = matchedSantri;
-
-                sessionStorage.setItem('jii_sim_session', JSON.stringify({
-                    role: 'santri',
-                    nis: matchedSantri.nis
-                }));
-
-                loadSantriIntoHeader(matchedSantri);
                 hafalanData = matchedSantri.hafalanData || [];
                 paymentData = matchedSantri.paymentData || [];
+                loadSantriIntoHeader(matchedSantri);
                 window.renderHafalanTable();
                 window.renderPaymentTable();
+                sessionStorage.setItem(SESSION_KEY, JSON.stringify({ role: 'santri', nis: matchedSantri.nis }));
             } else {
-                alert(`ID/NIS "${nisInput}" tidak ditemukan dalam sistem!`);
+                alert('Akun dengan NIS/ID tersebut tidak ditemukan!');
                 return;
             }
 
             isLoggedIn = true;
-            window.closeLoginModal();
-
             document.getElementById('publicContainer')?.classList.add('hidden');
             document.getElementById('dashboardContainer')?.classList.remove('hidden');
             document.getElementById('publicNav')?.classList.add('hidden');
             document.getElementById('userNav')?.classList.remove('hidden');
-            document.getElementById('userNav')?.classList.add('flex');
-            document.getElementById('mobilePublicLinks')?.classList.add('hidden');
-            document.getElementById('mobileUserLinks')?.classList.remove('hidden');
 
             configureRolePermissions();
+            window.closeLoginModal();
+        };
+
+        window.restoreSession = function() {
+            try {
+                const saved = sessionStorage.getItem(SESSION_KEY);
+                if (saved) {
+                    const sess = JSON.parse(saved);
+                    if (sess && sess.role) {
+                        if (sess.role !== 'santri') {
+                            const mgmtAcc = managementAccounts[sess.role];
+                            if (mgmtAcc) {
+                                currentRole = sess.role;
+                                setLoggedInUser(mgmtAcc.name, mgmtAcc.role, mgmtAcc.avatar, mgmtAcc.id, 'Pengurus Utama', 'Kantor Pusat');
+                                isLoggedIn = true;
+                            }
+                        } else if (sess.nis) {
+                            const foundSantri = masterSantriData.find(s => s.nis === sess.nis);
+                            if (foundSantri) {
+                                currentRole = 'santri';
+                                currentActiveSantri = foundSantri;
+                                hafalanData = foundSantri.hafalanData || [];
+                                paymentData = foundSantri.paymentData || [];
+                                loadSantriIntoHeader(foundSantri);
+                                window.renderHafalanTable();
+                                window.renderPaymentTable();
+                                isLoggedIn = true;
+                            }
+                        }
+
+                        if (isLoggedIn) {
+                            document.getElementById('publicContainer')?.classList.add('hidden');
+                            document.getElementById('dashboardContainer')?.classList.remove('hidden');
+                            document.getElementById('publicNav')?.classList.add('hidden');
+                            document.getElementById('userNav')?.classList.remove('hidden');
+                            configureRolePermissions();
+                        }
+                    }
+                }
+            } catch (e) {
+                console.error("Gagal restore session:", e);
+            }
         };
 
         window.handleLogout = function() {
-            sessionStorage.removeItem('jii_sim_session');
             isLoggedIn = false;
             currentActiveSantri = null;
-
-            document.getElementById('publicContainer')?.classList.remove('hidden');
-            document.getElementById('dashboardContainer')?.classList.add('hidden');
-            document.getElementById('publicNav')?.classList.remove('hidden');
-            document.getElementById('userNav')?.classList.add('hidden');
-            document.getElementById('userNav')?.classList.remove('flex');
-            document.getElementById('mobilePublicLinks')?.classList.remove('hidden');
-            document.getElementById('mobileUserLinks')?.classList.add('hidden');
+            sessionStorage.removeItem(SESSION_KEY);
+            window.showPublicView();
         };
 
-        window.handleChangePasswordSubmit = function(event) {
-            event.preventDefault();
-            const oldPass = document.getElementById('oldPassword').value.trim();
-            const newPass = document.getElementById('newAccountPassword').value.trim();
-            const confirmPass = document.getElementById('confirmNewPassword').value.trim();
-
-            if (newPass !== confirmPass) {
-                alert('Konfirmasi password baru tidak cocok!');
-                return;
-            }
+        window.handleChangePasswordSubmit = function(e) {
+            e.preventDefault();
+            const oldP = document.getElementById('oldPasswordInput').value;
+            const newP = document.getElementById('newPasswordInput').value;
 
             if (currentRole === 'santri' && currentActiveSantri) {
-                if (oldPass !== (currentActiveSantri.password || '123456')) {
-                    alert('Password lama Anda salah!');
+                if (oldP !== (currentActiveSantri.password || '123456')) {
+                    alert("Password lama Anda salah!");
                     return;
                 }
-                currentActiveSantri.password = newPass;
-                ensureAuth().then(user => {
-                    if (user) {
-                        const santriDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'santri', currentActiveSantri.nis);
-                        updateDoc(santriDocRef, { password: newPass });
-                    }
-                });
+                currentActiveSantri.password = newP;
+                saveSantriToLocalStorage(masterSantriData);
+                alert("Password berhasil diperbarui!");
             } else if (managementAccounts[currentRole]) {
-                if (oldPass !== managementAccounts[currentRole].password) {
-                    alert('Password lama Anda salah!');
+                if (oldP !== managementAccounts[currentRole].password) {
+                    alert("Password lama Anda salah!");
                     return;
                 }
-                managementAccounts[currentRole].password = newPass;
+                managementAccounts[currentRole].password = newP;
+                alert("Password pengurus berhasil diperbarui!");
             }
-
-            alert('Password berhasil diperbarui!');
             window.closeChangePasswordModal();
-            event.target.reset();
-        };
-
-        function restoreSession() {
-            const savedSession = sessionStorage.getItem('jii_sim_session');
-            if (!savedSession) return;
-
-            try {
-                const session = JSON.parse(savedSession);
-                const { role, nis } = session;
-
-                if (role === 'ketua') {
-                    currentRole = 'ketua';
-                    currentActiveSantri = null;
-                    setLoggedInUser(managementAccounts.ketua.name, managementAccounts.ketua.role, managementAccounts.ketua.avatar, 'KETUA-UMUM', 'Pengurus Utama', 'Kantor Pusat');
-                } else if (role === 'bendahara') {
-                    currentRole = 'bendahara';
-                    currentActiveSantri = null;
-                    setLoggedInUser(managementAccounts.bendahara.name, managementAccounts.bendahara.role, managementAccounts.bendahara.avatar, 'BENDAHARA', 'Pengurus Utama', 'Kantor Keuangan');
-                } else if (role === 'sekretaris') {
-                    currentRole = 'sekretaris';
-                    currentActiveSantri = null;
-                    setLoggedInUser(managementAccounts.sekretaris.name, managementAccounts.sekretaris.role, managementAccounts.sekretaris.avatar, 'SEKRETARIS', 'Pengurus Utama', 'Kantor Sekretariat');
-                } else if (role === 'santri') {
-                    const santri = masterSantriData.find(s => s.nis === nis);
-                    if (santri) {
-                        currentRole = 'santri';
-                        currentActiveSantri = santri;
-                        loadSantriIntoHeader(santri);
-                        hafalanData = santri.hafalanData || [];
-                        paymentData = santri.paymentData || [];
-                        window.renderHafalanTable();
-                        window.renderPaymentTable();
-                    } else {
-                        return;
-                    }
-                } else {
-                    return;
-                }
-
-                isLoggedIn = true;
-                document.getElementById('publicContainer')?.classList.add('hidden');
-                document.getElementById('dashboardContainer')?.classList.remove('hidden');
-                document.getElementById('publicNav')?.classList.add('hidden');
-                document.getElementById('userNav')?.classList.remove('hidden');
-                document.getElementById('userNav')?.classList.add('flex');
-                document.getElementById('mobilePublicLinks')?.classList.add('hidden');
-                document.getElementById('mobileUserLinks')?.classList.remove('hidden');
-
-                configureRolePermissions();
-            } catch (e) {
-                console.error("Failed to restore session:", e);
-            }
-        }
-
-        async function initStorage() {
-            await ensureAuth();
-            listenToSantriDatabase();
-        }
-
-        function listenToSantriDatabase() {
-            const santriCol = collection(db, 'artifacts', appId, 'public', 'data', 'santri');
-
-            onSnapshot(santriCol, async (snapshot) => {
-                if (!snapshot.empty) {
-                    const cloudList = [];
-                    snapshot.forEach(docSnap => {
-                        const data = docSnap.data();
-                        if (data && data.nis) {
-                            cloudList.push(data);
-                        }
-                    });
-                    
-                    // Cloud Firestore adalah otoritas tunggal untuk semua perangkat
-                    masterSantriData = cloudList;
-                    saveSantriToLocalStorage(masterSantriData);
-                } else {
-                    // Hanya jika database Cloud benar-benar kosong pertama kali, isi dengan data bawaan awal
-                    const defaults = loadSantriFromLocalStorage();
-                    for (const santri of defaults) {
-                        try {
-                            const santriDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'santri', santri.nis);
-                            await setDoc(santriDocRef, santri);
-                        } catch (e) {
-                            console.error("Error seeding initial santri:", e);
-                        }
-                    }
-                }
-
-                window.filterMasterSantri();
-                window.updateMasterSummary();
-                restoreSession();
-
-                if (currentActiveSantri) {
-                    const updated = masterSantriData.find(s => s.nis === currentActiveSantri.nis);
-                    if (updated) {
-                        currentActiveSantri = updated;
-                        loadSantriIntoHeader(updated);
-                        hafalanData = updated.hafalanData || [];
-                        paymentData = updated.paymentData || [];
-                        window.renderHafalanTable();
-                        window.renderPaymentTable();
-                    }
-                }
-            }, (error) => {
-                console.warn("Firestore sync warning (menggunakan cache lokal):", error);
-                window.filterMasterSantri();
-                window.updateMasterSummary();
-                restoreSession();
-            });
-        }
-
-        window.onload = function() {
-            window.renderMasterSantriTable(masterSantriData);
-            window.renderHafalanTable();
-            window.renderPaymentTable();
-            window.initHafalanChart();
-            window.updateMasterSummary();
-            restoreSession();
-            initStorage();
         };
 
         window.handleAddSantriSubmit = async function(event) {
@@ -1735,7 +1652,11 @@
                 ]
             };
 
-            // 1. Simpan langsung ke Cloud Firestore agar semua HP serentak menerima data
+            masterSantriData.push(newSantriObj);
+            saveSantriToLocalStorage(masterSantriData);
+            window.filterMasterSantri();
+            window.updateMasterSummary();
+
             try {
                 const user = await ensureAuth();
                 if (user) {
@@ -1746,18 +1667,7 @@
                 console.error("Cloud sync error:", err);
             }
 
-            // 2. Perbarui state lokal
-            const existingIndex = masterSantriData.findIndex(s => s.nis === nis);
-            if (existingIndex >= 0) {
-                masterSantriData[existingIndex] = newSantriObj;
-            } else {
-                masterSantriData.push(newSantriObj);
-            }
-            saveSantriToLocalStorage(masterSantriData);
-            window.filterMasterSantri();
-            window.updateMasterSummary();
-
-            alert(`Berhasil menambahkan santri "${nama}" dan menerbitkan akun SIM (NIS: ${nis}). Data telah disinkronkan ke seluruh perangkat!`);
+            alert(`Berhasil menambahkan santri "${nama}" dan menerbitkan akun SIM (NIS: ${nis}). Data telah disinkronkan!`);
             window.closeAddSantriModal();
             event.target.reset();
         };
@@ -1780,7 +1690,6 @@
                 statusBayar: document.getElementById('editStatusBayar').value
             };
 
-            // Update memori lokal
             Object.assign(santri, updatedData);
             saveSantriToLocalStorage(masterSantriData);
             window.filterMasterSantri();
@@ -1793,7 +1702,7 @@
                     await updateDoc(santriDocRef, updatedData);
                 }
             } catch (err) {
-                console.error("Cloud sync fail (tersimpan secara lokal):", err);
+                console.error("Cloud sync fail:", err);
             }
             alert(`Data santri ${updatedData.nama} berhasil diperbarui!`);
             window.closeEditSantriModal();
@@ -1816,11 +1725,126 @@
                         await deleteDoc(santriDocRef);
                     }
                 } catch (err) {
-                    console.error("Cloud sync fail (penghapusan lokal berhasil):", err);
+                    console.error("Cloud sync fail:", err);
                 }
                 alert("Santri telah berhasil dihapus secara permanen.");
             }
         };
+
+        window.copySantriDataToClipboard = function() {
+            const jsonString = JSON.stringify(masterSantriData);
+            const tempInput = document.createElement('textarea');
+            tempInput.value = jsonString;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+            alert("Teks data santri telah berhasil disalin ke Clipboard! Silakan kirimkan kode ini via WhatsApp atau pesan ke HP tujuan.");
+        };
+
+        window.processImportSantriData = async function() {
+            const rawVal = document.getElementById('importDataInput')?.value.trim();
+            if (!rawVal) {
+                alert("Masukkan atau tempelkan teks kode data santri terlebih dahulu!");
+                return;
+            }
+
+            try {
+                const parsed = JSON.parse(rawVal);
+                if (!Array.isArray(parsed) || parsed.length === 0) {
+                    alert("Format kode data tidak valid!");
+                    return;
+                }
+
+                masterSantriData = parsed;
+                saveSantriToLocalStorage(masterSantriData);
+                window.filterMasterSantri();
+                window.updateMasterSummary();
+
+                try {
+                    const user = await ensureAuth();
+                    if (user) {
+                        for (const santri of masterSantriData) {
+                            const santriDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'santri', santri.nis);
+                            await setDoc(santriDocRef, santri);
+                        }
+                    }
+                } catch (e) {
+                    console.warn("Cloud update warning:", e);
+                }
+
+                alert(`Berhasil memperbarui ${parsed.length} data santri di HP ini!`);
+                window.closeDataShareModal();
+            } catch (e) {
+                alert("Terjadi kesalahan saat memproses data. Pastikan teks yang ditempelkan utuh dan benar.");
+            }
+        };
+
+        function updateCloudBadge(isOnline) {
+            const badge = document.getElementById('cloudStatusBadge');
+            if (!badge) return;
+
+            if (isOnline) {
+                badge.className = "text-[9px] px-1.5 py-0.5 rounded font-bold bg-emerald-100 text-emerald-800 flex items-center space-x-1";
+                badge.innerHTML = `<i class="fa-solid fa-cloud-check"></i> <span>Cloud Synced</span>`;
+            } else {
+                badge.className = "text-[9px] px-1.5 py-0.5 rounded font-bold bg-amber-100 text-amber-800 flex items-center space-x-1";
+                badge.innerHTML = `<i class="fa-solid fa-hard-drive"></i> <span>Modus Lokal</span>`;
+            }
+        }
+
+        function listenToSantriDatabase() {
+            const santriCol = collection(db, 'artifacts', appId, 'public', 'data', 'santri');
+
+            onSnapshot(santriCol, async (snapshot) => {
+                if (!snapshot.empty) {
+                    const cloudList = [];
+                    snapshot.forEach(docSnap => {
+                        const data = docSnap.data();
+                        if (data && data.nis) {
+                            cloudList.push(data);
+                        }
+                    });
+                    
+                    masterSantriData = cloudList;
+                    saveSantriToLocalStorage(masterSantriData);
+                    updateCloudBadge(true);
+                } else {
+                    const defaults = loadSantriFromLocalStorage();
+                    for (const santri of defaults) {
+                        try {
+                            const santriDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'santri', santri.nis);
+                            await setDoc(santriDocRef, santri);
+                        } catch (e) {
+                            console.error("Error seeding initial santri:", e);
+                        }
+                    }
+                    updateCloudBadge(true);
+                }
+
+                window.filterMasterSantri();
+                window.updateMasterSummary();
+                window.restoreSession();
+
+                if (currentActiveSantri) {
+                    const updated = masterSantriData.find(s => s.nis === currentActiveSantri.nis);
+                    if (updated) {
+                        currentActiveSantri = updated;
+                        loadSantriIntoHeader(updated);
+                        hafalanData = updated.hafalanData || [];
+                        paymentData = updated.paymentData || [];
+                        window.renderHafalanTable();
+                        window.renderPaymentTable();
+                    }
+                }
+            }, (error) => {
+                console.warn("Menggunakan mode lokal / offline fallback:", error);
+                updateCloudBadge(false);
+                window.filterMasterSantri();
+                window.updateMasterSummary();
+                window.restoreSession();
+            });
+        }
 
         window.handleAddHafalanSubmit = async function(e) {
             e.preventDefault();
@@ -1898,8 +1922,20 @@
                 window.renderPaymentTable();
             }
 
-            alert("Pembayaran berhasil dikonfirmasi LUNAS dan tersimpan ke cloud!");
+            alert("Pembayaran berhasil dikonfirmasi LUNAS dan tersimpan!");
             window.closePaymentModal();
+        };
+
+        window.onload = function() {
+            window.renderMasterSantriTable(masterSantriData);
+            window.renderHafalanTable();
+            window.renderPaymentTable();
+            window.initHafalanChart();
+            window.updateMasterSummary();
+            window.restoreSession();
+            ensureAuth().then(() => {
+                listenToSantriDatabase();
+            });
         };
     </script>
 </body>
