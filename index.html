@@ -169,7 +169,6 @@
                             Berlokasi di Kabupaten Jember, Jawa Timur, pondok pesantren ini berkomitmen mendampingi para santri agar mampu menghafalkan Al-Qur'an 30 Juz secara mutqin, menguasai literasi bahasa Arab & Inggris, serta memiliki integritas moral yang kokoh.
                         </p>
                         
-                        <!-- Vision & Mission Mini Cards -->
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
                             <div class="p-4 bg-emerald-50/60 rounded-2xl border border-emerald-200">
                                 <h3 class="font-bold text-emerald-900 text-sm flex items-center space-x-2 mb-1">
@@ -188,11 +187,10 @@
                         </div>
                     </div>
 
-                    <!-- Side Graphic Card -->
                     <div class="lg:col-span-5 bg-gradient-to-br from-emerald-800 to-slate-900 text-white rounded-2xl p-8 space-y-6 flex flex-col justify-center shadow-inner">
                         <div class="text-center space-y-3">
-                            <div class="w-20 h-20 bg-amber-400 text-slate-950 font-black rounded-3xl mx-auto flex items-center justify-center text-2xl shadow-lg border-2 border-white">
-                                <i class="fa-solid fa-book-quran"></i>
+                            <div class="w-20 h-20 bg-amber-400 text-slate-950 font-black rounded-3xl mx-auto flex items-center justify-center text-2xl shadow-lg border-2 border-white overflow-hidden p-2">
+                                <img src="IMG-20260203-WA0001.jpg" alt="Logo JII" class="w-full h-full object-contain" onerror="this.onerror=null; this.src='https://placehold.co/200x200/0d882d/ffffff?text=JII';">
                             </div>
                             <h3 class="text-xl font-bold text-amber-300">Pondok Pesantren Tahfidz</h3>
                             <p class="text-xs text-emerald-100">"Sebaik-baik kalian adalah orang yang mempelajari Al-Qur'an dan mengajarkannya." (HR. Bukhari)</p>
@@ -642,321 +640,263 @@
         </div>
     </div>
 
-    <!-- MODAL 2: TAMBAH SANTRI BARU & BUAT AKUN -->
-    <div id="addSantriModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4 overflow-y-auto">
-        <div class="bg-white w-full max-w-lg rounded-2xl shadow-2xl p-6 space-y-4 my-8">
-            <div class="flex justify-between items-center border-b pb-3">
-                <div class="flex items-center space-x-2">
-                    <div class="p-2 bg-emerald-100 text-emerald-800 rounded-lg">
-                        <i class="fa-solid fa-user-plus text-lg"></i>
-                    </div>
-                    <div>
-                        <h3 class="font-bold text-slate-900 text-base">Pendaftaran Santri Baru & Akun SIM</h3>
-                        <p class="text-[11px] text-slate-500">Otoritas Tambah: Ketua Umum, Bendahara, Sekretaris</p>
-                    </div>
-                </div>
-                <button onclick="closeAddSantriModal()" class="text-slate-400 hover:text-slate-600">
+    <!-- MODAL 2: GANTI PASSWORD -->
+    <div id="changePasswordModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+        <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden">
+            <div class="bg-emerald-900 text-white p-5 text-center relative">
+                <button onclick="closeChangePasswordModal()" class="absolute right-4 top-4 text-emerald-300 hover:text-white">
                     <i class="fa-solid fa-xmark text-lg"></i>
                 </button>
+                <h3 class="font-extrabold text-base">Ganti Kata Sandi</h3>
+                <p class="text-xs text-emerald-200 mt-0.5">Pembaruan Keamanan Akun SIM</p>
             </div>
-
-            <form onsubmit="handleAddSantriSubmit(event)" class="space-y-4 text-xs">
-                <div class="p-3 bg-emerald-50/70 rounded-xl border border-emerald-200 space-y-3">
-                    <div class="font-bold text-emerald-900 text-xs border-b border-emerald-200 pb-1 flex items-center space-x-1">
-                        <i class="fa-solid fa-key"></i>
-                        <span>1. Buatkan Akun Login SIM Santri</span>
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <div>
-                            <label class="block font-semibold text-slate-700 mb-1">NIS Santri (Sebagai Username)</label>
-                            <input type="text" id="newNis" required placeholder="Contoh: 202601001" class="w-full px-3 py-2 border rounded-xl font-mono focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
-                        </div>
-                        <div>
-                            <label class="block font-semibold text-slate-700 mb-1">Password Akses Santri</label>
-                            <input type="text" id="newPassword" required placeholder="Contoh: santri123" value="123456" class="w-full px-3 py-2 border rounded-xl font-mono focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
-                        </div>
-                    </div>
-                </div>
-
-                <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
-                    <div class="font-bold text-slate-800 text-xs border-b pb-1">
-                        <span>2. Identitas & Penempatan Santri</span>
-                    </div>
-                    <div>
-                        <label class="block font-semibold text-slate-700 mb-1">Nama Lengkap Santri</label>
-                        <input type="text" id="newNama" required placeholder="Masukkan nama lengkap santri..." class="w-full px-3 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                        <div>
-                            <label class="block font-semibold text-slate-700 mb-1">Kelas</label>
-                            <input type="text" id="newKelas" required placeholder="10 MA Tahfidz" class="w-full px-3 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
-                        </div>
-                        <div>
-                            <label class="block font-semibold text-slate-700 mb-1">Kamar Asrama</label>
-                            <input type="text" id="newKamar" required placeholder="Al-Farabi 01" class="w-full px-3 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
-                        </div>
-                        <div>
-                            <label class="block font-semibold text-slate-700 mb-1">Status Keaktifan</label>
-                            <select id="newStatus" class="w-full px-3 py-2 border rounded-xl font-bold bg-white focus:ring-2 focus:ring-emerald-600 focus:outline-none">
-                                <option value="AKTIFF">AKTIFF</option>
-                                <option value="IZIN/CUTI">IZIN / CUTI</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
-                    <div class="font-bold text-slate-800 text-xs border-b pb-1">
-                        <span>3. Target Hafalan & Tanggungan Awal</span>
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <div>
-                            <label class="block font-semibold text-slate-700 mb-1">Awal Capaian Juz (0 - 30)</label>
-                            <input type="number" id="newHafalanJuz" min="0" max="30" value="0" required class="w-full px-3 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
-                        </div>
-                        <div>
-                            <label class="block font-semibold text-slate-700 mb-1">Surah Terakhir Setoran</label>
-                            <input type="text" id="newHafalanSurah" value="An-Nas" required class="w-full px-3 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <div>
-                            <label class="block font-semibold text-slate-700 mb-1">Nominal SPP & Syahriyah (Rp)</label>
-                            <input type="number" id="newSpp" min="0" step="10000" value="350000" required class="w-full px-3 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
-                        </div>
-                        <div>
-                            <label class="block font-semibold text-slate-700 mb-1">Nominal Uang Makan & Dapur (Rp)</label>
-                            <input type="number" id="newUangMakan" min="0" step="10000" value="100000" required class="w-full px-3 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <div>
-                            <label class="block font-semibold text-slate-700 mb-1">Status Pembayaran</label>
-                            <select id="newStatusBayar" class="w-full px-3 py-2 border rounded-xl font-bold bg-white focus:ring-2 focus:ring-emerald-600 focus:outline-none">
-                                <option value="Belum Lunas">Belum Lunas</option>
-                                <option value="Lunas">Lunas</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="flex items-center space-x-3 pt-2">
-                    <button type="button" onclick="closeAddSantriModal()" class="w-1/3 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold py-2.5 rounded-xl transition text-xs">
-                        Batal
-                    </button>
-                    <button type="submit" class="w-2/3 bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-2.5 rounded-xl shadow transition text-xs flex items-center justify-center space-x-2">
-                        <i class="fa-solid fa-plus"></i>
-                        <span>Simpan & Terbitkan Akun</span>
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- MODAL 3: EDIT DATA SANTRI -->
-    <div id="editSantriModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4 overflow-y-auto">
-        <div class="bg-white w-full max-w-lg rounded-2xl shadow-2xl p-6 space-y-4 my-8">
-            <div class="flex justify-between items-center border-b pb-3">
-                <div class="flex items-center space-x-2">
-                    <div class="p-2 bg-amber-100 text-amber-900 rounded-lg">
-                        <i class="fa-solid fa-user-pen text-lg"></i>
-                    </div>
-                    <div>
-                        <h3 class="font-bold text-slate-900 text-base">Edit Status, Hafalan & Tanggungan</h3>
-                        <p class="text-[11px] text-slate-500" id="editNisDisplay">NIS: -</p>
-                    </div>
-                </div>
-                <button onclick="closeEditSantriModal()" class="text-slate-400 hover:text-slate-600">
-                    <i class="fa-solid fa-xmark text-lg"></i>
-                </button>
-            </div>
-
-            <form onsubmit="handleEditSantriSubmit(event)" class="space-y-4 text-xs">
-                <input type="hidden" id="editSantriNis" />
-
-                <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
-                    <div class="font-bold text-slate-800 text-xs border-b pb-1">
-                        <span>1. Identitas & Status Keaktifan</span>
-                    </div>
-                    <div>
-                        <label class="block font-semibold text-slate-700 mb-1">Nama Santri</label>
-                        <input type="text" id="editNama" required class="w-full px-3 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                        <div>
-                            <label class="block font-semibold text-slate-700 mb-1">Status Keaktifan</label>
-                            <select id="editStatus" class="w-full px-3 py-2 border rounded-xl font-bold bg-white focus:ring-2 focus:ring-emerald-600 focus:outline-none">
-                                <option value="AKTIFF">AKTIFF</option>
-                                <option value="IZIN/CUTI">IZIN / CUTI</option>
-                                <option value="ALUMNI">ALUMNI</option>
-                                <option value="NON-AKTIF">NON-AKTIF</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block font-semibold text-slate-700 mb-1">Kelas</label>
-                            <input type="text" id="editKelas" required class="w-full px-3 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
-                        </div>
-                        <div>
-                            <label class="block font-semibold text-slate-700 mb-1">Kamar Asrama</label>
-                            <input type="text" id="editKamar" required class="w-full px-3 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
-                        </div>
-                    </div>
-                </div>
-
-                <div class="p-3 bg-emerald-50/60 rounded-xl border border-emerald-200 space-y-3">
-                    <div class="font-bold text-emerald-900 text-xs border-b border-emerald-200 pb-1">
-                        <span>2. Capaian Hafalan Al-Qur'an</span>
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <div>
-                            <label class="block font-semibold text-slate-700 mb-1">Capaian Juz (0 - 30)</label>
-                            <input type="number" id="editHafalanJuz" min="0" max="30" required class="w-full px-3 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
-                        </div>
-                        <div>
-                            <label class="block font-semibold text-slate-700 mb-1">Surah Terakhir Setoran</label>
-                            <input type="text" id="editHafalanSurah" required class="w-full px-3 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
-                        </div>
-                    </div>
-                </div>
-
-                <div class="p-3 bg-rose-50/60 rounded-xl border border-rose-200 space-y-3">
-                    <div class="font-bold text-rose-900 text-xs border-b border-rose-200 pb-1">
-                        <span>3. Tanggungan Syahriyah, Uang Makan & Status Bayar</span>
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <div>
-                            <label class="block font-semibold text-slate-700 mb-1">Nominal SPP & Syahriyah (Rp)</label>
-                            <input type="number" id="editSpp" min="0" step="10000" required class="w-full px-3 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
-                        </div>
-                        <div>
-                            <label class="block font-semibold text-slate-700 mb-1">Nominal Uang Makan & Dapur (Rp)</label>
-                            <input type="number" id="editUangMakan" min="0" step="10000" required class="w-full px-3 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <div>
-                            <label class="block font-semibold text-slate-700 mb-1">Status Pembayaran</label>
-                            <select id="editStatusBayar" class="w-full px-3 py-2 border rounded-xl font-bold bg-white focus:ring-2 focus:ring-emerald-600 focus:outline-none">
-                                <option value="Belum Lunas">Belum Lunas</option>
-                                <option value="Lunas">Lunas</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="flex items-center space-x-3 pt-2">
-                    <button type="button" onclick="closeEditSantriModal()" class="w-1/3 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold py-2.5 rounded-xl transition text-xs">
-                        Batal
-                    </button>
-                    <button type="submit" class="w-2/3 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-2.5 rounded-xl shadow transition text-xs flex items-center justify-center space-x-2">
-                        <i class="fa-solid fa-floppy-disk"></i>
-                        <span>Simpan Perubahan</span>
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- MODAL 4: INPUT SETORAN HAFALAN BARU -->
-    <div id="addHafalanModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
-        <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl p-6 space-y-4">
-            <div class="flex justify-between items-center border-b pb-3">
-                <h3 class="font-bold text-slate-900 text-base">Input Setoran Hafalan Baru</h3>
-                <button onclick="closeModalAddHafalan()" class="text-slate-400 hover:text-slate-600">
-                    <i class="fa-solid fa-xmark text-lg"></i>
-                </button>
-            </div>
-            <form onsubmit="handleAddHafalanSubmit(event)" class="space-y-3 text-xs">
+            <form onsubmit="handleChangePasswordSubmit(event)" class="p-6 space-y-4">
                 <div>
-                    <label class="block font-semibold text-slate-700 mb-1">Jenis Setoran</label>
-                    <select id="inputJenis" class="w-full px-3 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-600 focus:outline-none">
-                        <option value="Ziyadah (Baru)">Ziyadah (Hafalan Baru)</option>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Kata Sandi Lama</label>
+                    <input type="password" id="oldPasswordInput" required placeholder="Masukkan kata sandi lama" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Kata Sandi Baru</label>
+                    <input type="password" id="newPasswordInput" required placeholder="Masukkan kata sandi baru" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
+                </div>
+                <button type="submit" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-3 rounded-xl shadow transition text-sm">
+                    Simpan Perubahan
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 3: TAMBAH SANTRI BARU -->
+    <div id="addSantriModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4 overflow-y-auto">
+        <div class="bg-white w-full max-w-xl rounded-2xl shadow-2xl overflow-hidden my-8">
+            <div class="bg-emerald-900 text-white p-5 flex justify-between items-center">
+                <div>
+                    <h3 class="font-extrabold text-base">+ Tambah Santri & Menerbitkan Akun</h3>
+                    <p class="text-xs text-emerald-200">Data otomatis terintegrasi ke Server Cloud</p>
+                </div>
+                <button onclick="closeAddSantriModal()" class="text-emerald-300 hover:text-white">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <form onsubmit="handleAddSantriSubmit(event)" class="p-6 grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">NIS (Nomor Induk Santri)</label>
+                    <input type="text" id="newNis" required placeholder="Contoh: 202601003" class="w-full px-3 py-2 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Password Akun Login</label>
+                    <input type="password" id="newPassword" placeholder="Default: 123456" class="w-full px-3 py-2 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
+                </div>
+                <div class="md:col-span-2">
+                    <label class="block font-bold text-slate-700 mb-1">Nama Lengkap Santri</label>
+                    <input type="text" id="newNama" required placeholder="Nama lengkap sesuai dokumen" class="w-full px-3 py-2 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Kelas Formal / Diniyah</label>
+                    <input type="text" id="newKelas" placeholder="Contoh: 10 MA Tahfidz" class="w-full px-3 py-2 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Kamar / Asrama</label>
+                    <input type="text" id="newKamar" placeholder="Contoh: Al-Farabi Room 02" class="w-full px-3 py-2 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Status Disiplin</label>
+                    <select id="newStatus" class="w-full px-3 py-2 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none">
+                        <option value="AKTIFF">AKTIFF DISIPLIN</option>
+                        <option value="IZIN">IZIN / CUTI</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Capaian Hafalan (Juz)</label>
+                    <input type="number" id="newHafalanJuz" value="1" min="0" max="30" class="w-full px-3 py-2 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Surah Terakhir Disetorkan</label>
+                    <input type="text" id="newHafalanSurah" placeholder="Contoh: Al-Baqarah" class="w-full px-3 py-2 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Biaya SPP / Bulan (Rp)</label>
+                    <input type="number" id="newSpp" value="350000" class="w-full px-3 py-2 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Biaya Makan / Bulan (Rp)</label>
+                    <input type="number" id="newUangMakan" value="100000" class="w-full px-3 py-2 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Status Pembayaran</label>
+                    <select id="newStatusBayar" class="w-full px-3 py-2 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none">
+                        <option value="Belum Lunas">Belum Lunas</option>
+                        <option value="Lunas">Lunas</option>
+                    </select>
+                </div>
+                <div class="md:col-span-2 pt-2">
+                    <button type="submit" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-3 rounded-xl shadow transition">
+                        Simpan & Terbitkan Akun Santri
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 4: EDIT SANTRI -->
+    <div id="editSantriModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4 overflow-y-auto">
+        <div class="bg-white w-full max-w-xl rounded-2xl shadow-2xl overflow-hidden my-8">
+            <div class="bg-emerald-900 text-white p-5 flex justify-between items-center">
+                <div>
+                    <h3 class="font-extrabold text-base">Edit Data Santri</h3>
+                    <p class="text-xs text-emerald-200" id="editNisDisplay">NIS: -</p>
+                </div>
+                <button onclick="closeEditSantriModal()" class="text-emerald-300 hover:text-white">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <form onsubmit="handleEditSantriSubmit(event)" class="p-6 grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                <input type="hidden" id="editSantriNis" />
+                <div class="md:col-span-2">
+                    <label class="block font-bold text-slate-700 mb-1">Nama Lengkap Santri</label>
+                    <input type="text" id="editNama" required class="w-full px-3 py-2 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Kelas Formal</label>
+                    <input type="text" id="editKelas" class="w-full px-3 py-2 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Kamar Asrama</label>
+                    <input type="text" id="editKamar" class="w-full px-3 py-2 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Status Disiplin</label>
+                    <select id="editStatus" class="w-full px-3 py-2 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none">
+                        <option value="AKTIFF">AKTIFF DISIPLIN</option>
+                        <option value="IZIN">IZIN / CUTI</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Capaian Hafalan (Juz)</label>
+                    <input type="number" id="editHafalanJuz" min="0" max="30" class="w-full px-3 py-2 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Surah Terakhir</label>
+                    <input type="text" id="editHafalanSurah" class="w-full px-3 py-2 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">SPP (Rp)</label>
+                    <input type="number" id="editSpp" class="w-full px-3 py-2 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Uang Makan (Rp)</label>
+                    <input type="number" id="editUangMakan" class="w-full px-3 py-2 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Status Pembayaran</label>
+                    <select id="editStatusBayar" class="w-full px-3 py-2 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none">
+                        <option value="Belum Lunas">Belum Lunas</option>
+                        <option value="Lunas">Lunas</option>
+                    </select>
+                </div>
+                <div class="md:col-span-2 pt-2">
+                    <button type="submit" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-3 rounded-xl shadow transition">
+                        Perbarui Data Santri
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 5: INPUT SETORAN HAFALAN -->
+    <div id="addHafalanModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+        <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden">
+            <div class="bg-emerald-900 text-white p-5 flex justify-between items-center">
+                <h3 class="font-extrabold text-base">Setoran Hafalan Al-Qur'an</h3>
+                <button onclick="closeModalAddHafalan()" class="text-emerald-300 hover:text-white">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <form onsubmit="handleAddHafalanSubmit(event)" class="p-6 space-y-4 text-xs">
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Jenis Setoran</label>
+                    <select id="inputJenis" class="w-full px-3 py-2 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none">
+                        <option value="Ziyadah (Baru)">Ziyadah (Setoran Baru)</option>
                         <option value="Muraja'ah (Ulang)">Muraja'ah (Pengulangan)</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block font-semibold text-slate-700 mb-1">Surah & Ayat</label>
-                    <input type="text" id="inputSurah" required placeholder="Contoh: Surah At-Tawbah Ayat 1-30" class="w-full px-3 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
+                    <label class="block font-bold text-slate-700 mb-1">Surah & Ayat</label>
+                    <input type="text" id="inputSurah" required placeholder="Contoh: Surah At-Tawbah 1-30" class="w-full px-3 py-2 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
                 </div>
                 <div>
-                    <label class="block font-semibold text-slate-700 mb-1">Juz</label>
-                    <input type="number" id="inputJuz" min="1" max="30" value="10" required class="w-full px-3 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
+                    <label class="block font-bold text-slate-700 mb-1">Capaian Target Juz</label>
+                    <input type="number" id="inputJuz" min="1" max="30" value="10" required class="w-full px-3 py-2 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
                 </div>
                 <div>
-                    <label class="block font-semibold text-slate-700 mb-1">Nilai / Predikat Tajwid</label>
-                    <select id="inputNilai" class="w-full px-3 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-600 focus:outline-none">
+                    <label class="block font-bold text-slate-700 mb-1">Nilai & Tajwid</label>
+                    <select id="inputNilai" class="w-full px-3 py-2 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none">
                         <option value="A (Sangat Mutqin)">A (Sangat Mutqin)</option>
                         <option value="B+ (Lancar)">B+ (Lancar)</option>
                         <option value="B (Cukup)">B (Cukup)</option>
                     </select>
                 </div>
-                <div class="flex space-x-2 pt-2">
-                    <button type="button" onclick="closeModalAddHafalan()" class="w-1/2 bg-slate-200 text-slate-700 font-semibold py-2 rounded-xl">Batal</button>
-                    <button type="submit" class="w-1/2 bg-emerald-700 text-white font-bold py-2 rounded-xl">Simpan</button>
-                </div>
+                <button type="submit" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-3 rounded-xl shadow transition">
+                    Simpan Catatan Setoran
+                </button>
             </form>
         </div>
     </div>
 
-    <!-- MODAL 5: PEMBAYARAN TANGGUNGAN -->
+    <!-- MODAL 6: KONFIRMASI PEMBAYARAN -->
     <div id="paymentModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
-        <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl p-6 space-y-4">
-            <div class="flex justify-between items-center border-b pb-3">
-                <h3 class="font-bold text-slate-900 text-base">Konfirmasi Pembayaran Syahriyah</h3>
-                <button onclick="closePaymentModal()" class="text-slate-400 hover:text-slate-600">
+        <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden">
+            <div class="bg-emerald-900 text-white p-5 flex justify-between items-center">
+                <h3 class="font-extrabold text-base">Konfirmasi Pembayaran Syahriyah</h3>
+                <button onclick="closePaymentModal()" class="text-emerald-300 hover:text-white">
                     <i class="fa-solid fa-xmark text-lg"></i>
                 </button>
             </div>
-            <div class="space-y-3 text-xs text-slate-600">
-                <p>Transfer tagihan melalui rekening resmi Yayasan Pondok Pesantren Jember Islamic Institute:</p>
-                <div class="p-3 bg-slate-100 rounded-xl font-mono text-slate-900 space-y-1">
-                    <div>Bank Syariah Indonesia (BSI)</div>
-                    <div class="text-sm font-bold text-emerald-800">7700-8899-10</div>
+            <div class="p-6 space-y-4 text-xs">
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-center space-y-1">
+                    <span class="text-slate-400 font-bold uppercase block">Total Tagihan Bulan Ini</span>
+                    <div id="payModalTotalAmount" class="text-2xl font-black text-rose-600">Rp 450.000</div>
+                </div>
+                <p class="text-slate-600 text-center">Silakan selesaikan pembayaran ke Rekening Resmi Pesantren:</p>
+                <div class="p-3 bg-amber-50 rounded-xl border border-amber-200 font-mono text-center space-y-1">
+                    <div class="font-bold text-slate-800">BSI (Bank Syariah Indonesia)</div>
+                    <div class="text-lg font-black text-amber-900">7123-4567-8901</div>
                     <div class="text-[10px] text-slate-500">a.n. YAYASAN JEMBER ISLAMIC INSTITUTE</div>
                 </div>
-                <div class="p-3 bg-amber-50 rounded-xl border border-amber-200 text-amber-900">
-                    Total Tagihan: <strong class="text-slate-900 text-sm" id="payModalTotalAmount">Rp 450.000</strong>
-                </div>
-                <button onclick="simulasikanBayarLunas()" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-2.5 rounded-xl shadow transition text-xs">
-                    Konfirmasi Pembayaran Telah Transfer
+                <button onclick="simulasikanBayarLunas()" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-3 rounded-xl shadow transition">
+                    Konfirmasi Sudah Transfer (Lunas)
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- MODAL 6: GANTI PASSWORD -->
-    <div id="changePasswordModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
-        <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl p-6 space-y-4">
-            <div class="flex justify-between items-center border-b pb-3">
-                <h3 class="font-bold text-slate-900 text-base">Ganti Password Akses</h3>
-                <button onclick="closeChangePasswordModal()" class="text-slate-400 hover:text-slate-600">
-                    <i class="fa-solid fa-xmark text-lg"></i>
-                </button>
+    <!-- MODAL CONFIRMATION (Pengganti confirm) -->
+    <div id="customConfirmModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+        <div class="bg-white w-full max-w-sm rounded-2xl shadow-2xl p-6 text-center space-y-4">
+            <div class="w-12 h-12 bg-rose-100 text-rose-600 rounded-2xl mx-auto flex items-center justify-center text-xl">
+                <i class="fa-solid fa-triangle-exclamation"></i>
             </div>
-            <form onsubmit="handleChangePasswordSubmit(event)" class="space-y-3 text-xs">
-                <div>
-                    <label class="block font-semibold text-slate-700 mb-1">Password Lama</label>
-                    <input type="password" id="oldPasswordInput" required class="w-full px-3 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
-                </div>
-                <div>
-                    <label class="block font-semibold text-slate-700 mb-1">Password Baru</label>
-                    <input type="password" id="newPasswordInput" required class="w-full px-3 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
-                </div>
-                <div class="flex space-x-2 pt-2">
-                    <button type="button" onclick="closeChangePasswordModal()" class="w-1/2 bg-slate-200 text-slate-700 font-semibold py-2 rounded-xl">Batal</button>
-                    <button type="submit" class="w-1/2 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-2 rounded-xl">Simpan</button>
-                </div>
-            </form>
+            <div>
+                <h3 id="confirmModalTitle" class="font-extrabold text-slate-900 text-base">Konfirmasi Hapus</h3>
+                <p id="confirmModalMsg" class="text-xs text-slate-500 mt-1">Apakah Anda yakin ingin menghapus data ini?</p>
+            </div>
+            <div class="flex space-x-2 pt-2">
+                <button id="btnConfirmCancel" class="w-1/2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-2 rounded-xl text-xs">Batal</button>
+                <button id="btnConfirmOk" class="w-1/2 bg-rose-600 hover:bg-rose-700 text-white font-bold py-2 rounded-xl text-xs shadow">Ya, Hapus</button>
+            </div>
         </div>
     </div>
+
+    <!-- TOAST NOTIFICATION CONTAINER -->
+    <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col space-y-2 pointer-events-none"></div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, updateDoc, deleteDoc, onSnapshot, collection } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // APP DATABASE ID
-        const appId = 'jember-islamic-institute-global-db';
+        // FIXED GLOBAL APP ID UNTUK SINKRONISASI 100% SEMUA HP
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'jember-islamic-institute-global-db';
         
         const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
             apiKey: "AIzaSyDummyKeyForFallback",
@@ -973,7 +913,7 @@
 
         let currentUser = null;
         let isLoggedIn = false;
-        let currentRole = 'ketua'; // 'ketua', 'bendahara', 'sekretaris', or 'santri'
+        let currentRole = 'ketua';
 
         const managementAccounts = {
             'ketua': { id: 'KETUA-UMUM', password: '123456', name: 'K.H. Ahmad Dahlan, M.A.', role: 'Ketua Umum', avatar: 'KU' },
@@ -1023,8 +963,60 @@
             }
         ];
 
-        const STORAGE_KEY = 'jii_master_santri_db_v2';
-        const SESSION_KEY = 'jii_active_session_v2';
+        const STORAGE_KEY = 'jii_master_santri_db_v3';
+        const SESSION_KEY = 'jii_active_session_v3';
+
+        window.showToast = function(message, type = 'success') {
+            const container = document.getElementById('toastContainer');
+            if (!container) return;
+
+            const toast = document.createElement('div');
+            const isSuccess = type === 'success';
+            const isError = type === 'error';
+            
+            toast.className = `pointer-events-auto flex items-center space-x-3 px-4 py-3 rounded-xl shadow-xl text-xs font-bold text-white transition-all transform translate-y-2 opacity-0 duration-300 ${
+                isSuccess ? 'bg-emerald-800 border border-emerald-600' : 
+                isError ? 'bg-rose-800 border border-rose-600' : 'bg-slate-800 border border-slate-600'
+            }`;
+
+            toast.innerHTML = `
+                <i class="fa-solid ${isSuccess ? 'fa-circle-check text-emerald-400' : isError ? 'fa-circle-exclamation text-rose-400' : 'fa-circle-info text-amber-400'} text-base"></i>
+                <span>${message}</span>
+            `;
+
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-2', 'opacity-0');
+            }, 10);
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        };
+
+        window.showConfirmDialog = function(title, message, onOk) {
+            const modal = document.getElementById('customConfirmModal');
+            const titleEl = document.getElementById('confirmModalTitle');
+            const msgEl = document.getElementById('confirmModalMsg');
+            const btnOk = document.getElementById('btnConfirmOk');
+            const btnCancel = document.getElementById('btnConfirmCancel');
+
+            if (!modal) return;
+            if (titleEl) titleEl.innerText = title;
+            if (msgEl) msgEl.innerText = message;
+
+            modal.classList.remove('hidden');
+
+            const close = () => modal.classList.add('hidden');
+
+            btnOk.onclick = () => {
+                close();
+                onOk();
+            };
+            btnCancel.onclick = close;
+        };
 
         function loadSantriFromLocalStorage() {
             try {
@@ -1442,7 +1434,7 @@
             if (matchedRole) {
                 const mgmtAcc = managementAccounts[matchedRole];
                 if (passwordInput !== mgmtAcc.password) {
-                    alert('Password salah untuk akun pengurus!');
+                    showToast('Password salah untuk akun pengurus!', 'error');
                     return;
                 }
                 currentRole = matchedRole;
@@ -1451,7 +1443,7 @@
                 sessionStorage.setItem(SESSION_KEY, JSON.stringify({ role: currentRole, nis: mgmtAcc.id }));
             } else if (matchedSantri) {
                 if (passwordInput !== (matchedSantri.password || '123456')) {
-                    alert('Password salah untuk akun santri!');
+                    showToast('Password salah untuk akun santri!', 'error');
                     return;
                 }
                 currentRole = 'santri';
@@ -1463,7 +1455,7 @@
                 window.renderPaymentTable();
                 sessionStorage.setItem(SESSION_KEY, JSON.stringify({ role: 'santri', nis: matchedSantri.nis }));
             } else {
-                alert('Akun dengan NIS/ID tersebut tidak ditemukan!');
+                showToast('Akun dengan NIS/ID tersebut tidak ditemukan!', 'error');
                 return;
             }
 
@@ -1475,6 +1467,215 @@
 
             configureRolePermissions();
             window.closeLoginModal();
+            showToast(`Selamat datang, ${matchedRole ? managementAccounts[matchedRole].name : matchedSantri.nama}!`, 'success');
+        };
+
+        window.handleChangePasswordSubmit = function(e) {
+            e.preventDefault();
+            const oldP = document.getElementById('oldPasswordInput').value;
+            const newP = document.getElementById('newPasswordInput').value;
+
+            if (currentRole === 'santri' && currentActiveSantri) {
+                if (oldP !== (currentActiveSantri.password || '123456')) {
+                    showToast("Password lama Anda salah!", 'error');
+                    return;
+                }
+                currentActiveSantri.password = newP;
+                saveSantriToLocalStorage(masterSantriData);
+                showToast("Password berhasil diperbarui!", 'success');
+            } else if (managementAccounts[currentRole]) {
+                if (oldP !== managementAccounts[currentRole].password) {
+                    showToast("Password lama Anda salah!", 'error');
+                    return;
+                }
+                managementAccounts[currentRole].password = newP;
+                showToast("Password pengurus berhasil diperbarui!", 'success');
+            }
+            window.closeChangePasswordModal();
+        };
+
+        function updateCloudBadge(isOnline) {
+            const badge = document.getElementById('cloudStatusBadge');
+            if (!badge) return;
+
+            if (isOnline) {
+                badge.className = "text-[9px] px-1.5 py-0.5 rounded font-bold bg-emerald-100 text-emerald-800 flex items-center space-x-1";
+                badge.innerHTML = `<i class="fa-solid fa-cloud-check"></i> <span>Cloud Synced</span>`;
+            } else {
+                badge.className = "text-[9px] px-1.5 py-0.5 rounded font-bold bg-amber-100 text-amber-800 flex items-center space-x-1";
+                badge.innerHTML = `<i class="fa-solid fa-hard-drive"></i> <span>Modus Lokal</span>`;
+            }
+        }
+
+        function listenToSantriDatabase() {
+            const santriCol = collection(db, 'artifacts', appId, 'public', 'data', 'santri');
+
+            onSnapshot(santriCol, async (snapshot) => {
+                if (!snapshot.empty) {
+                    // Cloud memiliki data -> Cloud adalah SINGLE SOURCE OF TRUTH
+                    const cloudSantriList = [];
+                    snapshot.forEach(docSnap => {
+                        const data = docSnap.data();
+                        if (data && data.nis) {
+                            cloudSantriList.push(data);
+                        }
+                    });
+                    masterSantriData = cloudSantriList;
+                    saveSantriToLocalStorage(masterSantriData);
+                    updateCloudBadge(true);
+                } else {
+                    // Cloud masih kosong -> Inisialisasi data bawaan ke Cloud sekali saja
+                    const localData = loadSantriFromLocalStorage();
+                    masterSantriData = localData;
+                    for (const s of localData) {
+                        try {
+                            const santriDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'santri', s.nis);
+                            await setDoc(santriDocRef, s);
+                        } catch (e) {
+                            console.error("Error seeding initial santri to cloud:", e);
+                        }
+                    }
+                    updateCloudBadge(true);
+                }
+
+                window.filterMasterSantri();
+                window.updateMasterSummary();
+                window.restoreSession();
+
+                if (currentActiveSantri) {
+                    const updated = masterSantriData.find(s => s.nis === currentActiveSantri.nis);
+                    if (updated) {
+                        currentActiveSantri = updated;
+                        loadSantriIntoHeader(updated);
+                        hafalanData = updated.hafalanData || [];
+                        paymentData = updated.paymentData || [];
+                        window.renderHafalanTable();
+                        window.renderPaymentTable();
+                    }
+                }
+            }, (error) => {
+                console.warn("Koneksi cloud terganggu, menggunakan cadangan lokal:", error);
+                updateCloudBadge(false);
+                masterSantriData = loadSantriFromLocalStorage();
+                window.filterMasterSantri();
+                window.updateMasterSummary();
+                window.restoreSession();
+            });
+        }
+
+        window.handleAddSantriSubmit = async function(event) {
+            event.preventDefault();
+
+            const nis = document.getElementById('newNis').value.trim();
+            const password = document.getElementById('newPassword').value.trim();
+            const nama = document.getElementById('newNama').value.trim();
+            const kelas = document.getElementById('newKelas').value.trim();
+            const kamar = document.getElementById('newKamar').value.trim();
+            const status = document.getElementById('newStatus').value;
+            const hafalanJuz = Number(document.getElementById('newHafalanJuz').value);
+            const hafalanSurah = document.getElementById('newHafalanSurah').value.trim();
+            const spp = Number(document.getElementById('newSpp').value);
+            const uangMakan = Number(document.getElementById('newUangMakan').value);
+            const statusBayar = document.getElementById('newStatusBayar').value;
+
+            if (!nis || !nama) {
+                showToast("NIS dan Nama Santri wajib diisi!", 'error');
+                return;
+            }
+
+            if (masterSantriData.some(s => s.nis === nis)) {
+                showToast(`NIS ${nis} sudah terdaftar di sistem!`, 'error');
+                return;
+            }
+
+            const newSantriObj = {
+                nis,
+                password: password || '123456',
+                nama,
+                kelas: kelas || '10 MA Tahfidz',
+                kamar: kamar || 'Al-Farabi 01',
+                status: status || 'AKTIFF',
+                hafalanJuz: hafalanJuz || 0,
+                hafalanSurah: hafalanSurah || 'An-Nas',
+                spp: spp || 350000,
+                uangMakan: uangMakan || 100000,
+                statusBayar: statusBayar || 'Belum Lunas',
+                hafalanData: [
+                    { tanggal: new Date().toLocaleDateString('id-ID'), jenis: 'Ziyadah (Baru)', surah: `Surah ${hafalanSurah || 'An-Nas'}`, juz: hafalanJuz || 0, nilai: 'A (Sangat Mutqin)', ustadz: 'Ust. Abdullah' }
+                ],
+                paymentData: [
+                    { id: 'TRX-' + Math.floor(Math.random() * 89999 + 10000), tanggal: new Date().toLocaleDateString('id-ID'), uraian: 'Setoran Awal Registration', nominal: (spp || 350000) + (uangMakan || 100000), status: statusBayar || 'Belum Lunas' }
+                ]
+            };
+
+            // Simpan ke Cloud Server secara langsung
+            try {
+                const user = await ensureAuth();
+                if (user) {
+                    const santriDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'santri', nis);
+                    await setDoc(santriDocRef, newSantriObj);
+                }
+            } catch (err) {
+                console.error("Cloud sync error:", err);
+            }
+
+            showToast(`Berhasil menambahkan santri "${nama}" (NIS: ${nis}) ke Server Cloud!`, 'success');
+            window.closeAddSantriModal();
+            event.target.reset();
+        };
+
+        window.handleEditSantriSubmit = async function(event) {
+            event.preventDefault();
+            const nis = document.getElementById('editSantriNis').value;
+            const santri = masterSantriData.find(s => s.nis === nis);
+            if (!santri) return;
+
+            const updatedData = {
+                nama: document.getElementById('editNama').value.trim(),
+                kelas: document.getElementById('editKelas').value.trim(),
+                kamar: document.getElementById('editKamar').value.trim(),
+                status: document.getElementById('editStatus').value,
+                hafalanJuz: Number(document.getElementById('editHafalanJuz').value),
+                hafalanSurah: document.getElementById('editHafalanSurah').value.trim(),
+                spp: Number(document.getElementById('editSpp').value),
+                uangMakan: Number(document.getElementById('editUangMakan').value),
+                statusBayar: document.getElementById('editStatusBayar').value
+            };
+
+            try {
+                const user = await ensureAuth();
+                if (user) {
+                    const santriDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'santri', nis);
+                    await updateDoc(santriDocRef, updatedData);
+                }
+            } catch (err) {
+                console.error("Cloud sync fail:", err);
+            }
+
+            showToast(`Data santri ${updatedData.nama} berhasil diperbarui di Cloud!`, 'success');
+            window.closeEditSantriModal();
+        };
+
+        window.deleteSantri = function(nis) {
+            const santri = masterSantriData.find(s => s.nis === nis);
+            if (!santri) return;
+
+            showConfirmDialog(
+                "Hapus Santri Secara Permanen",
+                `Apakah Anda yakin ingin menghapus santri "${santri.nama}" (NIS: ${nis}) dari sistem Cloud?`,
+                async () => {
+                    try {
+                        const user = await ensureAuth();
+                        if (user) {
+                            const santriDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'santri', nis);
+                            await deleteDoc(santriDocRef);
+                        }
+                    } catch (err) {
+                        console.error("Cloud sync fail:", err);
+                    }
+                    showToast("Santri telah berhasil dihapus dari Cloud.", 'success');
+                }
+            );
         };
 
         window.restoreSession = function() {
@@ -1525,230 +1726,6 @@
             window.showPublicView();
         };
 
-        window.handleChangePasswordSubmit = function(e) {
-            e.preventDefault();
-            const oldP = document.getElementById('oldPasswordInput').value;
-            const newP = document.getElementById('newPasswordInput').value;
-
-            if (currentRole === 'santri' && currentActiveSantri) {
-                if (oldP !== (currentActiveSantri.password || '123456')) {
-                    alert("Password lama Anda salah!");
-                    return;
-                }
-                currentActiveSantri.password = newP;
-                saveSantriToLocalStorage(masterSantriData);
-                alert("Password berhasil diperbarui!");
-            } else if (managementAccounts[currentRole]) {
-                if (oldP !== managementAccounts[currentRole].password) {
-                    alert("Password lama Anda salah!");
-                    return;
-                }
-                managementAccounts[currentRole].password = newP;
-                alert("Password pengurus berhasil diperbarui!");
-            }
-            window.closeChangePasswordModal();
-        };
-
-        window.handleAddSantriSubmit = async function(event) {
-            event.preventDefault();
-
-            const nis = document.getElementById('newNis').value.trim();
-            const password = document.getElementById('newPassword').value.trim();
-            const nama = document.getElementById('newNama').value.trim();
-            const kelas = document.getElementById('newKelas').value.trim();
-            const kamar = document.getElementById('newKamar').value.trim();
-            const status = document.getElementById('newStatus').value;
-            const hafalanJuz = Number(document.getElementById('newHafalanJuz').value);
-            const hafalanSurah = document.getElementById('newHafalanSurah').value.trim();
-            const spp = Number(document.getElementById('newSpp').value);
-            const uangMakan = Number(document.getElementById('newUangMakan').value);
-            const statusBayar = document.getElementById('newStatusBayar').value;
-
-            if (!nis || !nama) {
-                alert("NIS dan Nama Santri wajib diisi!");
-                return;
-            }
-
-            if (masterSantriData.some(s => s.nis === nis)) {
-                alert(`NIS ${nis} sudah terdaftar di sistem! Silakan gunakan NIS lain.`);
-                return;
-            }
-
-            const newSantriObj = {
-                nis,
-                password: password || '123456',
-                nama,
-                kelas: kelas || '10 MA Tahfidz',
-                kamar: kamar || 'Al-Farabi 01',
-                status: status || 'AKTIFF',
-                hafalanJuz: hafalanJuz || 0,
-                hafalanSurah: hafalanSurah || 'An-Nas',
-                spp: spp || 350000,
-                uangMakan: uangMakan || 100000,
-                statusBayar: statusBayar || 'Belum Lunas',
-                hafalanData: [
-                    { tanggal: new Date().toLocaleDateString('id-ID'), jenis: 'Ziyadah (Baru)', surah: `Surah ${hafalanSurah || 'An-Nas'}`, juz: hafalanJuz || 0, nilai: 'A (Sangat Mutqin)', ustadz: 'Ust. Abdullah' }
-                ],
-                paymentData: [
-                    { id: 'TRX-' + Math.floor(Math.random() * 89999 + 10000), tanggal: new Date().toLocaleDateString('id-ID'), uraian: 'Setoran Awal Registration', nominal: (spp || 350000) + (uangMakan || 100000), status: statusBayar || 'Belum Lunas' }
-                ]
-            };
-
-            masterSantriData.push(newSantriObj);
-            saveSantriToLocalStorage(masterSantriData);
-            window.filterMasterSantri();
-            window.updateMasterSummary();
-
-            try {
-                const user = await ensureAuth();
-                if (user) {
-                    const santriDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'santri', nis);
-                    await setDoc(santriDocRef, newSantriObj);
-                }
-            } catch (err) {
-                console.error("Cloud sync error:", err);
-            }
-
-            alert(`Berhasil menambahkan santri "${nama}" dan menerbitkan akun SIM (NIS: ${nis}). Data telah disinkronkan!`);
-            window.closeAddSantriModal();
-            event.target.reset();
-        };
-
-        window.handleEditSantriSubmit = async function(event) {
-            event.preventDefault();
-            const nis = document.getElementById('editSantriNis').value;
-            const santri = masterSantriData.find(s => s.nis === nis);
-            if (!santri) return;
-
-            const updatedData = {
-                nama: document.getElementById('editNama').value.trim(),
-                kelas: document.getElementById('editKelas').value.trim(),
-                kamar: document.getElementById('editKamar').value.trim(),
-                status: document.getElementById('editStatus').value,
-                hafalanJuz: Number(document.getElementById('editHafalanJuz').value),
-                hafalanSurah: document.getElementById('editHafalanSurah').value.trim(),
-                spp: Number(document.getElementById('editSpp').value),
-                uangMakan: Number(document.getElementById('editUangMakan').value),
-                statusBayar: document.getElementById('editStatusBayar').value
-            };
-
-            Object.assign(santri, updatedData);
-            saveSantriToLocalStorage(masterSantriData);
-            window.filterMasterSantri();
-            window.updateMasterSummary();
-
-            try {
-                const user = await ensureAuth();
-                if (user) {
-                    const santriDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'santri', nis);
-                    await updateDoc(santriDocRef, updatedData);
-                }
-            } catch (err) {
-                console.error("Cloud sync fail:", err);
-            }
-            alert(`Data santri ${updatedData.nama} berhasil diperbarui!`);
-            window.closeEditSantriModal();
-        };
-
-        window.deleteSantri = async function(nis) {
-            const santri = masterSantriData.find(s => s.nis === nis);
-            if (!santri) return;
-
-            if (confirm(`Apakah Anda yakin ingin menghapus santri "${santri.nama}" (NIS: ${nis}) dari sistem?`)) {
-                masterSantriData = masterSantriData.filter(s => s.nis !== nis);
-                saveSantriToLocalStorage(masterSantriData);
-                window.filterMasterSantri();
-                window.updateMasterSummary();
-
-                try {
-                    const user = await ensureAuth();
-                    if (user) {
-                        const santriDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'santri', nis);
-                        await deleteDoc(santriDocRef);
-                    }
-                } catch (err) {
-                    console.error("Cloud sync fail:", err);
-                }
-                alert("Santri telah berhasil dihapus secara permanen.");
-            }
-        };
-
-        function updateCloudBadge(isOnline) {
-            const badge = document.getElementById('cloudStatusBadge');
-            if (!badge) return;
-
-            if (isOnline) {
-                badge.className = "text-[9px] px-1.5 py-0.5 rounded font-bold bg-emerald-100 text-emerald-800 flex items-center space-x-1";
-                badge.innerHTML = `<i class="fa-solid fa-cloud-check"></i> <span>Cloud Synced</span>`;
-            } else {
-                badge.className = "text-[9px] px-1.5 py-0.5 rounded font-bold bg-amber-100 text-amber-800 flex items-center space-x-1";
-                badge.innerHTML = `<i class="fa-solid fa-hard-drive"></i> <span>Modus Lokal</span>`;
-            }
-        }
-
-        function listenToSantriDatabase() {
-            const santriCol = collection(db, 'artifacts', appId, 'public', 'data', 'santri');
-
-            onSnapshot(santriCol, async (snapshot) => {
-                const localData = loadSantriFromLocalStorage();
-                const mergedMap = new Map();
-
-                // 1. Muat data lokal terlebih dahulu
-                localData.forEach(s => {
-                    if (s && s.nis) mergedMap.set(s.nis, s);
-                });
-
-                // 2. Gabungkan dengan data dari Cloud (Cloud overwrite/update)
-                if (!snapshot.empty) {
-                    snapshot.forEach(docSnap => {
-                        const data = docSnap.data();
-                        if (data && data.nis) {
-                            mergedMap.set(data.nis, data);
-                        }
-                    });
-                }
-
-                masterSantriData = Array.from(mergedMap.values());
-                saveSantriToLocalStorage(masterSantriData);
-                updateCloudBadge(true);
-
-                // 3. Kirim data lokal yang belum ada di Cloud ke server
-                for (const localSantri of localData) {
-                    if (snapshot.empty || !snapshot.docs.some(d => d.id === localSantri.nis)) {
-                        try {
-                            const santriDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'santri', localSantri.nis);
-                            await setDoc(santriDocRef, localSantri);
-                        } catch (e) {
-                            console.error("Error syncing local santri to cloud:", e);
-                        }
-                    }
-                }
-
-                window.filterMasterSantri();
-                window.updateMasterSummary();
-                window.restoreSession();
-
-                if (currentActiveSantri) {
-                    const updated = masterSantriData.find(s => s.nis === currentActiveSantri.nis);
-                    if (updated) {
-                        currentActiveSantri = updated;
-                        loadSantriIntoHeader(updated);
-                        hafalanData = updated.hafalanData || [];
-                        paymentData = updated.paymentData || [];
-                        window.renderHafalanTable();
-                        window.renderPaymentTable();
-                    }
-                }
-            }, (error) => {
-                console.warn("Menggunakan mode lokal / offline fallback:", error);
-                updateCloudBadge(false);
-                masterSantriData = loadSantriFromLocalStorage();
-                window.filterMasterSantri();
-                window.updateMasterSummary();
-                window.restoreSession();
-            });
-        }
-
         window.handleAddHafalanSubmit = async function(e) {
             e.preventDefault();
             const jenis = document.getElementById('inputJenis').value;
@@ -1789,6 +1766,7 @@
                 }
             }
 
+            showToast("Catatan setoran hafalan berhasil disimpan ke Cloud!", 'success');
             window.closeModalAddHafalan();
         };
 
@@ -1825,7 +1803,7 @@
                 window.renderPaymentTable();
             }
 
-            alert("Pembayaran berhasil dikonfirmasi LUNAS dan tersimpan!");
+            showToast("Pembayaran berhasil dikonfirmasi LUNAS dan tersimpan ke Cloud!", 'success');
             window.closePaymentModal();
         };
 
