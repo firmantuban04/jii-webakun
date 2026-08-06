@@ -1023,7 +1023,6 @@
             'sekretaris': { id: 'SEKRETARIS', password: '123456', name: 'Ust. M. Hidayat, S.Pd.', role: 'Sekretaris Pondok', avatar: 'SK' }
         };
 
-        // DEFAULT INITIAL SAMPLE DATA (FALLBACK)
         const initialDefaultSantri = [
             {
                 nis: '202601001',
@@ -1183,16 +1182,24 @@
         function listenToSantriDatabase() {
             const santriCol = collection(db, 'artifacts', appId, 'public', 'data', 'santri');
 
-            onSnapshot(santriCol, (snapshot) => {
-                const list = [];
-                snapshot.forEach(docSnap => {
-                    list.push(docSnap.data());
-                });
-
-                if (list.length > 0) {
-                    masterSantriData = list;
-                } else {
+            onSnapshot(santriCol, async (snapshot) => {
+                if (snapshot.empty) {
+                    // Seed initial default santri into Firestore if collection is brand new
+                    for (const defaultSantri of initialDefaultSantri) {
+                        try {
+                            const santriDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'santri', defaultSantri.nis);
+                            await setDoc(santriDocRef, defaultSantri);
+                        } catch (e) {
+                            console.error("Error seeding default santri:", e);
+                        }
+                    }
                     masterSantriData = [...initialDefaultSantri];
+                } else {
+                    const list = [];
+                    snapshot.forEach(docSnap => {
+                        list.push(docSnap.data());
+                    });
+                    masterSantriData = list;
                 }
 
                 filterMasterSantri();
@@ -1220,7 +1227,7 @@
 
         function restoreSession() {
             const savedSession = sessionStorage.getItem('jii_sim_session');
-            if (!savedSession || isLoggedIn) return;
+            if (!savedSession) return;
 
             try {
                 const session = JSON.parse(savedSession);
@@ -1256,13 +1263,13 @@
                 }
 
                 isLoggedIn = true;
-                document.getElementById('publicContainer').classList.add('hidden');
-                document.getElementById('dashboardContainer').classList.remove('hidden');
-                document.getElementById('publicNav').classList.add('hidden');
-                document.getElementById('userNav').classList.remove('hidden');
-                document.getElementById('userNav').classList.add('flex');
-                document.getElementById('mobilePublicLinks').classList.add('hidden');
-                document.getElementById('mobileUserLinks').classList.remove('hidden');
+                document.getElementById('publicContainer')?.classList.add('hidden');
+                document.getElementById('dashboardContainer')?.classList.remove('hidden');
+                document.getElementById('publicNav')?.classList.add('hidden');
+                document.getElementById('userNav')?.classList.remove('hidden');
+                document.getElementById('userNav')?.classList.add('flex');
+                document.getElementById('mobilePublicLinks')?.classList.add('hidden');
+                document.getElementById('mobileUserLinks')?.classList.remove('hidden');
 
                 configureRolePermissions();
             } catch (e) {
@@ -1276,6 +1283,7 @@
             renderPaymentTable();
             initHafalanChart();
             updateMasterSummary();
+            restoreSession();
             initStorage();
         };
 
@@ -1514,7 +1522,7 @@
                     const santriDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'santri', nis);
                     await setDoc(santriDocRef, newSantriObj);
                 }
-                alert(`Berhasil menambahkan santri "${nama}" dan menerbitkan akun login SIM (NIS: ${nis}).`);
+                alert(`Berhasil menambahkan santri "${nama}" dan menerbitkan akun login SIM (NIS: ${nis}). Data telah tersimpan secara permanen!`);
             } catch (err) {
                 console.error("Failed to save to Firestore:", err);
                 alert(`Santri "${nama}" berhasil didaftarkan di sistem.`);
@@ -1896,6 +1904,3 @@
     </script>
 </body>
 </html>
-```
-
-Anda dapat langsung mengeklik **Preview** dan mencoba memasukkan salah satu akun di atas (misalnya `KETUA-UMUM` / `123456` atau `202601001` / `123456`). Sesi akan berjalan lancar dan bertahan meskipun halaman di-refresh.
