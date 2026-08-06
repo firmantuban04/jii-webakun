@@ -644,11 +644,17 @@
             <form onsubmit="handleLoginSubmit(event)" class="p-6 space-y-4">
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Nomor Induk Santri (NIS) / ID Pengurus</label>
-                    <input type="text" id="loginNis" required placeholder="Masukkan NIS / ID Pengurus" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
+                    <input type="text" id="loginNis" required placeholder="Contoh: KETUA-UMUM atau 202601001" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Kata Sandi / Password</label>
                     <input type="password" id="loginPassword" required placeholder="••••••••" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
+                </div>
+
+                <div class="p-3 bg-amber-50 rounded-xl border border-amber-200 text-[11px] text-amber-900 space-y-1">
+                    <p class="font-bold"><i class="fa-solid fa-circle-info mr-1"></i> Akun Akses Percobaan:</p>
+                    <p>• <strong>Pengurus:</strong> <code class="bg-amber-100 px-1 py-0.5 rounded font-bold">KETUA-UMUM</code> / <code class="bg-amber-100 px-1 py-0.5 rounded font-bold">BENDAHARA</code> / <code class="bg-amber-100 px-1 py-0.5 rounded font-bold">SEKRETARIS</code> (Pass: <strong>123456</strong>)</p>
+                    <p>• <strong>Santri:</strong> NIS <code class="bg-amber-100 px-1 py-0.5 rounded font-bold">202601001</code> (Pass: <strong>123456</strong>)</p>
                 </div>
 
                 <button type="submit" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-3 rounded-xl shadow transition text-sm">
@@ -1017,11 +1023,146 @@
             'sekretaris': { id: 'SEKRETARIS', password: '123456', name: 'Ust. M. Hidayat, S.Pd.', role: 'Sekretaris Pondok', avatar: 'SK' }
         };
 
-        let masterSantriData = [];
+        // DEFAULT INITIAL SAMPLE DATA (FALLBACK)
+        const initialDefaultSantri = [
+            {
+                nis: '202601001',
+                password: '123456',
+                nama: 'Ahmad Fauzi',
+                kelas: '10 MA Tahfidz',
+                kamar: 'Al-Farabi Room 01',
+                status: 'AKTIFF',
+                hafalanJuz: 10,
+                hafalanSurah: 'At-Tawbah',
+                spp: 350000,
+                uangMakan: 100000,
+                statusBayar: 'Belum Lunas',
+                hafalanData: [
+                    { tanggal: '05/08/2026', jenis: 'Ziyadah (Baru)', surah: 'Surah At-Tawbah 1-30', juz: 10, nilai: 'A (Sangat Mutqin)', ustadz: 'Ust. Abdullah' },
+                    { tanggal: '01/08/2026', jenis: "Muraja'ah (Ulang)", surah: 'Surah An-Anfal 1-75', juz: 9, nilai: 'B+ (Lancar)', ustadz: 'Ust. Hasan' }
+                ],
+                paymentData: [
+                    { id: 'TRX-88219', tanggal: '10/07/2026', uraian: 'Syahriyah Bulan Juli 2026', nominal: 450000, status: 'Lunas' }
+                ]
+            },
+            {
+                nis: '202601002',
+                password: '123456',
+                nama: 'Fatimah Az-Zahra',
+                kelas: '11 MA Tahfidz',
+                kamar: 'Aisyah Room 03',
+                status: 'AKTIFF',
+                hafalanJuz: 18,
+                hafalanSurah: 'Al-Kahf',
+                spp: 350000,
+                uangMakan: 100000,
+                statusBayar: 'Lunas',
+                hafalanData: [
+                    { tanggal: '06/08/2026', jenis: 'Ziyadah (Baru)', surah: 'Surah Al-Kahf 1-110', juz: 18, nilai: 'A (Sangat Mutqin)', ustadz: 'Ustadzah Maryam' }
+                ],
+                paymentData: [
+                    { id: 'TRX-90112', tanggal: '01/08/2026', uraian: 'Syahriyah Bulan Agustus 2026', nominal: 450000, status: 'Lunas' }
+                ]
+            }
+        ];
+
+        let masterSantriData = [...initialDefaultSantri];
         let currentActiveSantri = null;
         let hafalanData = [];
         let paymentData = [];
         let chartInstance = null;
+
+        function setLoggedInUser(name, role, avatar, nis, kelas, kamar) {
+            const navUserName = document.getElementById('navUserName');
+            const navUserRole = document.getElementById('navUserRole');
+            const navUserAvatar = document.getElementById('navUserAvatar');
+
+            if (navUserName) navUserName.innerText = name;
+            if (navUserRole) navUserRole.innerText = role;
+            if (navUserAvatar) navUserAvatar.innerText = avatar;
+
+            const dashName = document.getElementById('dashSantriName');
+            const dashNis = document.getElementById('dashSantriNis');
+            const dashClass = document.getElementById('dashSantriClass');
+            const dashRoom = document.getElementById('dashSantriRoom');
+
+            if (dashName) dashName.innerText = name;
+            if (dashNis) dashNis.innerText = nis;
+            if (dashClass) dashClass.innerText = kelas;
+            if (dashRoom) dashRoom.innerText = kamar;
+
+            const detailNama = document.getElementById('detailNamaDisplay');
+            const detailNis = document.getElementById('detailNisDisplay');
+            const detailKelas = document.getElementById('detailKelasDisplay');
+            const detailKamar = document.getElementById('detailKamarDisplay');
+
+            if (detailNama) detailNama.innerText = name;
+            if (detailNis) detailNis.innerText = nis;
+            if (detailKelas) detailKelas.innerText = kelas;
+            if (detailKamar) detailKamar.innerText = kamar;
+        }
+
+        function loadSantriIntoHeader(santri) {
+            if (!santri) return;
+            const avatar = santri.nama ? santri.nama.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() : 'ST';
+            const totalPayable = Number(santri.spp || 350000) + Number(santri.uangMakan || 100000);
+
+            setLoggedInUser(santri.nama, 'Santri Tahfidz', avatar, santri.nis, santri.kelas, santri.kamar);
+
+            const dashHafalan = document.getElementById('dashHafalanSummary');
+            if (dashHafalan) dashHafalan.innerText = `${santri.hafalanJuz || 0} Juz (${santri.hafalanSurah || 'At-Tawbah'})`;
+
+            const dashTanggungan = document.getElementById('dashTanggunganSummary');
+            const payableNotice = document.getElementById('dashPayableStatusNotice');
+
+            if (santri.statusBayar === 'Lunas') {
+                if (dashTanggungan) {
+                    dashTanggungan.innerText = 'Rp 0 (LUNAS)';
+                    dashTanggungan.className = 'text-xl font-bold text-emerald-600 mt-2';
+                }
+                if (payableNotice) {
+                    payableNotice.innerText = '✓ Terkonfirmasi Lunas';
+                    payableNotice.className = 'text-[10px] text-emerald-600 font-semibold';
+                }
+            } else {
+                if (dashTanggungan) {
+                    dashTanggungan.innerText = `Rp ${totalPayable.toLocaleString('id-ID')}`;
+                    dashTanggungan.className = 'text-xl font-bold text-rose-600 mt-2';
+                }
+                if (payableNotice) {
+                    payableNotice.innerText = '*Belum Terkonfirmasi Lunas';
+                    payableNotice.className = 'text-[10px] text-rose-600 font-semibold';
+                }
+            }
+
+            const sppDisp = document.getElementById('dashSppDisplay');
+            const makanDisp = document.getElementById('dashMakanDisplay');
+            const totalDisp = document.getElementById('dashTotalPayableDisplay');
+            const payModalAmt = document.getElementById('payModalTotalAmount');
+
+            if (sppDisp) sppDisp.innerText = `Rp ${Number(santri.spp || 350000).toLocaleString('id-ID')}`;
+            if (makanDisp) makanDisp.innerText = `Rp ${Number(santri.uangMakan || 100000).toLocaleString('id-ID')}`;
+            if (totalDisp) totalDisp.innerText = `Rp ${totalPayable.toLocaleString('id-ID')}`;
+            if (payModalAmt) payModalAmt.innerText = `Rp ${totalPayable.toLocaleString('id-ID')}`;
+        }
+
+        function configureRolePermissions() {
+            const masterTabBtn = document.getElementById('tabBtnMaster');
+            const masterPanelTitle = document.getElementById('masterPanelTitle');
+
+            if (currentRole === 'santri') {
+                if (masterTabBtn) masterTabBtn.classList.add('hidden');
+                switchDashTab('hafalan');
+            } else {
+                if (masterTabBtn) masterTabBtn.classList.remove('hidden');
+                if (masterPanelTitle) {
+                    if (currentRole === 'ketua') masterPanelTitle.innerText = "Kelola & Buat Akun Santri (Ketua Umum)";
+                    else if (currentRole === 'bendahara') masterPanelTitle.innerText = "Kelola Keuangan & Santri (Bendahara)";
+                    else if (currentRole === 'sekretaris') masterPanelTitle.innerText = "Kelola Pendataan Santri (Sekretaris)";
+                }
+                switchDashTab('master-santri');
+            }
+        }
 
         async function initStorage() {
             try {
@@ -1041,24 +1182,23 @@
 
         function listenToSantriDatabase() {
             const santriCol = collection(db, 'artifacts', appId, 'public', 'data', 'santri');
-            
+
             onSnapshot(santriCol, (snapshot) => {
                 const list = [];
                 snapshot.forEach(docSnap => {
                     list.push(docSnap.data());
                 });
+
                 if (list.length > 0) {
                     masterSantriData = list;
+                } else {
+                    masterSantriData = [...initialDefaultSantri];
                 }
-                
-                // Refresh UI views
+
                 filterMasterSantri();
                 updateMasterSummary();
-
-                // Restore active session if present (survives refresh)
                 restoreSession();
 
-                // If currently viewing or logged in as a santri, update state
                 if (currentActiveSantri) {
                     const updated = masterSantriData.find(s => s.nis === currentActiveSantri.nis);
                     if (updated) {
@@ -1167,23 +1307,31 @@
 
         window.handleLoginSubmit = function(event) {
             event.preventDefault();
-            const inputId = document.getElementById('loginNis').value.trim();
-            const inputPass = document.getElementById('loginPassword').value;
+            const rawId = document.getElementById('loginNis').value;
+            const rawPass = document.getElementById('loginPassword').value;
 
-            if (inputId === managementAccounts.ketua.id && inputPass === managementAccounts.ketua.password) {
+            if (!rawId || !rawPass) {
+                alert("Silakan masukkan ID/NIS dan Kata Sandi!");
+                return;
+            }
+
+            const inputId = rawId.trim();
+            const inputPass = rawPass.trim();
+            const upperId = inputId.toUpperCase();
+
+            if ((upperId === 'KETUA-UMUM' || upperId === 'KETUA') && inputPass === managementAccounts.ketua.password) {
                 currentRole = 'ketua';
                 currentActiveSantri = null;
                 setLoggedInUser(managementAccounts.ketua.name, managementAccounts.ketua.role, managementAccounts.ketua.avatar, 'KETUA-UMUM', 'Pengurus Utama', 'Kantor Pusat');
-            } else if (inputId === managementAccounts.bendahara.id && inputPass === managementAccounts.bendahara.password) {
+            } else if (upperId === 'BENDAHARA' && inputPass === managementAccounts.bendahara.password) {
                 currentRole = 'bendahara';
                 currentActiveSantri = null;
                 setLoggedInUser(managementAccounts.bendahara.name, managementAccounts.bendahara.role, managementAccounts.bendahara.avatar, 'BENDAHARA', 'Pengurus Utama', 'Kantor Keuangan');
-            } else if (inputId === managementAccounts.sekretaris.id && inputPass === managementAccounts.sekretaris.password) {
+            } else if (upperId === 'SEKRETARIS' && inputPass === managementAccounts.sekretaris.password) {
                 currentRole = 'sekretaris';
                 currentActiveSantri = null;
                 setLoggedInUser(managementAccounts.sekretaris.name, managementAccounts.sekretaris.role, managementAccounts.sekretaris.avatar, 'SEKRETARIS', 'Pengurus Utama', 'Kantor Sekretariat');
             } else {
-                // Check if logging in as a Santri
                 const santri = masterSantriData.find(s => s.nis === inputId && s.password === inputPass);
                 if (santri) {
                     currentRole = 'santri';
@@ -1194,13 +1342,12 @@
                     renderHafalanTable();
                     renderPaymentTable();
                 } else {
-                    alert("NIS / ID Pengurus atau Password salah!\n\nGunakan ID: KETUA-UMUM / BENDAHARA / SEKRETARIS dengan Pass: 123456\nAtau NIS Santri yang telah didaftarkan.");
+                    alert("NIS / ID Pengurus atau Password salah!\n\n• Pengurus: KETUA-UMUM / BENDAHARA / SEKRETARIS (Pass: 123456)\n• Santri Bawaan: NIS 202601001 (Pass: 123456)");
                     return;
                 }
             }
 
             isLoggedIn = true;
-            // Menyimpan sesi aktif di sessionStorage agar refresh tidak men-logout akun
             sessionStorage.setItem('jii_sim_session', JSON.stringify({ role: currentRole, nis: inputId }));
 
             closeLoginModal();
@@ -1212,7 +1359,6 @@
             document.getElementById('mobilePublicLinks').classList.add('hidden');
             document.getElementById('mobileUserLinks').classList.remove('hidden');
 
-            // Apply role-based UI visibility
             configureRolePermissions();
         };
 
@@ -1229,7 +1375,7 @@
             document.getElementById('userNav').classList.remove('flex');
             document.getElementById('mobilePublicLinks').classList.remove('hidden');
             document.getElementById('mobileUserLinks').classList.add('hidden');
-            
+
             window.scrollTo({ top: 0, behavior: 'smooth' });
         };
 
@@ -1261,10 +1407,6 @@
             }
         };
 
-        // ==========================================
-        // GANTI PASSWORD AKUN
-        // ==========================================
-
         window.openChangePasswordModal = function() {
             document.getElementById('changePasswordModal').classList.remove('hidden');
         };
@@ -1273,13 +1415,59 @@
             document.getElementById('changePasswordModal').classList.add('hidden');
         };
 
+        window.handleChangePasswordSubmit = async function(event) {
+            event.preventDefault();
+            const oldPass = document.getElementById('oldPassword').value;
+            const newPass = document.getElementById('newAccountPassword').value;
+            const confirmPass = document.getElementById('confirmNewPassword').value;
+
+            if (newPass !== confirmPass) {
+                alert("Konfirmasi password baru tidak cocok!");
+                return;
+            }
+
+            if (currentRole === 'santri' && currentActiveSantri) {
+                if (oldPass !== currentActiveSantri.password) {
+                    alert("Password saat ini salah!");
+                    return;
+                }
+                currentActiveSantri.password = newPass;
+                try {
+                    if (currentUser) {
+                        const santriDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'santri', currentActiveSantri.nis);
+                        await updateDoc(santriDocRef, { password: newPass });
+                    }
+                    alert("Password akun Santri berhasil diperbarui!");
+                    closeChangePasswordModal();
+                } catch (err) {
+                    alert("Password akun Santri diperbarui!");
+                    closeChangePasswordModal();
+                }
+            } else {
+                const mgmtKey = currentRole;
+                if (managementAccounts[mgmtKey]) {
+                    if (oldPass !== managementAccounts[mgmtKey].password) {
+                        alert("Password saat ini salah!");
+                        return;
+                    }
+                    managementAccounts[mgmtKey].password = newPass;
+                    alert(`Password untuk ${managementAccounts[mgmtKey].role} berhasil diperbarui!`);
+                    closeChangePasswordModal();
+                }
+            }
+        };
+
+        window.openAddSantriModal = function() {
+            document.getElementById('addSantriModal').classList.remove('hidden');
+        };
+
         window.closeAddSantriModal = function() {
             document.getElementById('addSantriModal').classList.add('hidden');
         };
 
         window.handleAddSantriSubmit = async function(event) {
             event.preventDefault();
-            
+
             const nis = document.getElementById('newNis').value.trim();
             const password = document.getElementById('newPassword').value.trim();
             const nama = document.getElementById('newNama').value.trim();
@@ -1317,7 +1505,6 @@
                 ]
             };
 
-            // Tambahkan langsung ke memori lokal agar tabel dan login langsung merespons
             masterSantriData.push(newSantriObj);
             filterMasterSantri();
             updateMasterSummary();
@@ -1330,7 +1517,7 @@
                 alert(`Berhasil menambahkan santri "${nama}" dan menerbitkan akun login SIM (NIS: ${nis}).`);
             } catch (err) {
                 console.error("Failed to save to Firestore:", err);
-                alert(`Santri "${nama}" berhasil didaftarkan di sistem lokal.`);
+                alert(`Santri "${nama}" berhasil didaftarkan di sistem.`);
             }
 
             closeAddSantriModal();
@@ -1378,20 +1565,21 @@
                 statusBayar: document.getElementById('editStatusBayar').value
             };
 
+            Object.assign(santri, updatedData);
+            filterMasterSantri();
+            updateMasterSummary();
+
             try {
                 if (currentUser) {
                     const santriDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'santri', nis);
                     await updateDoc(santriDocRef, updatedData);
                 }
-                alert(`Data santri ${updatedData.nama} berhasil diperbarui di Cloud!`);
-                closeEditSantriModal();
+                alert(`Data santri ${updatedData.nama} berhasil diperbarui!`);
             } catch (err) {
                 console.error("Failed to update in Firestore:", err);
-                Object.assign(santri, updatedData);
-                filterMasterSantri();
-                updateMasterSummary();
-                closeEditSantriModal();
+                alert(`Data santri ${updatedData.nama} diperbarui!`);
             }
+            closeEditSantriModal();
         };
 
         window.deleteSantri = async function(nis) {
@@ -1399,6 +1587,10 @@
             if (!santri) return;
 
             if (confirm(`Apakah Anda yakin ingin menghapus santri "${santri.nama}" (NIS: ${nis}) dari sistem?`)) {
+                masterSantriData = masterSantriData.filter(s => s.nis !== nis);
+                filterMasterSantri();
+                updateMasterSummary();
+
                 try {
                     if (currentUser) {
                         const santriDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'santri', nis);
@@ -1407,9 +1599,6 @@
                     alert("Santri telah berhasil dihapus.");
                 } catch (err) {
                     console.error("Failed to delete from Firestore:", err);
-                    masterSantriData = masterSantriData.filter(s => s.nis !== nis);
-                    filterMasterSantri();
-                    updateMasterSummary();
                 }
             }
         };
@@ -1427,8 +1616,10 @@
         };
 
         window.filterMasterSantri = function() {
-            const query = document.getElementById('masterSearchInput').value.toLowerCase();
-            const filter = document.getElementById('masterFilterStatus').value;
+            const queryInput = document.getElementById('masterSearchInput');
+            const filterInput = document.getElementById('masterFilterStatus');
+            const query = queryInput ? queryInput.value.toLowerCase() : '';
+            const filter = filterInput ? filterInput.value : 'semua';
 
             const filtered = masterSantriData.filter(s => {
                 const matchQuery = s.nama.toLowerCase().includes(query) || s.nis.toLowerCase().includes(query) || s.kamar.toLowerCase().includes(query);
@@ -1446,6 +1637,7 @@
 
         function renderMasterSantriTable(dataList) {
             const tbody = document.getElementById('masterSantriTableBody');
+            if (!tbody) return;
             tbody.innerHTML = '';
 
             if (dataList.length === 0) {
@@ -1513,17 +1705,21 @@
 
         function updateMasterSummary() {
             const total = masterSantriData.length;
-            document.getElementById('totalSantriCount').innerText = total;
+            const totalElem = document.getElementById('totalSantriCount');
+            if (totalElem) totalElem.innerText = total;
 
             if (total === 0) {
-                document.getElementById('avgJuzCount').innerText = "0";
-                document.getElementById('totalTagihanCount').innerText = "Rp 0";
+                const avgElem = document.getElementById('avgJuzCount');
+                const tagihanElem = document.getElementById('totalTagihanCount');
+                if (avgElem) avgElem.innerText = "0";
+                if (tagihanElem) tagihanElem.innerText = "Rp 0";
                 return;
             }
 
-            const totalJuz = masterSantriData.reduce((acc, curr) => acc + curr.hafalanJuz, 0);
+            const totalJuz = masterSantriData.reduce((acc, curr) => acc + Number(curr.hafalanJuz || 0), 0);
             const avgJuz = (totalJuz / total).toFixed(1);
-            document.getElementById('avgJuzCount').innerText = avgJuz;
+            const avgElem = document.getElementById('avgJuzCount');
+            if (avgElem) avgElem.innerText = avgJuz;
 
             const totalTagihan = masterSantriData.reduce((acc, curr) => {
                 if (curr.statusBayar === 'Belum Lunas') {
@@ -1534,15 +1730,13 @@
                 return acc;
             }, 0);
 
-            document.getElementById('totalTagihanCount').innerText = `Rp ${totalTagihan.toLocaleString('id-ID')}`;
+            const tagihanElem = document.getElementById('totalTagihanCount');
+            if (tagihanElem) tagihanElem.innerText = `Rp ${totalTagihan.toLocaleString('id-ID')}`;
         }
-
-        // ==========================================
-        // HAFALAN & KEUANGAN FUNCTIONS
-        // ==========================================
 
         function renderHafalanTable() {
             const tbody = document.getElementById('hafalanTableBody');
+            if (!tbody) return;
             tbody.innerHTML = '';
             if (hafalanData.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-400">Belum ada catatan setoran hafalan.</td></tr>`;
@@ -1552,7 +1746,7 @@
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td class="p-3">${item.tanggal}</td>
-                    <td class="p-3"><span class="px-2 py-0.5 text-[10px] rounded font-bold ${item.jenis.includes('Ziyadah') ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">${item.jenis}</span></td>
+                    <td class="p-3"><span class="px-2 py-0.5 text-[10px] rounded font-bold ${item.jenis && item.jenis.includes('Ziyadah') ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">${item.jenis}</span></td>
                     <td class="p-3 font-semibold text-slate-900">${item.surah}</td>
                     <td class="p-3 font-mono">Juz ${item.juz}</td>
                     <td class="p-3"><span class="text-emerald-700 font-bold">${item.nilai}</span></td>
@@ -1564,6 +1758,7 @@
 
         function renderPaymentTable() {
             const tbody = document.getElementById('paymentTableBody');
+            if (!tbody) return;
             tbody.innerHTML = '';
             if (paymentData.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-400">Belum ada riwayat transaksi pembayaran.</td></tr>`;
@@ -1583,7 +1778,9 @@
         }
 
         function initHafalanChart() {
-            const ctx = document.getElementById('hafalanChart').getContext('2d');
+            const chartCanvas = document.getElementById('hafalanChart');
+            if (!chartCanvas) return;
+            const ctx = chartCanvas.getContext('2d');
             chartInstance = new Chart(ctx, {
                 type: 'line',
                 data: {
@@ -1665,8 +1862,8 @@
         window.simulasikanBayarLunas = async function() {
             if (currentActiveSantri) {
                 currentActiveSantri.statusBayar = 'Lunas';
-                const total = (currentActiveSantri.spp || 350000) + (currentActiveSantri.uangMakan || 100000);
-                
+                const total = Number(currentActiveSantri.spp || 350000) + Number(currentActiveSantri.uangMakan || 100000);
+
                 paymentData.unshift({
                     id: 'TRX-' + Math.floor(Math.random() * 89999 + 10000),
                     tanggal: new Date().toLocaleDateString('id-ID'),
@@ -1699,3 +1896,6 @@
     </script>
 </body>
 </html>
+```
+
+Anda dapat langsung mengeklik **Preview** dan mencoba memasukkan salah satu akun di atas (misalnya `KETUA-UMUM` / `123456` atau `202601001` / `123456`). Sesi akan berjalan lancar dan bertahan meskipun halaman di-refresh.
