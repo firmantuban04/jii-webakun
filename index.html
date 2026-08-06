@@ -1071,6 +1071,277 @@
         let paymentData = [];
         let chartInstance = null;
 
+        window.renderMasterSantriTable = function(data) {
+            const tbody = document.getElementById('masterSantriTableBody');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+            
+            if (!data || data.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="p-6 text-center text-slate-400">Tidak ada data santri ditemukan.</td></tr>`;
+                return;
+            }
+
+            data.forEach(santri => {
+                const isLunas = santri.statusBayar === 'Lunas';
+                const totalTagihan = Number(santri.spp || 350000) + Number(santri.uangMakan || 100000);
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50 transition border-b border-slate-100";
+                tr.innerHTML = `
+                    <td class="p-3.5">
+                        <span class="font-mono font-bold text-slate-900 block">${santri.nis}</span>
+                        <span class="text-[10px] text-slate-400">Pass: ${santri.password || '123456'}</span>
+                    </td>
+                    <td class="p-3.5">
+                        <div class="font-bold text-slate-900">${santri.nama}</div>
+                    </td>
+                    <td class="p-3.5">
+                        <div>${santri.kelas}</div>
+                        <div class="text-[11px] text-slate-400">${santri.kamar}</div>
+                    </td>
+                    <td class="p-3.5">
+                        <span class="px-2 py-0.5 text-[10px] font-bold rounded-full ${santri.status === 'AKTIFF' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
+                            ${santri.status || 'AKTIFF'}
+                        </span>
+                    </td>
+                    <td class="p-3.5">
+                        <div class="font-bold text-emerald-700">${santri.hafalanJuz || 0} Juz</div>
+                        <div class="text-[11px] text-slate-400">${santri.hafalanSurah || '-'}</div>
+                    </td>
+                    <td class="p-3.5">
+                        <div class="font-bold ${isLunas ? 'text-emerald-600' : 'text-rose-600'}">
+                            ${isLunas ? 'Rp 0 (Lunas)' : 'Rp ' + totalTagihan.toLocaleString('id-ID')}
+                        </div>
+                        <span class="text-[10px] font-semibold ${isLunas ? 'text-emerald-600' : 'text-amber-600'}">
+                            ${santri.statusBayar || 'Belum Lunas'}
+                        </span>
+                    </td>
+                    <td class="p-3.5 text-center space-x-1">
+                        <button onclick="openEditSantriModal('${santri.nis}')" title="Edit Data" class="bg-amber-500 hover:bg-amber-600 text-slate-950 px-2.5 py-1.5 rounded-lg text-xs font-bold transition">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </button>
+                        <button onclick="deleteSantri('${santri.nis}')" title="Hapus Santri" class="bg-rose-600 hover:bg-rose-700 text-white px-2.5 py-1.5 rounded-lg text-xs font-bold transition">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        };
+
+        window.filterMasterSantri = function() {
+            const searchVal = (document.getElementById('masterSearchInput')?.value || '').toLowerCase();
+            const statusVal = document.getElementById('masterFilterStatus')?.value || 'semua';
+
+            let filtered = masterSantriData.filter(santri => {
+                const matchesSearch = (santri.nama || '').toLowerCase().includes(searchVal) ||
+                                      (santri.nis || '').toLowerCase().includes(searchVal) ||
+                                      (santri.kamar || '').toLowerCase().includes(searchVal) ||
+                                      (santri.kelas || '').toLowerCase().includes(searchVal);
+
+                let matchesStatus = true;
+                if (statusVal === 'aktif') matchesStatus = santri.status === 'AKTIFF';
+                else if (statusVal === 'belum_lunas') matchesStatus = santri.statusBayar === 'Belum Lunas';
+                else if (statusVal === 'khatam') matchesStatus = Number(santri.hafalanJuz) >= 20;
+
+                return matchesSearch && matchesStatus;
+            });
+
+            window.renderMasterSantriTable(filtered);
+        };
+
+        window.updateMasterSummary = function() {
+            const totalCount = masterSantriData.length;
+            const totalJuz = masterSantriData.reduce((acc, curr) => acc + Number(curr.hafalanJuz || 0), 0);
+            const avgJuz = totalCount > 0 ? (totalJuz / totalCount).toFixed(1) : 0;
+            
+            const uncollected = masterSantriData
+                .filter(s => s.statusBayar !== 'Lunas')
+                .reduce((acc, curr) => acc + (Number(curr.spp || 350000) + Number(curr.uangMakan || 100000)), 0);
+
+            const elTotal = document.getElementById('totalSantriCount');
+            const elAvg = document.getElementById('avgJuzCount');
+            const elTagihan = document.getElementById('totalTagihanCount');
+
+            if (elTotal) elTotal.innerText = totalCount;
+            if (elAvg) elAvg.innerText = `${avgJuz} Juz`;
+            if (elTagihan) elTagihan.innerText = `Rp ${uncollected.toLocaleString('id-ID')}`;
+        };
+
+        window.renderHafalanTable = function() {
+            const tbody = document.getElementById('hafalanTableBody');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+            const list = hafalanData && hafalanData.length > 0 ? hafalanData : [
+                { tanggal: '05/08/2026', jenis: 'Ziyadah (Baru)', surah: 'Surah At-Tawbah 1-30', juz: 10, nilai: 'A (Sangat Mutqin)', ustadz: 'Ust. Abdullah' },
+                { tanggal: '01/08/2026', jenis: "Muraja'ah (Ulang)", surah: 'Surah An-Anfal 1-75', juz: 9, nilai: 'B+ (Lancar)', ustadz: 'Ust. Hasan' }
+            ];
+
+            list.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50 border-b border-slate-100";
+                tr.innerHTML = `
+                    <td class="p-3 font-mono text-slate-500">${item.tanggal}</td>
+                    <td class="p-3 font-semibold text-emerald-800">${item.jenis}</td>
+                    <td class="p-3 font-medium text-slate-800">${item.surah}</td>
+                    <td class="p-3 font-bold text-slate-700">Juz ${item.juz}</td>
+                    <td class="p-3 font-bold text-amber-700">${item.nilai}</td>
+                    <td class="p-3 text-slate-600">${item.ustadz}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        };
+
+        window.renderPaymentTable = function() {
+            const tbody = document.getElementById('paymentTableBody');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+            const list = paymentData && paymentData.length > 0 ? paymentData : [
+                { id: 'TRX-88219', tanggal: '10/07/2026', uraian: 'Syahriyah Bulan Juli 2026', nominal: 450000, status: 'Lunas' }
+            ];
+
+            list.forEach(item => {
+                const isLunas = item.status === 'Lunas';
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50 border-b border-slate-100";
+                tr.innerHTML = `
+                    <td class="p-3 font-mono font-bold text-slate-700">${item.id}</td>
+                    <td class="p-3 font-mono text-slate-500">${item.tanggal}</td>
+                    <td class="p-3 text-slate-800">${item.uraian}</td>
+                    <td class="p-3 font-bold text-slate-900">Rp ${Number(item.nominal).toLocaleString('id-ID')}</td>
+                    <td class="p-3">
+                        <span class="px-2 py-0.5 rounded text-[10px] font-bold ${isLunas ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
+                            ${item.status}
+                        </span>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        };
+
+        window.initHafalanChart = function() {
+            const canvas = document.getElementById('hafalanChart');
+            if (!canvas) return;
+            if (chartInstance) {
+                chartInstance.destroy();
+            }
+            const ctx = canvas.getContext('2d');
+            chartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu'],
+                    datasets: [{
+                        label: 'Perkembangan Capaian Juz',
+                        data: [3, 4, 5, 6, 7, 8, 9, 10],
+                        borderColor: '#047857',
+                        backgroundColor: 'rgba(4, 120, 87, 0.1)',
+                        fill: true,
+                        tension: 0.3,
+                        pointBackgroundColor: '#d97706',
+                        pointRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: true, max: 30, ticks: { stepSize: 5 } } }
+                }
+            });
+        };
+
+        window.switchDashTab = function(tabName) {
+            const tabs = ['master-santri', 'hafalan', 'tanggungan', 'kegiatan', 'detail-santri'];
+            tabs.forEach(t => {
+                const content = document.getElementById(t === 'master-santri' ? 'tabMasterSantri' : 
+                                                        t === 'hafalan' ? 'tabHafalan' : 
+                                                        t === 'tanggungan' ? 'tabTanggungan' : 
+                                                        t === 'kegiatan' ? 'tabKegiatan' : 'tabDetail');
+                if (content) {
+                    if (t === tabName) content.classList.remove('hidden');
+                    else content.classList.add('hidden');
+                }
+            });
+
+            const btnMap = {
+                'master-santri': 'tabBtnMaster',
+                'hafalan': 'tabBtnHafalan',
+                'tanggungan': 'tabBtnTanggungan',
+                'kegiatan': 'tabBtnKegiatan',
+                'detail-santri': 'tabBtnDetail'
+            };
+
+            Object.keys(btnMap).forEach(key => {
+                const btn = document.getElementById(btnMap[key]);
+                if (btn) {
+                    if (key === tabName) {
+                        btn.className = "dash-tab-btn px-6 py-4 font-semibold text-sm border-b-2 border-emerald-600 text-emerald-700 whitespace-nowrap flex items-center space-x-2";
+                    } else {
+                        btn.className = "dash-tab-btn px-6 py-4 font-semibold text-sm border-b-2 border-transparent text-slate-600 hover:text-emerald-700 whitespace-nowrap flex items-center space-x-2";
+                    }
+                }
+            });
+        };
+
+        window.showPublicView = function() {
+            document.getElementById('publicContainer')?.classList.remove('hidden');
+            document.getElementById('dashboardContainer')?.classList.add('hidden');
+        };
+
+        window.openLoginModal = function() { document.getElementById('loginModal')?.classList.remove('hidden'); };
+        window.closeLoginModal = function() { document.getElementById('loginModal')?.classList.add('hidden'); };
+        window.openChangePasswordModal = function() { document.getElementById('changePasswordModal')?.classList.remove('hidden'); };
+        window.closeChangePasswordModal = function() { document.getElementById('changePasswordModal')?.classList.add('hidden'); };
+        window.openAddSantriModal = function() { document.getElementById('addSantriModal')?.classList.remove('hidden'); };
+        window.closeAddSantriModal = function() { document.getElementById('addSantriModal')?.classList.add('hidden'); };
+        window.openModalAddHafalan = function() { document.getElementById('addHafalanModal')?.classList.remove('hidden'); };
+        window.closeModalAddHafalan = function() { document.getElementById('addHafalanModal')?.classList.add('hidden'); };
+        window.openPaymentModal = function() { document.getElementById('paymentModal')?.classList.remove('hidden'); };
+        window.closePaymentModal = function() { document.getElementById('paymentModal')?.classList.add('hidden'); };
+        window.toggleMobileMenu = function() { document.getElementById('mobileMenu')?.classList.toggle('hidden'); };
+        window.toggleUserDropdown = function() {};
+
+        window.openEditSantriModal = function(nis) {
+            const santri = masterSantriData.find(s => s.nis === nis);
+            if (!santri) return;
+
+            document.getElementById('editSantriNis').value = santri.nis;
+            document.getElementById('editNisDisplay').innerText = `NIS: ${santri.nis}`;
+            document.getElementById('editNama').value = santri.nama || '';
+            document.getElementById('editKelas').value = santri.kelas || '';
+            document.getElementById('editKamar').value = santri.kamar || '';
+            document.getElementById('editStatus').value = santri.status || 'AKTIFF';
+            document.getElementById('editHafalanJuz').value = santri.hafalanJuz || 0;
+            document.getElementById('editHafalanSurah').value = santri.hafalanSurah || '';
+            document.getElementById('editSpp').value = santri.spp || 350000;
+            document.getElementById('editUangMakan').value = santri.uangMakan || 100000;
+            document.getElementById('editStatusBayar').value = santri.statusBayar || 'Belum Lunas';
+
+            document.getElementById('editSantriModal')?.classList.remove('hidden');
+        };
+
+        window.closeEditSantriModal = function() {
+            document.getElementById('editSantriModal')?.classList.add('hidden');
+        };
+
+        async function ensureAuth() {
+            if (auth.currentUser) {
+                currentUser = auth.currentUser;
+                return currentUser;
+            }
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    const res = await signInWithCustomToken(auth, __initial_auth_token);
+                    currentUser = res.user;
+                } else {
+                    const res = await signInAnonymously(auth);
+                    currentUser = res.user;
+                }
+            } catch (err) {
+                console.error("Auth initialization error:", err);
+            }
+            return auth.currentUser || currentUser;
+        }
+
         function setLoggedInUser(name, role, avatar, nis, kelas, kamar) {
             const navUserName = document.getElementById('navUserName');
             const navUserRole = document.getElementById('navUserRole');
@@ -1151,7 +1422,7 @@
 
             if (currentRole === 'santri') {
                 if (masterTabBtn) masterTabBtn.classList.add('hidden');
-                switchDashTab('hafalan');
+                window.switchDashTab('hafalan');
             } else {
                 if (masterTabBtn) masterTabBtn.classList.remove('hidden');
                 if (masterPanelTitle) {
@@ -1159,71 +1430,130 @@
                     else if (currentRole === 'bendahara') masterPanelTitle.innerText = "Kelola Keuangan & Santri (Bendahara)";
                     else if (currentRole === 'sekretaris') masterPanelTitle.innerText = "Kelola Pendataan Santri (Sekretaris)";
                 }
-                switchDashTab('master-santri');
+                window.switchDashTab('master-santri');
             }
         }
 
-        async function initStorage() {
-            try {
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    const res = await signInWithCustomToken(auth, __initial_auth_token);
-                    currentUser = res.user;
-                } else {
-                    const res = await signInAnonymously(auth);
-                    currentUser = res.user;
-                }
-            } catch (err) {
-                console.error("Auth error:", err);
+        window.handleLoginSubmit = function(event) {
+            event.preventDefault();
+            const nisInput = document.getElementById('loginNis').value.trim();
+            const passwordInput = document.getElementById('loginPassword').value.trim();
+            const normalizedInput = nisInput.toUpperCase();
+
+            let matchedRole = null;
+            let matchedSantri = null;
+
+            if (normalizedInput === 'KETUA-UMUM' || normalizedInput === 'KETUA') {
+                matchedRole = 'ketua';
+            } else if (normalizedInput === 'BENDAHARA') {
+                matchedRole = 'bendahara';
+            } else if (normalizedInput === 'SEKRETARIS') {
+                matchedRole = 'sekretaris';
+            } else {
+                matchedSantri = masterSantriData.find(s => s.nis === nisInput);
             }
 
-            listenToSantriDatabase();
-        }
-
-        function listenToSantriDatabase() {
-            const santriCol = collection(db, 'artifacts', appId, 'public', 'data', 'santri');
-
-            onSnapshot(santriCol, async (snapshot) => {
-                if (snapshot.empty) {
-                    // Seed initial default santri into Firestore if collection is brand new
-                    for (const defaultSantri of initialDefaultSantri) {
-                        try {
-                            const santriDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'santri', defaultSantri.nis);
-                            await setDoc(santriDocRef, defaultSantri);
-                        } catch (e) {
-                            console.error("Error seeding default santri:", e);
-                        }
-                    }
-                    masterSantriData = [...initialDefaultSantri];
-                } else {
-                    const list = [];
-                    snapshot.forEach(docSnap => {
-                        list.push(docSnap.data());
-                    });
-                    masterSantriData = list;
+            if (matchedRole) {
+                const mgmtAcc = managementAccounts[matchedRole];
+                if (passwordInput !== mgmtAcc.password) {
+                    alert('Password salah untuk akun pengurus!');
+                    return;
                 }
+                currentRole = matchedRole;
+                currentActiveSantri = null;
 
-                filterMasterSantri();
-                updateMasterSummary();
-                restoreSession();
+                sessionStorage.setItem('jii_sim_session', JSON.stringify({
+                    role: matchedRole,
+                    nis: mgmtAcc.id
+                }));
 
-                if (currentActiveSantri) {
-                    const updated = masterSantriData.find(s => s.nis === currentActiveSantri.nis);
-                    if (updated) {
-                        currentActiveSantri = updated;
-                        loadSantriIntoHeader(updated);
-                        hafalanData = updated.hafalanData || [];
-                        paymentData = updated.paymentData || [];
-                        renderHafalanTable();
-                        renderPaymentTable();
-                    }
+                setLoggedInUser(mgmtAcc.name, mgmtAcc.role, mgmtAcc.avatar, mgmtAcc.id, 'Pengurus Utama', 'Kantor Pusat');
+            } else if (matchedSantri) {
+                if (passwordInput !== (matchedSantri.password || '123456')) {
+                    alert('Password salah untuk akun santri!');
+                    return;
                 }
-            }, (error) => {
-                console.error("Firestore sync error:", error);
-                filterMasterSantri();
-                updateMasterSummary();
-                restoreSession();
-            });
-        }
+                currentRole = 'santri';
+                currentActiveSantri = matchedSantri;
+
+                sessionStorage.setItem('jii_sim_session', JSON.stringify({
+                    role: 'santri',
+                    nis: matchedSantri.nis
+                }));
+
+                loadSantriIntoHeader(matchedSantri);
+                hafalanData = matchedSantri.hafalanData || [];
+                paymentData = matchedSantri.paymentData || [];
+                window.renderHafalanTable();
+                window.renderPaymentTable();
+            } else {
+                alert(`ID/NIS "${nisInput}" tidak ditemukan dalam sistem!`);
+                return;
+            }
+
+            isLoggedIn = true;
+            window.closeLoginModal();
+
+            document.getElementById('publicContainer')?.classList.add('hidden');
+            document.getElementById('dashboardContainer')?.classList.remove('hidden');
+            document.getElementById('publicNav')?.classList.add('hidden');
+            document.getElementById('userNav')?.classList.remove('hidden');
+            document.getElementById('userNav')?.classList.add('flex');
+            document.getElementById('mobilePublicLinks')?.classList.add('hidden');
+            document.getElementById('mobileUserLinks')?.classList.remove('hidden');
+
+            configureRolePermissions();
+        };
+
+        window.handleLogout = function() {
+            sessionStorage.removeItem('jii_sim_session');
+            isLoggedIn = false;
+            currentActiveSantri = null;
+
+            document.getElementById('publicContainer')?.classList.remove('hidden');
+            document.getElementById('dashboardContainer')?.classList.add('hidden');
+            document.getElementById('publicNav')?.classList.remove('hidden');
+            document.getElementById('userNav')?.classList.add('hidden');
+            document.getElementById('userNav')?.classList.remove('flex');
+            document.getElementById('mobilePublicLinks')?.classList.remove('hidden');
+            document.getElementById('mobileUserLinks')?.classList.add('hidden');
+        };
+
+        window.handleChangePasswordSubmit = function(event) {
+            event.preventDefault();
+            const oldPass = document.getElementById('oldPassword').value.trim();
+            const newPass = document.getElementById('newAccountPassword').value.trim();
+            const confirmPass = document.getElementById('confirmNewPassword').value.trim();
+
+            if (newPass !== confirmPass) {
+                alert('Konfirmasi password baru tidak cocok!');
+                return;
+            }
+
+            if (currentRole === 'santri' && currentActiveSantri) {
+                if (oldPass !== (currentActiveSantri.password || '123456')) {
+                    alert('Password lama Anda salah!');
+                    return;
+                }
+                currentActiveSantri.password = newPass;
+                ensureAuth().then(user => {
+                    if (user) {
+                        const santriDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'santri', currentActiveSantri.nis);
+                        updateDoc(santriDocRef, { password: newPass });
+                    }
+                });
+            } else if (managementAccounts[currentRole]) {
+                if (oldPass !== managementAccounts[currentRole].password) {
+                    alert('Password lama Anda salah!');
+                    return;
+                }
+                managementAccounts[currentRole].password = newPass;
+            }
+
+            alert('Password berhasil diperbarui!');
+            window.closeChangePasswordModal();
+            event.target.reset();
+        };
 
         function restoreSession() {
             const savedSession = sessionStorage.getItem('jii_sim_session');
@@ -1253,8 +1583,8 @@
                         loadSantriIntoHeader(santri);
                         hafalanData = santri.hafalanData || [];
                         paymentData = santri.paymentData || [];
-                        renderHafalanTable();
-                        renderPaymentTable();
+                        window.renderHafalanTable();
+                        window.renderPaymentTable();
                     } else {
                         return;
                     }
@@ -1277,200 +1607,64 @@
             }
         }
 
+        async function initStorage() {
+            await ensureAuth();
+            listenToSantriDatabase();
+        }
+
+        function listenToSantriDatabase() {
+            const santriCol = collection(db, 'artifacts', appId, 'public', 'data', 'santri');
+
+            onSnapshot(santriCol, async (snapshot) => {
+                if (snapshot.empty) {
+                    for (const defaultSantri of initialDefaultSantri) {
+                        try {
+                            const santriDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'santri', defaultSantri.nis);
+                            await setDoc(santriDocRef, defaultSantri);
+                        } catch (e) {
+                            console.error("Error seeding default santri:", e);
+                        }
+                    }
+                    masterSantriData = [...initialDefaultSantri];
+                } else {
+                    const list = [];
+                    snapshot.forEach(docSnap => {
+                        list.push(docSnap.data());
+                    });
+                    masterSantriData = list;
+                }
+
+                window.filterMasterSantri();
+                window.updateMasterSummary();
+                restoreSession();
+
+                if (currentActiveSantri) {
+                    const updated = masterSantriData.find(s => s.nis === currentActiveSantri.nis);
+                    if (updated) {
+                        currentActiveSantri = updated;
+                        loadSantriIntoHeader(updated);
+                        hafalanData = updated.hafalanData || [];
+                        paymentData = updated.paymentData || [];
+                        window.renderHafalanTable();
+                        window.renderPaymentTable();
+                    }
+                }
+            }, (error) => {
+                console.error("Firestore sync error:", error);
+                window.filterMasterSantri();
+                window.updateMasterSummary();
+                restoreSession();
+            });
+        }
+
         window.onload = function() {
-            renderMasterSantriTable(masterSantriData);
-            renderHafalanTable();
-            renderPaymentTable();
-            initHafalanChart();
-            updateMasterSummary();
+            window.renderMasterSantriTable(masterSantriData);
+            window.renderHafalanTable();
+            window.renderPaymentTable();
+            window.initHafalanChart();
+            window.updateMasterSummary();
             restoreSession();
             initStorage();
-        };
-
-        window.showPublicView = function(sectionId) {
-            if (isLoggedIn) return;
-            document.getElementById('publicContainer').classList.remove('hidden');
-            document.getElementById('dashboardContainer').classList.add('hidden');
-            const target = document.getElementById(sectionId);
-            if (target) target.scrollIntoView({ behavior: 'smooth' });
-        };
-
-        window.toggleMobileMenu = function() {
-            document.getElementById('mobileMenu').classList.toggle('hidden');
-        };
-
-        window.toggleUserDropdown = function() {
-            const name = document.getElementById('navUserName').innerText;
-            const role = document.getElementById('navUserRole').innerText;
-            alert("Akun Aktif SIM Santri:\nNama: " + name + "\nPeran: " + role);
-        };
-
-        window.openLoginModal = function() {
-            document.getElementById('loginModal').classList.remove('hidden');
-        };
-
-        window.closeLoginModal = function() {
-            document.getElementById('loginModal').classList.add('hidden');
-        };
-
-        window.handleLoginSubmit = function(event) {
-            event.preventDefault();
-            const rawId = document.getElementById('loginNis').value;
-            const rawPass = document.getElementById('loginPassword').value;
-
-            if (!rawId || !rawPass) {
-                alert("Silakan masukkan ID/NIS dan Kata Sandi!");
-                return;
-            }
-
-            const inputId = rawId.trim();
-            const inputPass = rawPass.trim();
-            const upperId = inputId.toUpperCase();
-
-            if ((upperId === 'KETUA-UMUM' || upperId === 'KETUA') && inputPass === managementAccounts.ketua.password) {
-                currentRole = 'ketua';
-                currentActiveSantri = null;
-                setLoggedInUser(managementAccounts.ketua.name, managementAccounts.ketua.role, managementAccounts.ketua.avatar, 'KETUA-UMUM', 'Pengurus Utama', 'Kantor Pusat');
-            } else if (upperId === 'BENDAHARA' && inputPass === managementAccounts.bendahara.password) {
-                currentRole = 'bendahara';
-                currentActiveSantri = null;
-                setLoggedInUser(managementAccounts.bendahara.name, managementAccounts.bendahara.role, managementAccounts.bendahara.avatar, 'BENDAHARA', 'Pengurus Utama', 'Kantor Keuangan');
-            } else if (upperId === 'SEKRETARIS' && inputPass === managementAccounts.sekretaris.password) {
-                currentRole = 'sekretaris';
-                currentActiveSantri = null;
-                setLoggedInUser(managementAccounts.sekretaris.name, managementAccounts.sekretaris.role, managementAccounts.sekretaris.avatar, 'SEKRETARIS', 'Pengurus Utama', 'Kantor Sekretariat');
-            } else {
-                const santri = masterSantriData.find(s => s.nis === inputId && s.password === inputPass);
-                if (santri) {
-                    currentRole = 'santri';
-                    currentActiveSantri = santri;
-                    loadSantriIntoHeader(santri);
-                    hafalanData = santri.hafalanData || [];
-                    paymentData = santri.paymentData || [];
-                    renderHafalanTable();
-                    renderPaymentTable();
-                } else {
-                    alert("NIS / ID Pengurus atau Password salah!\n\n• Pengurus: KETUA-UMUM / BENDAHARA / SEKRETARIS (Pass: 123456)\n• Santri Bawaan: NIS 202601001 (Pass: 123456)");
-                    return;
-                }
-            }
-
-            isLoggedIn = true;
-            sessionStorage.setItem('jii_sim_session', JSON.stringify({ role: currentRole, nis: inputId }));
-
-            closeLoginModal();
-            document.getElementById('publicContainer').classList.add('hidden');
-            document.getElementById('dashboardContainer').classList.remove('hidden');
-            document.getElementById('publicNav').classList.add('hidden');
-            document.getElementById('userNav').classList.remove('hidden');
-            document.getElementById('userNav').classList.add('flex');
-            document.getElementById('mobilePublicLinks').classList.add('hidden');
-            document.getElementById('mobileUserLinks').classList.remove('hidden');
-
-            configureRolePermissions();
-        };
-
-        window.handleLogout = function() {
-            isLoggedIn = false;
-            currentRole = 'ketua';
-            currentActiveSantri = null;
-            sessionStorage.removeItem('jii_sim_session');
-
-            document.getElementById('publicContainer').classList.remove('hidden');
-            document.getElementById('dashboardContainer').classList.add('hidden');
-            document.getElementById('publicNav').classList.remove('hidden');
-            document.getElementById('userNav').classList.add('hidden');
-            document.getElementById('userNav').classList.remove('flex');
-            document.getElementById('mobilePublicLinks').classList.remove('hidden');
-            document.getElementById('mobileUserLinks').classList.add('hidden');
-
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        };
-
-        window.switchDashTab = function(tabName) {
-            document.querySelectorAll('.dash-tab-btn').forEach(btn => {
-                btn.classList.remove('border-emerald-600', 'text-emerald-700');
-                btn.classList.add('border-transparent', 'text-slate-600');
-            });
-
-            document.querySelectorAll('.dash-tab-content').forEach(content => {
-                content.classList.add('hidden');
-            });
-
-            if (tabName === 'master-santri') {
-                document.getElementById('tabBtnMaster').classList.add('border-emerald-600', 'text-emerald-700');
-                document.getElementById('tabMasterSantri').classList.remove('hidden');
-            } else if (tabName === 'hafalan') {
-                document.getElementById('tabBtnHafalan').classList.add('border-emerald-600', 'text-emerald-700');
-                document.getElementById('tabHafalan').classList.remove('hidden');
-            } else if (tabName === 'tanggungan') {
-                document.getElementById('tabBtnTanggungan').classList.add('border-emerald-600', 'text-emerald-700');
-                document.getElementById('tabTanggungan').classList.remove('hidden');
-            } else if (tabName === 'kegiatan') {
-                document.getElementById('tabBtnKegiatan').classList.add('border-emerald-600', 'text-emerald-700');
-                document.getElementById('tabKegiatan').classList.remove('hidden');
-            } else if (tabName === 'detail-santri') {
-                document.getElementById('tabBtnDetail').classList.add('border-emerald-600', 'text-emerald-700');
-                document.getElementById('tabDetail').classList.remove('hidden');
-            }
-        };
-
-        window.openChangePasswordModal = function() {
-            document.getElementById('changePasswordModal').classList.remove('hidden');
-        };
-
-        window.closeChangePasswordModal = function() {
-            document.getElementById('changePasswordModal').classList.add('hidden');
-        };
-
-        window.handleChangePasswordSubmit = async function(event) {
-            event.preventDefault();
-            const oldPass = document.getElementById('oldPassword').value;
-            const newPass = document.getElementById('newAccountPassword').value;
-            const confirmPass = document.getElementById('confirmNewPassword').value;
-
-            if (newPass !== confirmPass) {
-                alert("Konfirmasi password baru tidak cocok!");
-                return;
-            }
-
-            if (currentRole === 'santri' && currentActiveSantri) {
-                if (oldPass !== currentActiveSantri.password) {
-                    alert("Password saat ini salah!");
-                    return;
-                }
-                currentActiveSantri.password = newPass;
-                try {
-                    if (currentUser) {
-                        const santriDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'santri', currentActiveSantri.nis);
-                        await updateDoc(santriDocRef, { password: newPass });
-                    }
-                    alert("Password akun Santri berhasil diperbarui!");
-                    closeChangePasswordModal();
-                } catch (err) {
-                    alert("Password akun Santri diperbarui!");
-                    closeChangePasswordModal();
-                }
-            } else {
-                const mgmtKey = currentRole;
-                if (managementAccounts[mgmtKey]) {
-                    if (oldPass !== managementAccounts[mgmtKey].password) {
-                        alert("Password saat ini salah!");
-                        return;
-                    }
-                    managementAccounts[mgmtKey].password = newPass;
-                    alert(`Password untuk ${managementAccounts[mgmtKey].role} berhasil diperbarui!`);
-                    closeChangePasswordModal();
-                }
-            }
-        };
-
-        window.openAddSantriModal = function() {
-            document.getElementById('addSantriModal').classList.remove('hidden');
-        };
-
-        window.closeAddSantriModal = function() {
-            document.getElementById('addSantriModal').classList.add('hidden');
         };
 
         window.handleAddSantriSubmit = async function(event) {
@@ -1513,46 +1707,30 @@
                 ]
             };
 
-            masterSantriData.push(newSantriObj);
-            filterMasterSantri();
-            updateMasterSummary();
+            const existingIdx = masterSantriData.findIndex(s => s.nis === nis);
+            if (existingIdx >= 0) {
+                masterSantriData[existingIdx] = newSantriObj;
+            } else {
+                masterSantriData.push(newSantriObj);
+            }
+
+            window.filterMasterSantri();
+            window.updateMasterSummary();
 
             try {
-                if (currentUser) {
+                const user = await ensureAuth();
+                if (user) {
                     const santriDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'santri', nis);
                     await setDoc(santriDocRef, newSantriObj);
                 }
                 alert(`Berhasil menambahkan santri "${nama}" dan menerbitkan akun login SIM (NIS: ${nis}). Data telah tersimpan secara permanen!`);
             } catch (err) {
                 console.error("Failed to save to Firestore:", err);
-                alert(`Santri "${nama}" berhasil didaftarkan di sistem.`);
+                alert(`Santri "${nama}" telah terdaftar di sistem.`);
             }
 
-            closeAddSantriModal();
+            window.closeAddSantriModal();
             event.target.reset();
-        };
-
-        window.openEditSantriModal = function(nis) {
-            const santri = masterSantriData.find(s => s.nis === nis);
-            if (!santri) return;
-
-            document.getElementById('editSantriNis').value = santri.nis;
-            document.getElementById('editNisDisplay').innerText = `NIS: ${santri.nis} | Akun Login SIM`;
-            document.getElementById('editNama').value = santri.nama;
-            document.getElementById('editKelas').value = santri.kelas;
-            document.getElementById('editKamar').value = santri.kamar;
-            document.getElementById('editStatus').value = santri.status;
-            document.getElementById('editHafalanJuz').value = santri.hafalanJuz;
-            document.getElementById('editHafalanSurah').value = santri.hafalanSurah;
-            document.getElementById('editSpp').value = santri.spp || 350000;
-            document.getElementById('editUangMakan').value = santri.uangMakan || 100000;
-            document.getElementById('editStatusBayar').value = santri.statusBayar;
-
-            document.getElementById('editSantriModal').classList.remove('hidden');
-        };
-
-        window.closeEditSantriModal = function() {
-            document.getElementById('editSantriModal').classList.add('hidden');
         };
 
         window.handleEditSantriSubmit = async function(event) {
@@ -1574,20 +1752,21 @@
             };
 
             Object.assign(santri, updatedData);
-            filterMasterSantri();
-            updateMasterSummary();
+            window.filterMasterSantri();
+            window.updateMasterSummary();
 
             try {
-                if (currentUser) {
+                const user = await ensureAuth();
+                if (user) {
                     const santriDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'santri', nis);
                     await updateDoc(santriDocRef, updatedData);
                 }
-                alert(`Data santri ${updatedData.nama} berhasil diperbarui!`);
+                alert(`Data santri ${updatedData.nama} berhasil diperbarui di database!`);
             } catch (err) {
                 console.error("Failed to update in Firestore:", err);
-                alert(`Data santri ${updatedData.nama} diperbarui!`);
+                alert(`Data santri ${updatedData.nama} berhasil diperbarui!`);
             }
-            closeEditSantriModal();
+            window.closeEditSantriModal();
         };
 
         window.deleteSantri = async function(nis) {
@@ -1596,226 +1775,20 @@
 
             if (confirm(`Apakah Anda yakin ingin menghapus santri "${santri.nama}" (NIS: ${nis}) dari sistem?`)) {
                 masterSantriData = masterSantriData.filter(s => s.nis !== nis);
-                filterMasterSantri();
-                updateMasterSummary();
+                window.filterMasterSantri();
+                window.updateMasterSummary();
 
                 try {
-                    if (currentUser) {
+                    const user = await ensureAuth();
+                    if (user) {
                         const santriDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'santri', nis);
                         await deleteDoc(santriDocRef);
                     }
-                    alert("Santri telah berhasil dihapus.");
+                    alert("Santri telah berhasil dihapus secara permanen.");
                 } catch (err) {
                     console.error("Failed to delete from Firestore:", err);
                 }
             }
-        };
-
-        window.inspectSantri = function(nis) {
-            const santri = masterSantriData.find(s => s.nis === nis);
-            if (!santri) return;
-            currentActiveSantri = santri;
-            loadSantriIntoHeader(santri);
-            hafalanData = santri.hafalanData || [];
-            paymentData = santri.paymentData || [];
-            renderHafalanTable();
-            renderPaymentTable();
-            switchDashTab('hafalan');
-        };
-
-        window.filterMasterSantri = function() {
-            const queryInput = document.getElementById('masterSearchInput');
-            const filterInput = document.getElementById('masterFilterStatus');
-            const query = queryInput ? queryInput.value.toLowerCase() : '';
-            const filter = filterInput ? filterInput.value : 'semua';
-
-            const filtered = masterSantriData.filter(s => {
-                const matchQuery = s.nama.toLowerCase().includes(query) || s.nis.toLowerCase().includes(query) || s.kamar.toLowerCase().includes(query);
-                let matchFilter = true;
-
-                if (filter === 'aktif') matchFilter = s.status === 'AKTIFF';
-                else if (filter === 'belum_lunas') matchFilter = s.statusBayar === 'Belum Lunas';
-                else if (filter === 'khatam') matchFilter = s.hafalanJuz >= 20;
-
-                return matchQuery && matchFilter;
-            });
-
-            renderMasterSantriTable(filtered);
-        };
-
-        function renderMasterSantriTable(dataList) {
-            const tbody = document.getElementById('masterSantriTableBody');
-            if (!tbody) return;
-            tbody.innerHTML = '';
-
-            if (dataList.length === 0) {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="7" class="p-8 text-center text-slate-400 font-medium">
-                            <i class="fa-solid fa-users-slash text-2xl mb-2 block text-slate-300"></i>
-                            Belum ada santri terdaftar. Klik tombol <strong>"+ Tambah Santri & Buat Akun"</strong> di atas untuk menambahkan santri baru.
-                        </td>
-                    </tr>
-                `;
-                return;
-            }
-
-            dataList.forEach(s => {
-                const spp = Number(s.spp || 350000);
-                const makan = Number(s.uangMakan || 100000);
-                const total = spp + makan;
-
-                const tr = document.createElement('tr');
-                tr.className = 'hover:bg-slate-50 transition border-b border-slate-100';
-                tr.innerHTML = `
-                    <td class="p-3.5">
-                        <span class="font-mono font-bold text-slate-900 block">${s.nis}</span>
-                        <span class="text-[10px] text-slate-400 font-mono">Pass: ${s.password || '123456'}</span>
-                    </td>
-                    <td class="p-3.5">
-                        <strong class="text-slate-900 font-bold block">${s.nama}</strong>
-                    </td>
-                    <td class="p-3.5">
-                        <span class="block font-semibold text-slate-800">${s.kelas}</span>
-                        <span class="text-[11px] text-slate-500">${s.kamar}</span>
-                    </td>
-                    <td class="p-3.5">
-                        <span class="px-2.5 py-0.5 text-[10px] font-extrabold rounded-full ${s.status === 'AKTIFF' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
-                            ${s.status}
-                        </span>
-                    </td>
-                    <td class="p-3.5">
-                        <span class="font-bold text-emerald-800 block">${s.hafalanJuz} Juz</span>
-                        <span class="text-[11px] text-slate-500">Surah ${s.hafalanSurah}</span>
-                    </td>
-                    <td class="p-3.5">
-                        ${s.statusBayar === 'Lunas' ? 
-                            `<span class="px-2 py-0.5 text-[10px] font-bold bg-emerald-100 text-emerald-800 rounded">LUNAS</span>` : 
-                            `<span class="font-bold text-rose-600 block">Rp ${total.toLocaleString('id-ID')}</span>
-                             <span class="text-[10px] text-rose-500">SPP: ${spp/1000}k | Makan: ${makan/1000}k</span>`
-                        }
-                    </td>
-                    <td class="p-3.5 text-center space-x-1 whitespace-nowrap">
-                        <button onclick="inspectSantri('${s.nis}')" title="Inspeksi Detail Santri" class="p-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold">
-                            <i class="fa-solid fa-eye"></i> Inspeksi
-                        </button>
-                        <button onclick="openEditSantriModal('${s.nis}')" title="Edit Data & Tanggungan Santri" class="p-1.5 bg-amber-100 hover:bg-amber-200 text-amber-900 rounded-lg text-xs font-bold">
-                            <i class="fa-solid fa-pen-to-square"></i> Edit
-                        </button>
-                        <button onclick="deleteSantri('${s.nis}')" title="Hapus Santri" class="p-1.5 bg-rose-100 hover:bg-rose-200 text-rose-700 rounded-lg text-xs font-bold">
-                            <i class="fa-solid fa-trash"></i>
-                        </button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function updateMasterSummary() {
-            const total = masterSantriData.length;
-            const totalElem = document.getElementById('totalSantriCount');
-            if (totalElem) totalElem.innerText = total;
-
-            if (total === 0) {
-                const avgElem = document.getElementById('avgJuzCount');
-                const tagihanElem = document.getElementById('totalTagihanCount');
-                if (avgElem) avgElem.innerText = "0";
-                if (tagihanElem) tagihanElem.innerText = "Rp 0";
-                return;
-            }
-
-            const totalJuz = masterSantriData.reduce((acc, curr) => acc + Number(curr.hafalanJuz || 0), 0);
-            const avgJuz = (totalJuz / total).toFixed(1);
-            const avgElem = document.getElementById('avgJuzCount');
-            if (avgElem) avgElem.innerText = avgJuz;
-
-            const totalTagihan = masterSantriData.reduce((acc, curr) => {
-                if (curr.statusBayar === 'Belum Lunas') {
-                    const spp = Number(curr.spp || 350000);
-                    const makan = Number(curr.uangMakan || 100000);
-                    return acc + spp + makan;
-                }
-                return acc;
-            }, 0);
-
-            const tagihanElem = document.getElementById('totalTagihanCount');
-            if (tagihanElem) tagihanElem.innerText = `Rp ${totalTagihan.toLocaleString('id-ID')}`;
-        }
-
-        function renderHafalanTable() {
-            const tbody = document.getElementById('hafalanTableBody');
-            if (!tbody) return;
-            tbody.innerHTML = '';
-            if (hafalanData.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-400">Belum ada catatan setoran hafalan.</td></tr>`;
-                return;
-            }
-            hafalanData.forEach(item => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td class="p-3">${item.tanggal}</td>
-                    <td class="p-3"><span class="px-2 py-0.5 text-[10px] rounded font-bold ${item.jenis && item.jenis.includes('Ziyadah') ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">${item.jenis}</span></td>
-                    <td class="p-3 font-semibold text-slate-900">${item.surah}</td>
-                    <td class="p-3 font-mono">Juz ${item.juz}</td>
-                    <td class="p-3"><span class="text-emerald-700 font-bold">${item.nilai}</span></td>
-                    <td class="p-3 text-slate-500">${item.ustadz}</td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function renderPaymentTable() {
-            const tbody = document.getElementById('paymentTableBody');
-            if (!tbody) return;
-            tbody.innerHTML = '';
-            if (paymentData.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-400">Belum ada riwayat transaksi pembayaran.</td></tr>`;
-                return;
-            }
-            paymentData.forEach(item => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td class="p-3 font-mono text-slate-500">${item.id}</td>
-                    <td class="p-3">${item.tanggal}</td>
-                    <td class="p-3 font-medium text-slate-800">${item.uraian}</td>
-                    <td class="p-3 font-bold text-slate-900">Rp ${Number(item.nominal).toLocaleString('id-ID')}</td>
-                    <td class="p-3"><span class="px-2 py-0.5 text-[10px] font-bold rounded ${item.status === 'Lunas' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}">${item.status}</span></td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function initHafalanChart() {
-            const chartCanvas = document.getElementById('hafalanChart');
-            if (!chartCanvas) return;
-            const ctx = chartCanvas.getContext('2d');
-            chartInstance = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun'],
-                    datasets: [{
-                        label: 'Progres Juz Mutqin',
-                        data: [2, 4, 6, 7, 9, 10],
-                        borderColor: '#047857',
-                        backgroundColor: 'rgba(4, 120, 87, 0.1)',
-                        fill: true,
-                        tension: 0.3
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } }
-                }
-            });
-        }
-
-        window.openModalAddHafalan = function() {
-            document.getElementById('addHafalanModal').classList.remove('hidden');
-        };
-
-        window.closeModalAddHafalan = function() {
-            document.getElementById('addHafalanModal').classList.add('hidden');
         };
 
         window.handleAddHafalanSubmit = async function(e) {
@@ -1835,7 +1808,7 @@
             };
 
             hafalanData.unshift(newSetoran);
-            renderHafalanTable();
+            window.renderHafalanTable();
 
             if (currentActiveSantri) {
                 currentActiveSantri.hafalanJuz = Math.max(currentActiveSantri.hafalanJuz, juz);
@@ -1843,7 +1816,8 @@
                 currentActiveSantri.hafalanData = hafalanData;
 
                 try {
-                    if (currentUser) {
+                    const user = await ensureAuth();
+                    if (user) {
                         const santriDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'santri', currentActiveSantri.nis);
                         await updateDoc(santriDocRef, {
                             hafalanJuz: currentActiveSantri.hafalanJuz,
@@ -1856,15 +1830,7 @@
                 }
             }
 
-            closeModalAddHafalan();
-        };
-
-        window.openPaymentModal = function() {
-            document.getElementById('paymentModal').classList.remove('hidden');
-        };
-
-        window.closePaymentModal = function() {
-            document.getElementById('paymentModal').classList.add('hidden');
+            window.closeModalAddHafalan();
         };
 
         window.simulasikanBayarLunas = async function() {
@@ -1883,7 +1849,8 @@
                 currentActiveSantri.paymentData = paymentData;
 
                 try {
-                    if (currentUser) {
+                    const user = await ensureAuth();
+                    if (user) {
                         const santriDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'santri', currentActiveSantri.nis);
                         await updateDoc(santriDocRef, {
                             statusBayar: 'Lunas',
@@ -1895,11 +1862,11 @@
                 }
 
                 loadSantriIntoHeader(currentActiveSantri);
-                renderPaymentTable();
+                window.renderPaymentTable();
             }
 
             alert("Pembayaran berhasil dikonfirmasi LUNAS!");
-            closePaymentModal();
+            window.closePaymentModal();
         };
     </script>
 </body>
