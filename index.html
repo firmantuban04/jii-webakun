@@ -1047,13 +1047,16 @@
                 snapshot.forEach(docSnap => {
                     list.push(docSnap.data());
                 });
-                if (list.length > 0 || masterSantriData.length === 0) {
+                if (list.length > 0) {
                     masterSantriData = list;
                 }
                 
                 // Refresh UI views
                 filterMasterSantri();
                 updateMasterSummary();
+
+                // Restore active session if present (survives refresh)
+                restoreSession();
 
                 // If currently viewing or logged in as a santri, update state
                 if (currentActiveSantri) {
@@ -1071,7 +1074,60 @@
                 console.error("Firestore sync error:", error);
                 filterMasterSantri();
                 updateMasterSummary();
+                restoreSession();
             });
+        }
+
+        function restoreSession() {
+            const savedSession = sessionStorage.getItem('jii_sim_session');
+            if (!savedSession || isLoggedIn) return;
+
+            try {
+                const session = JSON.parse(savedSession);
+                const { role, nis } = session;
+
+                if (role === 'ketua') {
+                    currentRole = 'ketua';
+                    currentActiveSantri = null;
+                    setLoggedInUser(managementAccounts.ketua.name, managementAccounts.ketua.role, managementAccounts.ketua.avatar, 'KETUA-UMUM', 'Pengurus Utama', 'Kantor Pusat');
+                } else if (role === 'bendahara') {
+                    currentRole = 'bendahara';
+                    currentActiveSantri = null;
+                    setLoggedInUser(managementAccounts.bendahara.name, managementAccounts.bendahara.role, managementAccounts.bendahara.avatar, 'BENDAHARA', 'Pengurus Utama', 'Kantor Keuangan');
+                } else if (role === 'sekretaris') {
+                    currentRole = 'sekretaris';
+                    currentActiveSantri = null;
+                    setLoggedInUser(managementAccounts.sekretaris.name, managementAccounts.sekretaris.role, managementAccounts.sekretaris.avatar, 'SEKRETARIS', 'Pengurus Utama', 'Kantor Sekretariat');
+                } else if (role === 'santri') {
+                    const santri = masterSantriData.find(s => s.nis === nis);
+                    if (santri) {
+                        currentRole = 'santri';
+                        currentActiveSantri = santri;
+                        loadSantriIntoHeader(santri);
+                        hafalanData = santri.hafalanData || [];
+                        paymentData = santri.paymentData || [];
+                        renderHafalanTable();
+                        renderPaymentTable();
+                    } else {
+                        return;
+                    }
+                } else {
+                    return;
+                }
+
+                isLoggedIn = true;
+                document.getElementById('publicContainer').classList.add('hidden');
+                document.getElementById('dashboardContainer').classList.remove('hidden');
+                document.getElementById('publicNav').classList.add('hidden');
+                document.getElementById('userNav').classList.remove('hidden');
+                document.getElementById('userNav').classList.add('flex');
+                document.getElementById('mobilePublicLinks').classList.add('hidden');
+                document.getElementById('mobileUserLinks').classList.remove('hidden');
+
+                configureRolePermissions();
+            } catch (e) {
+                console.error("Failed to restore session:", e);
+            }
         }
 
         window.onload = function() {
@@ -1144,6 +1200,9 @@
             }
 
             isLoggedIn = true;
+            // Menyimpan sesi aktif di sessionStorage agar refresh tidak men-logout akun
+            sessionStorage.setItem('jii_sim_session', JSON.stringify({ role: currentRole, nis: inputId }));
+
             closeLoginModal();
             document.getElementById('publicContainer').classList.add('hidden');
             document.getElementById('dashboardContainer').classList.remove('hidden');
@@ -1157,70 +1216,11 @@
             configureRolePermissions();
         };
 
-        function setLoggedInUser(name, role, avatar, nis, kelas, kamar) {
-            document.getElementById('navUserName').innerText = name;
-            document.getElementById('navUserRole').innerText = role;
-            document.getElementById('navUserAvatar').innerText = avatar;
-
-            document.getElementById('dashSantriName').innerText = name;
-            document.getElementById('dashSantriNis').innerText = nis;
-            document.getElementById('dashSantriClass').innerText = kelas;
-            document.getElementById('dashSantriRoom').innerText = kamar;
-        }
-
-        function loadSantriIntoHeader(santri) {
-            const initials = santri.nama.split(' ').map(n => n[0]).join('').substring(0,2).toUpperCase();
-            setLoggedInUser(santri.nama, 'Santri Tahfidz', initials, santri.nis, santri.kelas, santri.kamar);
-            
-            document.getElementById('dashSantriStatus').innerText = santri.status;
-            document.getElementById('dashHafalanSummary').innerText = `${santri.hafalanJuz} Juz (Surah ${santri.hafalanSurah})`;
-            
-            const spp = Number(santri.spp || 350000);
-            const makan = Number(santri.uangMakan || 100000);
-            const total = spp + makan;
-            
-            document.getElementById('dashSppDisplay').innerText = `Rp ${spp.toLocaleString('id-ID')}`;
-            document.getElementById('dashMakanDisplay').innerText = `Rp ${makan.toLocaleString('id-ID')}`;
-            
-            if (santri.statusBayar === 'Lunas') {
-                document.getElementById('dashTanggunganSummary').innerText = "LUNAS";
-                document.getElementById('dashTanggunganSummary').className = "text-xl font-bold text-emerald-600 mt-2";
-                document.getElementById('dashTotalPayableDisplay').innerText = "Rp 0 (Lunas)";
-                document.getElementById('dashTotalPayableDisplay').className = "text-xl font-extrabold text-emerald-600";
-                document.getElementById('dashPayableStatusNotice').innerText = "✓ Sudah Terkonfirmasi Lunas";
-                document.getElementById('dashPayableStatusNotice').className = "text-[10px] text-emerald-600 font-semibold";
-            } else {
-                document.getElementById('dashTanggunganSummary').innerText = `Rp ${total.toLocaleString('id-ID')}`;
-                document.getElementById('dashTanggunganSummary').className = "text-xl font-bold text-rose-600 mt-2";
-                document.getElementById('dashTotalPayableDisplay').innerText = `Rp ${total.toLocaleString('id-ID')}`;
-                document.getElementById('dashTotalPayableDisplay').className = "text-xl font-extrabold text-rose-600";
-                document.getElementById('dashPayableStatusNotice').innerText = "*Belum Terkonfirmasi Lunas";
-                document.getElementById('dashPayableStatusNotice').className = "text-[10px] text-rose-600 font-semibold";
-            }
-
-            document.getElementById('detailNamaDisplay').innerText = santri.nama;
-            document.getElementById('detailNisDisplay').innerText = santri.nis;
-            document.getElementById('detailKelasDisplay').innerText = santri.kelas;
-            document.getElementById('detailKamarDisplay').innerText = santri.kamar;
-            document.getElementById('detailStatusDisplay').innerText = santri.status;
-        }
-
-        function configureRolePermissions() {
-            const masterTabBtn = document.getElementById('tabBtnMaster');
-            
-            if (['ketua', 'bendahara', 'sekretaris'].includes(currentRole)) {
-                masterTabBtn.style.display = 'flex';
-                switchDashTab('master-santri');
-            } else {
-                masterTabBtn.style.display = 'none';
-                switchDashTab('hafalan');
-            }
-        }
-
         window.handleLogout = function() {
             isLoggedIn = false;
             currentRole = 'ketua';
             currentActiveSantri = null;
+            sessionStorage.removeItem('jii_sim_session');
 
             document.getElementById('publicContainer').classList.remove('hidden');
             document.getElementById('dashboardContainer').classList.add('hidden');
@@ -1273,107 +1273,6 @@
             document.getElementById('changePasswordModal').classList.add('hidden');
         };
 
-        window.handleChangePasswordSubmit = async function(event) {
-            event.preventDefault();
-            const oldPass = document.getElementById('oldPassword').value;
-            const newPass = document.getElementById('newAccountPassword').value;
-            const confirmPass = document.getElementById('confirmNewPassword').value;
-
-            if (newPass !== confirmPass) {
-                alert("Konfirmasi password baru tidak cocok!");
-                return;
-            }
-
-            if (currentRole === 'santri') {
-                if (currentActiveSantri.password !== oldPass) {
-                    alert("Password saat ini salah!");
-                    return;
-                }
-                currentActiveSantri.password = newPass;
-
-                try {
-                    const santriDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'santri', currentActiveSantri.nis);
-                    await updateDoc(santriDocRef, { password: newPass });
-                    alert("Password akun santri Anda berhasil diubah!");
-                } catch (err) {
-                    console.error("Gagal mengubah password di cloud:", err);
-                    alert("Password diperbarui di memori lokal!");
-                }
-            } else {
-                if (managementAccounts[currentRole].password !== oldPass) {
-                    alert("Password saat ini salah!");
-                    return;
-                }
-                managementAccounts[currentRole].password = newPass;
-                alert(`Password akun pengurus (${managementAccounts[currentRole].role}) berhasil diubah!`);
-            }
-
-            event.target.reset();
-            closeChangePasswordModal();
-        };
-
-        // ==========================================
-        // MASTER SANTRI DATA MANAGEMENT (FIXED CLOUD FIRESTORE)
-        // ==========================================
-
-        window.handleAddSantriSubmit = async function(event) {
-            event.preventDefault();
-            
-            const nis = document.getElementById('newNis').value.trim();
-            const password = document.getElementById('newPassword').value.trim();
-            const nama = document.getElementById('newNama').value.trim();
-            const kelas = document.getElementById('newKelas').value.trim();
-            const kamar = document.getElementById('newKamar').value.trim();
-            const status = document.getElementById('newStatus').value;
-            const hafalanJuz = Number(document.getElementById('newHafalanJuz').value);
-            const hafalanSurah = document.getElementById('newHafalanSurah').value.trim();
-            const spp = Number(document.getElementById('newSpp').value);
-            const uangMakan = Number(document.getElementById('newUangMakan').value);
-            const statusBayar = document.getElementById('newStatusBayar').value;
-
-            if (masterSantriData.some(s => s.nis === nis)) {
-                alert(`NIS ${nis} sudah terdaftar di sistem! Silakan gunakan NIS lain.`);
-                return;
-            }
-
-            const newSantriObj = {
-                nis,
-                password,
-                nama,
-                kelas,
-                kamar,
-                status,
-                hafalanJuz,
-                hafalanSurah,
-                spp,
-                uangMakan,
-                statusBayar,
-                hafalanData: [
-                    { tanggal: new Date().toLocaleDateString('id-ID'), jenis: 'Ziyadah (Baru)', surah: `Surah ${hafalanSurah}`, juz: hafalanJuz, nilai: 'A (Sangat Mutqin)', ustadz: 'Ust. Abdullah' }
-                ],
-                paymentData: [
-                    { id: 'TRX-' + Math.floor(Math.random() * 89999 + 10000), tanggal: new Date().toLocaleDateString('id-ID'), uraian: 'Setoran Awal Registration', nominal: spp + uangMakan, status: statusBayar }
-                ]
-            };
-
-            // Directly add to local state first for immediate UI update
-            masterSantriData.push(newSantriObj);
-            filterMasterSantri();
-            updateMasterSummary();
-
-            try {
-                const santriDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'santri', nis);
-                await setDoc(santriDocRef, newSantriObj);
-                alert(`Berhasil menambahkan santri "${nama}" dan menerbitkan akun login SIM.`);
-            } catch (err) {
-                console.error("Failed to save to Firestore:", err);
-                alert(`Santri "${nama}" berhasil didaftarkan di lokal.`);
-            }
-
-            closeAddSantriModal();
-            event.target.reset();
-        };
-
         window.closeAddSantriModal = function() {
             document.getElementById('addSantriModal').classList.add('hidden');
         };
@@ -1418,22 +1317,24 @@
                 ]
             };
 
+            // Tambahkan langsung ke memori lokal agar tabel dan login langsung merespons
+            masterSantriData.push(newSantriObj);
+            filterMasterSantri();
+            updateMasterSummary();
+
             try {
                 if (currentUser) {
                     const santriDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'santri', nis);
                     await setDoc(santriDocRef, newSantriObj);
                 }
-                alert(`Berhasil menambahkan santri "${nama}" dan menerbitkan akun login SIM.`);
-                closeAddSantriModal();
-                event.target.reset();
+                alert(`Berhasil menambahkan santri "${nama}" dan menerbitkan akun login SIM (NIS: ${nis}).`);
             } catch (err) {
                 console.error("Failed to save to Firestore:", err);
-                alert("Gagal menyimpan ke cloud. Menimpan sementara di lokal.");
-                masterSantriData.push(newSantriObj);
-                filterMasterSantri();
-                updateMasterSummary();
-                closeAddSantriModal();
+                alert(`Santri "${nama}" berhasil didaftarkan di sistem lokal.`);
             }
+
+            closeAddSantriModal();
+            event.target.reset();
         };
 
         window.openEditSantriModal = function(nis) {
