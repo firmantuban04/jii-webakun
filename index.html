@@ -2275,19 +2275,6 @@
             sholatTimerInterval = setInterval(updateTimer, 1000);
         }
 
-        window.onload = function() {
-            window.renderMasterSantriTable(masterSantriData);
-            window.renderHafalanTable();
-            window.renderPaymentTable();
-            window.initHafalanChart();
-            window.updateAllSummaries();
-
-            initNeonDatabase();
-            fetchJadwalSholat();
-        };
-    </script>
-</body>
-</html>
         window.onload = async function() {
             window.renderMasterSantriTable(masterSantriData);
             window.renderHafalanTable();
@@ -2296,11 +2283,16 @@
             window.updateAllSummaries();
 
             await initNeonDatabase();
+
             const restored = restoreSession();
             if (restored) {
                 updateUIPermissions();
                 window.updateAllSummaries();
+                window.showDashboardView();
+            } else {
+                updateUIPermissions();
             }
+
             fetchJadwalSholat();
         };
     </script>
