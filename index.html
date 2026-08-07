@@ -929,6 +929,7 @@
         
         const NEON_STORAGE_KEY = 'jii_neon_connection_string_v2';
         const LOCAL_SANTRI_KEY = 'jii_master_santri_local_v2';
+        const SESSION_STORAGE_KEY = 'jii_user_session_v2';
 
         let neonConnectionString = localStorage.getItem(NEON_STORAGE_KEY) || DEFAULT_NEON_CONN;
         let sql = null;
@@ -1003,6 +1004,55 @@
         let currentRole = 'santri'; // default 'santri'
         let isLoggedIn = false;
         let pollingTimer = null;
+
+        // FUNGSI PENYIMPANAN DAN PEMULIHAN SESI LOGIN SAAT REFRESH
+        function saveSession(role, nis = null) {
+            try {
+                localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify({ role, nis }));
+            } catch (e) {
+                console.error("Gagal menyimpan sesi login:", e);
+            }
+        }
+
+        function clearSession() {
+            try {
+                localStorage.removeItem(SESSION_STORAGE_KEY);
+            } catch (e) {}
+        }
+
+        function restoreSession() {
+            try {
+                const stored = localStorage.getItem(SESSION_STORAGE_KEY);
+                if (!stored) return false;
+                const session = JSON.parse(stored);
+                if (session.role && ['ketua', 'bendahara', 'sekretaris'].includes(session.role)) {
+                    const mgmtAcc = managementAccounts[session.role];
+                    if (mgmtAcc) {
+                        currentRole = session.role;
+                        currentActiveSantri = null;
+                        isLoggedIn = true;
+                        setLoggedInUser(mgmtAcc.name, mgmtAcc.role, mgmtAcc.avatar, mgmtAcc.id, 'Pengurus Utama', 'Kantor Pusat');
+                        return true;
+                    }
+                } else if (session.nis) {
+                    const matchedSantri = masterSantriData.find(s => s.nis === session.nis);
+                    if (matchedSantri) {
+                        currentRole = 'santri';
+                        currentActiveSantri = matchedSantri;
+                        hafalanData = matchedSantri.hafalanData || [];
+                        paymentData = matchedSantri.paymentData || [];
+                        isLoggedIn = true;
+                        loadSantriIntoHeader(matchedSantri);
+                        window.renderHafalanTable();
+                        window.renderPaymentTable();
+                        return true;
+                    }
+                }
+            } catch (e) {
+                console.error("Gagal memulihkan sesi login:", e);
+            }
+            return false;
+        }
 
         function saveToLocal() {
             try {
@@ -1825,6 +1875,7 @@
                 currentRole = matchedRole;
                 currentActiveSantri = null;
                 setLoggedInUser(mgmtAcc.name, mgmtAcc.role, mgmtAcc.avatar, mgmtAcc.id, 'Pengurus Utama', 'Kantor Pusat');
+                saveSession(matchedRole, null);
             } else if (matchedSantri) {
                 if (passwordInput !== (matchedSantri.password || '123456')) {
                     showToast('Password salah untuk akun santri!', 'error');
@@ -1837,6 +1888,7 @@
                 loadSantriIntoHeader(matchedSantri);
                 window.renderHafalanTable();
                 window.renderPaymentTable();
+                saveSession('santri', matchedSantri.nis);
             } else {
                 showToast('Akun tidak ditemukan!', 'error');
                 return;
@@ -2066,6 +2118,7 @@
             isLoggedIn = false;
             currentActiveSantri = null;
             currentRole = 'santri';
+            clearSession();
             const navGreeting = document.getElementById('navUserGreeting');
             if (navGreeting) navGreeting.innerText = 'Menu';
             updateUIPermissions();
@@ -2230,6 +2283,24 @@
             window.updateAllSummaries();
 
             initNeonDatabase();
+            fetchJadwalSholat();
+        };
+    </script>
+</body>
+</html>
+        window.onload = async function() {
+            window.renderMasterSantriTable(masterSantriData);
+            window.renderHafalanTable();
+            window.renderPaymentTable();
+            window.initHafalanChart();
+            window.updateAllSummaries();
+
+            await initNeonDatabase();
+            const restored = restoreSession();
+            if (restored) {
+                updateUIPermissions();
+                window.updateAllSummaries();
+            }
             fetchJadwalSholat();
         };
     </script>
