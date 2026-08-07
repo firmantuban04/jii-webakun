@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jember Islamic Institute - Excellent With Al-Qur'an (Neon Postgres Powered)</title>
+    <title>Jember Islamic Institute - Excellent With Al-Qur'an</title>
     
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -56,7 +56,7 @@
                     </div>
                 </a>
 
-                <!-- Desktop Nav Links (Visible always, smooth view toggle) -->
+                <!-- Desktop Nav Links -->
                 <nav class="hidden md:flex items-center space-x-6 text-sm font-medium">
                     <a href="#beranda" onclick="showPublicView('beranda')" class="hover:text-amber-300 transition py-1 border-b-2 border-transparent hover:border-amber-300">Beranda</a>
                     <a href="#profil" onclick="showPublicView('profil')" class="hover:text-amber-300 transition py-1 border-b-2 border-transparent hover:border-amber-300">Profil & Latar Belakang</a>
@@ -148,7 +148,13 @@
             
             <!-- Hero Banner Section -->
             <section id="beranda" class="relative bg-gradient-to-b from-emerald-900 via-emerald-800 to-slate-900 text-white pt-16 pb-24 px-4 sm:px-6 lg:px-8 overflow-hidden">
-                <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#d97706_1px,transparent_1px)] [background-size:16px_16px]"></div>
+                <!-- Background Photo Activity JII -->
+                <div class="absolute inset-0 z-0">
+                    <img src="motion_photo_6803223217145197217.jpg" alt="Kegiatan Rihlah Santri JII" class="w-full h-full object-cover opacity-30 mix-blend-overlay filter brightness-90" onerror="this.onerror=null; this.src='https://placehold.co/1920x1080/064e3b/ffffff?text=Kegiatan+Santri+JII';">
+                    <div class="absolute inset-0 bg-gradient-to-b from-emerald-950/90 via-emerald-900/80 to-slate-950/95"></div>
+                </div>
+                <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#d97706_1px,transparent_1px)] [background-size:16px_16px] z-0"></div>
+                
                 <div class="max-w-6xl mx-auto text-center relative z-10 space-y-6">
                     <span class="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-amber-500/20 text-amber-300 text-xs sm:text-sm font-bold border border-amber-500/30">
                         <i class="fa-solid fa-kaaba"></i>
@@ -161,9 +167,9 @@
                         Mencetak Generasi Qur'ani yang Unggul dalam Hafalan, Anggun dalam Akhlak, dan Pemimpin Berwawasan Global dengan Tagline Resmi <strong class="text-amber-300 font-semibold">"Excellent With Al-Qur'an"</strong>.
                     </p>
                     <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-                        <button onclick="openLoginModal()" class="w-full sm:w-auto bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold px-8 py-4 rounded-xl shadow-xl hover:shadow-amber-500/20 transition text-base flex items-center justify-center space-x-2">
+                        <button id="heroPortalBtn" onclick="handleHeroPortalClick()" class="w-full sm:w-auto bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold px-8 py-4 rounded-xl shadow-xl hover:shadow-amber-500/20 transition text-base flex items-center justify-center space-x-2">
                             <i class="fa-solid fa-id-card-clip"></i>
-                            <span>Portal SIM Santri & Pengurus</span>
+                            <span id="heroPortalBtnText">Portal SIM Santri & Pengurus</span>
                         </button>
                         <a href="#profil" class="w-full sm:w-auto bg-white/10 hover:bg-white/20 text-white font-semibold px-8 py-4 rounded-xl border border-white/20 transition text-base">
                             Pelajari Profil Pondok
@@ -233,8 +239,12 @@
                     </div>
                     <div class="space-y-2">
                         <h4 class="text-white font-bold text-xs uppercase tracking-wider">Akses Cepat SIM</h4>
-                        <p><a href="javascript:void(0)" onclick="openLoginModal()" class="hover:text-amber-300">Login Ketua Umum / Pimpinan</a></p>
-                        <p><a href="javascript:void(0)" onclick="openLoginModal()" class="hover:text-amber-300">Login Santri / Wali Santri</a></p>
+                        <div id="footerPublicLinks">
+                            <p><a href="javascript:void(0)" onclick="openLoginModal()" class="hover:text-amber-300"><i class="fa-solid fa-right-to-bracket mr-1 text-amber-400"></i> Masuk SIM Santri & Pengurus</a></p>
+                        </div>
+                        <div id="footerUserLinks" class="hidden">
+                            <p><a href="javascript:void(0)" onclick="showDashboardView()" class="hover:text-amber-300"><i class="fa-solid fa-gauge-high mr-1 text-amber-400"></i> Buka Dashboard SIM Santri</a></p>
+                        </div>
                     </div>
                 </div>
                 <div class="max-w-7xl mx-auto px-4 text-center border-t border-emerald-900/80 pt-6 text-[11px] text-emerald-400/60">
@@ -897,7 +907,7 @@
         let hafalanData = [];
         let paymentData = [];
         let chartInstance = null;
-        let currentRole = 'santri'; // default 'santri', set to 'ketua'/'bendahara'/'sekretaris' when logged in as management
+        let currentRole = 'santri'; // default 'santri'
         let isLoggedIn = false;
         let pollingTimer = null;
 
@@ -965,22 +975,6 @@
             btnCancel.onclick = close;
         };
 
-        function updateCloudBadge(isNeonConnected) {
-            const badge = document.getElementById('cloudStatusBadge');
-            const summary = document.getElementById('neonStatusSummary');
-            if (!badge) return;
-
-            if (isNeonConnected) {
-                badge.className = "text-[9px] px-1.5 py-0.5 rounded font-bold bg-emerald-100 text-emerald-800 flex items-center space-x-1 cursor-pointer";
-                badge.innerHTML = `<i class="fa-solid fa-database"></i> <span>Neon Connected</span>`;
-                if (summary) summary.innerText = "Neon.tech Postgres";
-            } else {
-                badge.className = "text-[9px] px-1.5 py-0.5 rounded font-bold bg-amber-100 text-amber-800 flex items-center space-x-1 cursor-pointer";
-                badge.innerHTML = `<i class="fa-solid fa-hard-drive"></i> <span>Penyimpanan Lokal</span>`;
-                if (summary) summary.innerText = "Penyimpanan Lokal";
-            }
-        }
-
         window.openNeonModal = function() {
             if (!isManagementRole()) {
                 showToast("Pengaturan Database hanya dapat diakses oleh Pengurus Utama.", "error");
@@ -1011,16 +1005,12 @@
                 await initNeonDatabase();
             } else {
                 sql = null;
-                updateCloudBadge(false);
                 showToast("Menggunakan mode Penyimpanan Lokal HP.", "info");
             }
         };
 
         async function initNeonDatabase() {
-            if (!neonConnectionString) {
-                updateCloudBadge(false);
-                return;
-            }
+            if (!neonConnectionString) return;
 
             try {
                 sql = neon(neonConnectionString);
@@ -1045,14 +1035,12 @@
                     );
                 `;
 
-                updateCloudBadge(true);
                 await syncFromNeon();
                 startPollingNeon();
 
             } catch (err) {
                 console.warn("Neon Postgres connection inactive or invalid:", err);
                 sql = null;
-                updateCloudBadge(false);
             }
         }
 
@@ -1259,7 +1247,7 @@
 
             // Update top executive cards & tab 3 financial cards based on current user view
             if (isManagementRole()) {
-                // PENGURUS UTAMA (Ketua Umum, Sekretaris, Bendahara)
+                // PENGURUS UTAMA
                 const dashHafalan = document.getElementById('dashHafalanSummary');
                 if (dashHafalan) dashHafalan.innerText = `Rata2 ${avgJuz} Juz`;
 
@@ -1410,6 +1398,7 @@
 
         window.switchDashTab = function(tabName) {
             const isMgmt = isManagementRole();
+            
             // DIBATASI KHUSUS AKUN PENGURUS
             if (tabName === 'master-santri' && !isMgmt) {
                 showToast("Akses dibatasi. Tab Kelola Santri khusus Pengurus Utama.", "error");
@@ -1466,6 +1455,10 @@
             const menuUserInfo = document.getElementById('menuUserInfo');
             const mobileUserLinks = document.getElementById('mobileUserLinks');
             const mobilePublicLinks = document.getElementById('mobilePublicLinks');
+            const heroPortalBtn = document.getElementById('heroPortalBtn');
+            const heroPortalBtnText = document.getElementById('heroPortalBtnText');
+            const footerPublicLinks = document.getElementById('footerPublicLinks');
+            const footerUserLinks = document.getElementById('footerUserLinks');
 
             if (isLoggedIn) {
                 if (btnNavDashboard) btnNavDashboard.classList.remove('hidden');
@@ -1473,12 +1466,28 @@
                 if (menuUserInfo) menuUserInfo.classList.remove('hidden');
                 if (mobileUserLinks) mobileUserLinks.classList.remove('hidden');
                 if (mobilePublicLinks) mobilePublicLinks.classList.add('hidden');
+                if (footerPublicLinks) footerPublicLinks.classList.add('hidden');
+                if (footerUserLinks) footerUserLinks.classList.remove('hidden');
+
+                if (heroPortalBtn && heroPortalBtnText) {
+                    const icon = heroPortalBtn.querySelector('i');
+                    if (icon) icon.className = "fa-solid fa-gauge-high";
+                    heroPortalBtnText.innerText = "Buka Dashboard SIM Santri";
+                }
             } else {
                 if (btnNavDashboard) btnNavDashboard.classList.add('hidden');
                 if (btnNavLogin) btnNavLogin.classList.remove('hidden');
                 if (menuUserInfo) menuUserInfo.classList.add('hidden');
                 if (mobileUserLinks) mobileUserLinks.classList.add('hidden');
                 if (mobilePublicLinks) mobilePublicLinks.classList.remove('hidden');
+                if (footerPublicLinks) footerPublicLinks.classList.remove('hidden');
+                if (footerUserLinks) footerUserLinks.classList.add('hidden');
+
+                if (heroPortalBtn && heroPortalBtnText) {
+                    const icon = heroPortalBtn.querySelector('i');
+                    if (icon) icon.className = "fa-solid fa-id-card-clip";
+                    heroPortalBtnText.innerText = "Portal SIM Santri & Pengurus";
+                }
             }
 
             // Management specific privileges
@@ -1517,6 +1526,14 @@
             if (targetSection) {
                 const el = document.getElementById(targetSection);
                 if (el) el.scrollIntoView({ behavior: 'smooth' });
+            }
+        };
+
+        window.handleHeroPortalClick = function() {
+            if (isLoggedIn) {
+                window.showDashboardView();
+            } else {
+                window.openLoginModal();
             }
         };
 
