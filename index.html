@@ -1243,7 +1243,6 @@
 
             let list = [];
             if (isManagementRole()) {
-                // If management, list all hafalan records from active santri or all santri
                 if (currentActiveSantri) {
                     list = currentActiveSantri.hafalanData || [];
                 } else {
@@ -1337,7 +1336,6 @@
         };
 
         window.switchDashTab = function(tabName) {
-            // Prevent santri from opening master-santri
             if (tabName === 'master-santri' && !isManagementRole()) {
                 showToast("Akses dibatasi. Tab Kelola Santri khusus Pengurus Utama.", "error");
                 tabName = 'hafalan';
@@ -1531,16 +1529,36 @@
             const dashMakanDisplay = document.getElementById('dashMakanDisplay');
             const dashTotalPayableDisplay = document.getElementById('dashTotalPayableDisplay');
 
-            if (dashSppDisplay) dashSppDisplay.innerText = `Rp ${Number(santri.spp || 350000).toLocaleString('id-ID')}`;
-            if (dashMakanDisplay) dashMakanDisplay.innerText = `Rp ${Number(santri.uangMakan || 100000).toLocaleString('id-ID')}`;
-            if (dashTotalPayableDisplay) dashTotalPayableDisplay.innerText = `Rp ${totalPayable.toLocaleString('id-ID')}`;
-
             if (santri.statusBayar === 'Lunas') {
+                if (dashSppDisplay) {
+                    dashSppDisplay.innerText = 'Rp 0 (LUNAS)';
+                    dashSppDisplay.className = 'text-xl font-extrabold text-emerald-600';
+                }
+                if (dashMakanDisplay) {
+                    dashMakanDisplay.innerText = 'Rp 0 (LUNAS)';
+                    dashMakanDisplay.className = 'text-xl font-extrabold text-emerald-600';
+                }
+                if (dashTotalPayableDisplay) {
+                    dashTotalPayableDisplay.innerText = 'Rp 0 (LUNAS)';
+                    dashTotalPayableDisplay.className = 'text-xl font-extrabold text-emerald-600';
+                }
                 if (dashTanggungan) {
                     dashTanggungan.innerText = 'Rp 0 (LUNAS)';
                     dashTanggungan.className = 'text-xl font-bold text-emerald-600 mt-2';
                 }
             } else {
+                if (dashSppDisplay) {
+                    dashSppDisplay.innerText = `Rp ${Number(santri.spp || 350000).toLocaleString('id-ID')}`;
+                    dashSppDisplay.className = 'text-xl font-extrabold text-slate-900';
+                }
+                if (dashMakanDisplay) {
+                    dashMakanDisplay.innerText = `Rp ${Number(santri.uangMakan || 100000).toLocaleString('id-ID')}`;
+                    dashMakanDisplay.className = 'text-xl font-extrabold text-slate-900';
+                }
+                if (dashTotalPayableDisplay) {
+                    dashTotalPayableDisplay.innerText = `Rp ${totalPayable.toLocaleString('id-ID')}`;
+                    dashTotalPayableDisplay.className = 'text-xl font-extrabold text-rose-600';
+                }
                 if (dashTanggungan) {
                     dashTanggungan.innerText = `Rp ${totalPayable.toLocaleString('id-ID')}`;
                     dashTanggungan.className = 'text-xl font-bold text-rose-600 mt-2';
@@ -1715,6 +1733,10 @@
             window.filterMasterSantri();
             window.updateMasterSummary();
 
+            if (currentActiveSantri && currentActiveSantri.nis === santri.nis) {
+                loadSantriIntoHeader(santri);
+            }
+
             await saveSantriToNeon(santri);
 
             showToast(`Data santri ${santri.nama} diperbarui!`, 'success');
@@ -1805,7 +1827,6 @@
 
             if (!currentActiveSantri) return;
 
-            // Mark confirmation request
             showToast("Konfirmasi transfer telah dikirim ke Bendahara untuk diverifikasi.", "success");
             window.closePaymentModal();
         };
