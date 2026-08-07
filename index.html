@@ -260,8 +260,8 @@
                     </div>
                     <div class="bg-amber-50/80 p-4 rounded-xl border border-amber-100">
                         <span class="text-[11px] font-bold text-amber-800 uppercase tracking-wider block">Status Tanggungan Syahriyah</span>
-                        <div id="dashTanggunganSummary" class="text-xl font-bold text-rose-600 mt-2">Rp 450.000</div>
-                        <span class="text-[10px] text-slate-500">Jatuh Tempo: Tanggal 10 Tiap Bulan</span>
+                        <div id="dashTanggunganSummary" class="text-xl font-bold text-rose-600 mt-2">Rp 0 (LUNAS)</div>
+                        <span id="dashTanggunganLabel" class="text-[10px] text-slate-500">Jatuh Tempo: Tanggal 10 Tiap Bulan</span>
                     </div>
                     <div class="bg-blue-50/80 p-4 rounded-xl border border-blue-100">
                         <span class="text-[11px] font-bold text-blue-800 uppercase tracking-wider block">Tingkat Kedisiplinan Santri</span>
@@ -416,15 +416,15 @@
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div class="p-4 bg-white rounded-xl border border-slate-200 space-y-2 shadow-sm">
                                 <span class="text-xs font-bold text-slate-500 uppercase">Tanggungan SPP</span>
-                                <div id="dashSppDisplay" class="text-xl font-extrabold text-slate-900">Rp 350.000</div>
+                                <div id="dashSppDisplay" class="text-xl font-extrabold text-emerald-600">Rp 0 (LUNAS)</div>
                             </div>
                             <div class="p-4 bg-white rounded-xl border border-slate-200 space-y-2 shadow-sm">
                                 <span class="text-xs font-bold text-slate-500 uppercase">Uang Makan</span>
-                                <div id="dashMakanDisplay" class="text-xl font-extrabold text-slate-900">Rp 100.000</div>
+                                <div id="dashMakanDisplay" class="text-xl font-extrabold text-emerald-600">Rp 0 (LUNAS)</div>
                             </div>
                             <div class="p-4 bg-white rounded-xl border border-slate-200 space-y-2 shadow-sm">
                                 <span class="text-xs font-bold text-slate-500 uppercase">Total Harus Dibayar</span>
-                                <div id="dashTotalPayableDisplay" class="text-xl font-extrabold text-rose-600">Rp 450.000</div>
+                                <div id="dashTotalPayableDisplay" class="text-xl font-extrabold text-emerald-600">Rp 0 (LUNAS)</div>
                             </div>
                         </div>
 
@@ -768,7 +768,7 @@
             <div class="p-6 space-y-4 text-xs">
                 <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-center space-y-1">
                     <span class="text-slate-400 font-bold uppercase block">Total Tagihan Bulan Ini</span>
-                    <div id="payModalTotalAmount" class="text-2xl font-black text-rose-600">Rp 450.000</div>
+                    <div id="payModalTotalAmount" class="text-2xl font-black text-emerald-600">Rp 0 (LUNAS)</div>
                 </div>
                 <p class="text-slate-600 text-center">Silakan selesaikan pembayaran ke Rekening Resmi Pesantren:</p>
                 <div class="p-3 bg-amber-50 rounded-xl border border-amber-200 font-mono text-center space-y-1">
@@ -836,7 +836,7 @@
                 hafalanSurah: 'At-Tawbah',
                 spp: 350000,
                 uangMakan: 100000,
-                statusBayar: 'Belum Lunas',
+                statusBayar: 'Lunas',
                 hafalanData: [
                     { tanggal: '05/08/2026', jenis: 'Ziyadah (Baru)', surah: 'Surah At-Tawbah 1-30', juz: 10, nilai: 'A (Sangat Mutqin)', ustadz: 'Ust. Abdullah' },
                     { tanggal: '01/08/2026', jenis: "Muraja'ah (Ulang)", surah: 'Surah An-Anfal 1-75', juz: 9, nilai: 'B+ (Lancar)', ustadz: 'Ust. Hasan' }
@@ -1071,7 +1071,7 @@
                 }
 
                 window.filterMasterSantri();
-                window.updateMasterSummary();
+                window.updateAllSummaries();
 
                 if (currentActiveSantri) {
                     const updated = masterSantriData.find(s => s.nis === currentActiveSantri.nis);
@@ -1155,7 +1155,7 @@
 
             data.forEach(santri => {
                 const isLunas = santri.statusBayar === 'Lunas';
-                const totalTagihan = Number(santri.spp || 350000) + Number(santri.uangMakan || 100000);
+                const totalTagihan = isLunas ? 0 : (Number(santri.spp || 350000) + Number(santri.uangMakan || 100000));
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-slate-50 transition border-b border-slate-100";
                 
@@ -1218,14 +1218,23 @@
             window.renderMasterSantriTable(filtered);
         };
 
-        window.updateMasterSummary = function() {
+        window.updateAllSummaries = function() {
             const totalCount = masterSantriData.length;
             const totalJuz = masterSantriData.reduce((acc, curr) => acc + Number(curr.hafalanJuz || 0), 0);
             const avgJuz = totalCount > 0 ? (totalJuz / totalCount).toFixed(1) : 0;
             
-            const uncollected = masterSantriData
-                .filter(s => s.statusBayar !== 'Lunas')
-                .reduce((acc, curr) => acc + (Number(curr.spp || 350000) + Number(curr.uangMakan || 100000)), 0);
+            // Calculate uncollected balances
+            let totalUnpaidSpp = 0;
+            let totalUnpaidMakan = 0;
+
+            masterSantriData.forEach(s => {
+                if (s.statusBayar !== 'Lunas') {
+                    totalUnpaidSpp += Number(s.spp || 350000);
+                    totalUnpaidMakan += Number(s.uangMakan || 100000);
+                }
+            });
+
+            const uncollectedTotal = totalUnpaidSpp + totalUnpaidMakan;
 
             const elTotal = document.getElementById('totalSantriCount');
             const elAvg = document.getElementById('avgJuzCount');
@@ -1233,7 +1242,58 @@
 
             if (elTotal) elTotal.innerText = totalCount;
             if (elAvg) elAvg.innerText = `${avgJuz} Juz`;
-            if (elTagihan) elTagihan.innerText = `Rp ${uncollected.toLocaleString('id-ID')}`;
+            if (elTagihan) elTagihan.innerText = uncollectedTotal === 0 ? 'Rp 0 (Lunas)' : `Rp ${uncollectedTotal.toLocaleString('id-ID')}`;
+
+            // Update top executive cards & tab 3 financial cards based on current user view
+            if (isManagementRole()) {
+                // PENGURUS UTAMA (Ketua Umum, Sekretaris, Bendahara)
+                const dashHafalan = document.getElementById('dashHafalanSummary');
+                if (dashHafalan) dashHafalan.innerText = `Rata2 ${avgJuz} Juz`;
+
+                const dashTanggungan = document.getElementById('dashTanggunganSummary');
+                const dashSppDisplay = document.getElementById('dashSppDisplay');
+                const dashMakanDisplay = document.getElementById('dashMakanDisplay');
+                const dashTotalPayableDisplay = document.getElementById('dashTotalPayableDisplay');
+
+                if (uncollectedTotal === 0) {
+                    if (dashTanggungan) {
+                        dashTanggungan.innerText = "Rp 0 (LUNAS)";
+                        dashTanggungan.className = "text-xl font-extrabold text-emerald-600 mt-2";
+                    }
+                    if (dashSppDisplay) {
+                        dashSppDisplay.innerText = "Rp 0 (LUNAS)";
+                        dashSppDisplay.className = "text-xl font-extrabold text-emerald-600";
+                    }
+                    if (dashMakanDisplay) {
+                        dashMakanDisplay.innerText = "Rp 0 (LUNAS)";
+                        dashMakanDisplay.className = "text-xl font-extrabold text-emerald-600";
+                    }
+                    if (dashTotalPayableDisplay) {
+                        dashTotalPayableDisplay.innerText = "Rp 0 (LUNAS)";
+                        dashTotalPayableDisplay.className = "text-xl font-extrabold text-emerald-600";
+                    }
+                } else {
+                    if (dashTanggungan) {
+                        dashTanggungan.innerText = `Rp ${uncollectedTotal.toLocaleString('id-ID')}`;
+                        dashTanggungan.className = "text-xl font-extrabold text-rose-600 mt-2";
+                    }
+                    if (dashSppDisplay) {
+                        dashSppDisplay.innerText = `Rp ${totalUnpaidSpp.toLocaleString('id-ID')}`;
+                        dashSppDisplay.className = "text-xl font-extrabold text-slate-900";
+                    }
+                    if (dashMakanDisplay) {
+                        dashMakanDisplay.innerText = `Rp ${totalUnpaidMakan.toLocaleString('id-ID')}`;
+                        dashMakanDisplay.className = "text-xl font-extrabold text-slate-900";
+                    }
+                    if (dashTotalPayableDisplay) {
+                        dashTotalPayableDisplay.innerText = `Rp ${uncollectedTotal.toLocaleString('id-ID')}`;
+                        dashTotalPayableDisplay.className = "text-xl font-extrabold text-rose-600";
+                    }
+                }
+            } else if (currentActiveSantri) {
+                // AKUN SANTRI BIASA
+                loadSantriIntoHeader(currentActiveSantri);
+            }
         };
 
         window.renderHafalanTable = function() {
@@ -1449,8 +1509,11 @@
         window.openPaymentModal = function() { 
             const payTotal = document.getElementById('payModalTotalAmount');
             if (currentActiveSantri) {
-                const totalPayable = Number(currentActiveSantri.spp || 350000) + Number(currentActiveSantri.uangMakan || 100000);
-                if (payTotal) payTotal.innerText = currentActiveSantri.statusBayar === 'Lunas' ? 'Rp 0 (LUNAS)' : `Rp ${totalPayable.toLocaleString('id-ID')}`;
+                const totalPayable = currentActiveSantri.statusBayar === 'Lunas' ? 0 : (Number(currentActiveSantri.spp || 350000) + Number(currentActiveSantri.uangMakan || 100000));
+                if (payTotal) {
+                    payTotal.innerText = currentActiveSantri.statusBayar === 'Lunas' ? 'Rp 0 (LUNAS)' : `Rp ${totalPayable.toLocaleString('id-ID')}`;
+                    payTotal.className = currentActiveSantri.statusBayar === 'Lunas' ? 'text-2xl font-black text-emerald-600' : 'text-2xl font-black text-rose-600';
+                }
             }
             document.getElementById('paymentModal')?.classList.remove('hidden'); 
         };
@@ -1517,7 +1580,7 @@
         function loadSantriIntoHeader(santri) {
             if (!santri) return;
             const avatar = santri.nama ? santri.nama.substring(0, 2).toUpperCase() : 'ST';
-            const totalPayable = Number(santri.spp || 350000) + Number(santri.uangMakan || 100000);
+            const totalPayable = santri.statusBayar === 'Lunas' ? 0 : (Number(santri.spp || 350000) + Number(santri.uangMakan || 100000));
 
             setLoggedInUser(santri.nama, 'Santri Tahfidz', avatar, santri.nis, santri.kelas, santri.kamar);
 
@@ -1618,6 +1681,7 @@
             document.getElementById('userNav')?.classList.remove('hidden');
 
             updateUIPermissions();
+            window.updateAllSummaries();
             window.closeLoginModal();
             showToast(`Selamat datang, ${matchedRole ? managementAccounts[matchedRole].name : matchedSantri.nama}!`, 'success');
         };
@@ -1691,14 +1755,14 @@
                     { tanggal: new Date().toLocaleDateString('id-ID'), jenis: 'Ziyadah (Baru)', surah: `Surah ${hafalanSurah || 'An-Nas'}`, juz: hafalanJuz || 0, nilai: 'A (Sangat Mutqin)', ustadz: 'Ust. Abdullah' }
                 ],
                 paymentData: [
-                    { id: 'TRX-' + Math.floor(Math.random() * 89999 + 10000), tanggal: new Date().toLocaleDateString('id-ID'), uraian: 'Setoran Awal Registration', nominal: (spp || 350000) + (uangMakan || 100000), status: statusBayar || 'Belum Lunas' }
+                    { id: 'TRX-' + Math.floor(Math.random() * 89999 + 10000), tanggal: new Date().toLocaleDateString('id-ID'), uraian: 'Setoran Awal Registration', nominal: statusBayar === 'Lunas' ? 0 : ((spp || 350000) + (uangMakan || 100000)), status: statusBayar || 'Belum Lunas' }
                 ]
             };
 
             masterSantriData.unshift(newSantriObj);
             saveToLocal();
             window.filterMasterSantri();
-            window.updateMasterSummary();
+            window.updateAllSummaries();
 
             await saveSantriToNeon(newSantriObj);
 
@@ -1731,7 +1795,7 @@
 
             saveToLocal();
             window.filterMasterSantri();
-            window.updateMasterSummary();
+            window.updateAllSummaries();
 
             if (currentActiveSantri && currentActiveSantri.nis === santri.nis) {
                 loadSantriIntoHeader(santri);
@@ -1759,7 +1823,7 @@
                     masterSantriData = masterSantriData.filter(s => s.nis !== nis);
                     saveToLocal();
                     window.filterMasterSantri();
-                    window.updateMasterSummary();
+                    window.updateAllSummaries();
 
                     await deleteSantriFromNeon(nis);
                     showToast("Santri berhasil dihapus.", 'success');
@@ -1811,6 +1875,7 @@
             }
             window.renderHafalanTable();
             window.filterMasterSantri();
+            window.updateAllSummaries();
 
             await saveSantriToNeon(targetSantri);
 
@@ -1843,7 +1908,7 @@
             window.renderHafalanTable();
             window.renderPaymentTable();
             window.initHafalanChart();
-            window.updateMasterSummary();
+            window.updateAllSummaries();
 
             initNeonDatabase();
         };
