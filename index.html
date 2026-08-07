@@ -65,7 +65,7 @@
                     
                     <!-- Dashboard button when logged in -->
                     <button id="btnNavDashboard" onclick="showDashboardView()" class="hidden bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold px-4 py-2 rounded-xl shadow transition flex items-center space-x-2 text-xs">
-                        <i class="fa-solid fa-user-circle"></i>
+                        <i class="fa-solid fa-gauge-high"></i>
                         <span>Profil Santri / SIM</span>
                     </button>
 
@@ -116,8 +116,13 @@
             <!-- Options when logged in -->
             <div id="mobileUserLinks" class="hidden pt-3 border-t border-emerald-800 space-y-2">
                 <button onclick="showDashboardView(); closeMobileMenu();" class="w-full text-left py-2.5 px-3 rounded-xl bg-amber-500 text-slate-950 font-bold hover:bg-amber-400 transition flex items-center space-x-2">
-                    <i class="fa-solid fa-id-card-clip text-slate-950 w-5"></i>
+                    <i class="fa-solid fa-gauge-high text-slate-950 w-5"></i>
                     <span>Profil Santri / Dashboard SIM</span>
+                </button>
+
+                <button onclick="showDashboardView(); switchDashTab('detail-santri'); closeMobileMenu();" class="w-full text-left py-2.5 px-3 rounded-xl bg-emerald-900 hover:bg-emerald-800 text-emerald-100 font-bold transition flex items-center space-x-2">
+                    <i class="fa-solid fa-address-card text-amber-400 w-5"></i>
+                    <span>Biodata Santri</span>
                 </button>
 
                 <button onclick="openChangePasswordModal(); closeMobileMenu();" class="w-full text-left py-2.5 px-3 rounded-xl bg-emerald-900 hover:bg-emerald-800 text-amber-300 font-bold transition flex items-center space-x-2">
@@ -253,18 +258,15 @@
                 </div>
             </section>
 
-            <!-- JADWAL SHOLAT OTOMATIS SECTION (PALING BAWAH HALAMAN BERANDA) -->
+            <!-- JADWAL SHOLAT OTOMATIS SECTION -->
             <section id="jadwal-sholat" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
                 <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-950 via-slate-900 to-emerald-900 text-white shadow-2xl border border-emerald-800/60 p-6 sm:p-10">
-                    <!-- Ambient Glow Effects & Subtle Pattern Background -->
                     <div class="absolute -right-16 -top-16 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
                     <div class="absolute -left-16 -bottom-16 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
                     <div class="absolute inset-0 bg-[radial-gradient(#d97706_1px,transparent_1px)] [background-size:24px_24px] opacity-10 pointer-events-none"></div>
 
                     <div class="relative z-10 space-y-8">
-                        <!-- Top Header & Countdown Hero Bar -->
                         <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-6 border-b border-emerald-800/60">
-                            <!-- Title & Dates -->
                             <div class="space-y-2">
                                 <div class="flex items-center space-x-3 flex-wrap gap-y-2">
                                     <div class="flex items-center space-x-2 bg-emerald-800/80 backdrop-blur border border-emerald-600/50 px-3.5 py-1 rounded-full text-xs font-bold text-amber-300 shadow-sm">
@@ -286,7 +288,6 @@
                                 </p>
                             </div>
 
-                            <!-- Modern Next Prayer Countdown Hero -->
                             <div class="bg-slate-900/80 backdrop-blur-md rounded-2xl p-4 sm:p-5 border border-amber-500/30 shadow-xl flex items-center justify-between sm:justify-start space-x-4 sm:space-x-6">
                                 <div class="space-y-1">
                                     <div class="text-[10px] sm:text-[11px] font-bold tracking-widest text-emerald-400 uppercase flex items-center space-x-1.5">
@@ -307,7 +308,6 @@
                             </div>
                         </div>
 
-                        <!-- Prayer Times Cards Grid -->
                         <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3 sm:gap-4" id="prayerTimesGrid">
                             <!-- Dynamic items generated via JavaScript -->
                         </div>
@@ -394,7 +394,6 @@
             <!-- Dashboard Main Navigation Tabs -->
             <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
                 <div class="flex border-b border-slate-200 overflow-x-auto scrollbar-none bg-slate-50/50">
-                    <!-- KHUSUS AKUN PENGURUS (KETUA UMUM, SEKRETARIS, BENDAHARA) -->
                     <button onclick="switchDashTab('master-santri')" id="tabBtnMaster" class="dash-tab-btn hidden px-6 py-4 font-semibold text-sm border-b-2 border-emerald-600 text-emerald-700 whitespace-nowrap flex items-center space-x-2">
                         <i class="fa-solid fa-users-gear"></i>
                         <span>Kelola Data Santri (Pengurus)</span>
@@ -409,7 +408,7 @@
                     </button>
                     <button onclick="switchDashTab('detail-santri')" id="tabBtnDetail" class="dash-tab-btn px-6 py-4 font-semibold text-sm border-b-2 border-transparent text-slate-600 hover:text-emerald-700 whitespace-nowrap flex items-center space-x-2">
                         <i class="fa-solid fa-id-card"></i>
-                        <span>Info Santri</span>
+                        <span>Info Santri / Biodata</span>
                     </button>
                 </div>
 
@@ -483,7 +482,6 @@
                                 <h3 class="text-lg font-bold text-slate-900">Perkembangan Setoran Hafalan</h3>
                                 <p class="text-xs text-slate-500">Grafik dan rekam jejak hafalan Al-Qur'an santri.</p>
                             </div>
-                            <!-- Only management can add setoran -->
                             <button id="btnAddHafalanNav" onclick="openModalAddHafalan()" class="bg-emerald-700 hover:bg-emerald-800 text-white font-bold px-4 py-2 rounded-xl text-xs shadow transition flex items-center space-x-1.5">
                                 <i class="fa-solid fa-plus"></i>
                                 <span>Input Setoran Baru</span>
@@ -562,21 +560,62 @@
                         </div>
                     </div>
 
-                    <!-- TAB 4: DETAIL SANTRI -->
+                    <!-- TAB 4: DETAIL & BIODATA SANTRI -->
                     <div id="tabDetail" class="dash-tab-content space-y-6 hidden">
-                        <div class="border-b pb-4">
-                            <h3 class="text-lg font-bold text-slate-900">Profil & Biodata Santri</h3>
-                            <p class="text-xs text-slate-500">Data identitas resmi santri.</p>
-                        </div>
-                        <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200 grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
-                            <div class="space-y-3">
-                                <div><span class="text-slate-400 font-bold block uppercase">Nama Lengkap</span> <strong class="text-sm text-slate-900" id="detailNamaDisplay">Ahmad Fauzi</strong></div>
-                                <div><span class="text-slate-400 font-bold block uppercase">Nomor Induk Santri (NIS) / ID</span> <strong class="text-slate-900 font-mono" id="detailNisDisplay">202601001</strong></div>
-                            </div>
-                            <div class="space-y-3">
-                                <div><span class="text-slate-400 font-bold block uppercase">Kamar Asrama / Lokasi</span> <strong class="text-slate-900" id="detailKamarDisplay">Al-Farabi Room 01</strong></div>
+                        <div class="border-b pb-4 flex justify-between items-center">
+                            <div>
+                                <h3 class="text-lg font-bold text-slate-900">Profil & Biodata Santri</h3>
+                                <p class="text-xs text-slate-500">Kelola dan perbarui data identitas pribadi Anda.</p>
                             </div>
                         </div>
+
+                        <!-- KHUSUS PENGURUS: SELECTOR SANTRI UNTUK MELIHAT ALL BIODATA -->
+                        <div id="bioSantriSelectorContainer" class="hidden bg-amber-50 p-4 rounded-xl border border-amber-200 space-y-1">
+                            <label class="block font-bold text-amber-900 text-xs"><i class="fa-solid fa-users text-amber-600 mr-1"></i> Pilih Santri untuk Dilihat / Diperbarui Biodatanya (Pengurus Utama):</label>
+                            <select id="bioSantriSelect" onchange="onSelectBioSantri(this.value)" class="w-full px-3 py-2 rounded-xl border border-amber-300 text-xs font-semibold focus:ring-2 focus:ring-emerald-600 focus:outline-none bg-white text-slate-800">
+                                <!-- Dynamic Options Generated via JS -->
+                            </select>
+                        </div>
+
+                        <form onsubmit="handleSaveBiodataSubmit(event)" class="bg-slate-50 p-6 rounded-2xl border border-slate-200 space-y-6 text-xs">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block font-bold text-slate-700 mb-1">Nama Lengkap</label>
+                                    <input type="text" id="bioNamaInput" required class="w-full px-3 py-2.5 rounded-xl border border-slate-300 font-bold text-slate-900 focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
+                                </div>
+                                <div>
+                                    <label class="block font-bold text-slate-700 mb-1">Nomor Induk Santri (NIS)</label>
+                                    <input type="text" id="bioNisInput" readonly class="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-slate-200/70 font-mono font-bold text-slate-600 cursor-not-allowed" />
+                                </div>
+                                <div>
+                                    <label class="block font-bold text-slate-700 mb-1">Kelas Formal / Diniyah</label>
+                                    <input type="text" id="bioKelasInput" placeholder="Contoh: 10 MA Tahfidz" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 font-semibold text-slate-800 focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
+                                </div>
+                                <div>
+                                    <label class="block font-bold text-slate-700 mb-1">Kamar / Asrama</label>
+                                    <input type="text" id="bioKamarInput" placeholder="Contoh: Al-Farabi Room 01" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 font-semibold text-slate-800 focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
+                                </div>
+                                <div>
+                                    <label class="block font-bold text-slate-700 mb-1">Nomor WhatsApp / Telp Santri</label>
+                                    <input type="text" id="bioWaInput" placeholder="Contoh: 081234567890" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 font-semibold text-slate-800 focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
+                                </div>
+                                <div>
+                                    <label class="block font-bold text-slate-700 mb-1">Nama Orang Tua / Wali</label>
+                                    <input type="text" id="bioWaliInput" placeholder="Nama lengkap wali santri" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 font-semibold text-slate-800 focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
+                                </div>
+                                <div class="md:col-span-2">
+                                    <label class="block font-bold text-slate-700 mb-1">Alamat Lengkap Asal</label>
+                                    <textarea id="bioAlamatInput" rows="2" placeholder="Alamat rumah / daerah asal santri" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 font-semibold text-slate-800 focus:ring-2 focus:ring-emerald-600 focus:outline-none"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="pt-2 flex justify-end">
+                                <button type="submit" class="bg-emerald-700 hover:bg-emerald-800 text-white font-bold px-6 py-3 rounded-xl shadow-lg transition flex items-center space-x-2 text-xs">
+                                    <i class="fa-solid fa-floppy-disk"></i>
+                                    <span>Simpan Perubahan Biodata</span>
+                                </button>
+                            </div>
+                        </form>
                     </div>
 
                 </div>
@@ -585,42 +624,6 @@
         </div>
 
     </main>
-
-    <!-- MODAL NEON POSTGRES CONFIG -->
-    <div id="neonModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
-        <div class="bg-white w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden">
-            <div class="bg-slate-900 text-white p-5 flex justify-between items-center border-b border-slate-800">
-                <div class="flex items-center space-x-2">
-                    <i class="fa-solid fa-database text-amber-400"></i>
-                    <h3 class="font-extrabold text-base">Pengaturan Neon.tech PostgreSQL</h3>
-                </div>
-                <button onclick="closeNeonModal()" class="text-slate-400 hover:text-white">
-                    <i class="fa-solid fa-xmark text-lg"></i>
-                </button>
-            </div>
-            <div class="p-6 space-y-4 text-xs">
-                <p class="text-slate-600 leading-relaxed">
-                    Aplikasi ini terhubung langsung ke **Neon.tech Serverless PostgreSQL** untuk sinkronisasi otomatis antar HP.
-                </p>
-
-                <div>
-                    <label class="block font-bold text-slate-700 mb-1">Neon Database Connection String:</label>
-                    <input type="password" id="neonConnStringInput" placeholder="postgres://user:password@ep-xyz.neon.tech/neondb?sslmode=require" class="w-full px-3 py-2 rounded-xl border border-slate-300 font-mono text-xs focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
-                </div>
-
-                <div class="p-3 bg-amber-50 rounded-xl border border-amber-200 text-[11px] text-amber-900 space-y-1">
-                    <p class="font-bold"><i class="fa-solid fa-circle-info mr-1"></i> Informasi Database:</p>
-                    <p>• Connection String telah terkonfigurasi secara terpusat.</p>
-                    <p>• Pengurus dapat memperbarui string database kapan saja di sini.</p>
-                </div>
-
-                <div class="flex space-x-2 pt-2">
-                    <button onclick="closeNeonModal()" class="w-1/2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-2.5 rounded-xl">Tutup</button>
-                    <button onclick="saveNeonConnString()" class="w-1/2 bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-2.5 rounded-xl shadow">Simpan Connection String</button>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- MODAL 1: LOGIN SIM SANTRI & PENGURUS -->
     <div id="loginModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
@@ -689,7 +692,7 @@
         </div>
     </div>
 
-    <!-- MODAL 3: TAMBAH SANTRI BARU (Pengurus Only) -->
+    <!-- MODAL 3: TAMBAH SANTRI BARU -->
     <div id="addSantriModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4 overflow-y-auto">
         <div class="bg-white w-full max-w-xl rounded-2xl shadow-2xl overflow-hidden my-8">
             <div class="bg-emerald-900 text-white p-5 flex justify-between items-center">
@@ -761,7 +764,7 @@
         </div>
     </div>
 
-    <!-- MODAL 4: EDIT SANTRI (Pengurus Only) -->
+    <!-- MODAL 4: EDIT SANTRI -->
     <div id="editSantriModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4 overflow-y-auto">
         <div class="bg-white w-full max-w-xl rounded-2xl shadow-2xl overflow-hidden my-8">
             <div class="bg-emerald-900 text-white p-5 flex justify-between items-center">
@@ -826,7 +829,7 @@
         </div>
     </div>
 
-    <!-- MODAL 5: INPUT SETORAN HAFALAN (Pengurus Only) -->
+    <!-- MODAL 5: INPUT SETORAN HAFALAN -->
     <div id="addHafalanModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
         <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden">
             <div class="bg-emerald-900 text-white p-5 flex justify-between items-center">
@@ -948,6 +951,9 @@
                 nama: 'Ahmad Fauzi',
                 kelas: '10 MA Tahfidz',
                 kamar: 'Al-Farabi Room 01',
+                wa: '081234567890',
+                wali: 'H. Sulaiman',
+                alamat: 'Jl. Pemuda No. 45, Jember, Jawa Timur',
                 status: 'AKTIFF',
                 hafalanJuz: 10,
                 hafalanSurah: 'At-Tawbah',
@@ -968,6 +974,9 @@
                 nama: 'Fatimah Az-Zahra',
                 kelas: '11 MA Tahfidz',
                 kamar: 'Aisyah Room 03',
+                wa: '085678901234',
+                wali: 'Dr. Ahmad Rivaldi',
+                alamat: 'Jl. Merdeka No. 12, Banyuwangi, Jawa Timur',
                 status: 'AKTIFF',
                 hafalanJuz: 18,
                 hafalanSurah: 'Al-Kahf',
@@ -1001,11 +1010,10 @@
         let hafalanData = [];
         let paymentData = [];
         let chartInstance = null;
-        let currentRole = 'santri'; // default 'santri'
+        let currentRole = 'santri';
         let isLoggedIn = false;
         let pollingTimer = null;
 
-        // FUNGSI PENYIMPANAN DAN PEMULIHAN SESI LOGIN SAAT REFRESH
         function saveSession(role, nis = null) {
             try {
                 localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify({ role, nis }));
@@ -1118,47 +1126,12 @@
             btnCancel.onclick = close;
         };
 
-        window.openNeonModal = function() {
-            if (!isManagementRole()) {
-                showToast("Pengaturan Database hanya dapat diakses oleh Pengurus Utama.", "error");
-                return;
-            }
-            const modal = document.getElementById('neonModal');
-            const input = document.getElementById('neonConnStringInput');
-            if (input) input.value = neonConnectionString;
-            if (modal) modal.classList.remove('hidden');
-        };
-
-        window.closeNeonModal = function() {
-            const modal = document.getElementById('neonModal');
-            if (modal) modal.classList.add('hidden');
-        };
-
-        window.saveNeonConnString = async function() {
-            if (!isManagementRole()) {
-                showToast("Aksi khusus Pengurus Utama.", "error");
-                return;
-            }
-            const connStr = document.getElementById('neonConnStringInput').value.trim();
-            neonConnectionString = connStr;
-            localStorage.setItem(NEON_STORAGE_KEY, connStr);
-            window.closeNeonModal();
-
-            if (connStr) {
-                await initNeonDatabase();
-            } else {
-                sql = null;
-                showToast("Menggunakan mode Penyimpanan Lokal HP.", "info");
-            }
-        };
-
         async function initNeonDatabase() {
             if (!neonConnectionString) return;
 
             try {
                 sql = neon(neonConnectionString);
 
-                // Create Table if not exists in Neon Postgres
                 await sql`
                     CREATE TABLE IF NOT EXISTS santri (
                         nis VARCHAR(50) PRIMARY KEY,
@@ -1166,6 +1139,9 @@
                         nama TEXT NOT NULL,
                         kelas TEXT,
                         kamar TEXT,
+                        wa TEXT,
+                        wali TEXT,
+                        alamat TEXT,
                         status TEXT DEFAULT 'AKTIFF',
                         hafalan_juz INT DEFAULT 0,
                         hafalan_surah TEXT,
@@ -1177,6 +1153,20 @@
                         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                     );
                 `;
+
+                await sql`ALTER TABLE santri ADD COLUMN IF NOT EXISTS password TEXT DEFAULT '123456';`;
+                await sql`ALTER TABLE santri ADD COLUMN IF NOT EXISTS wa TEXT DEFAULT '';`;
+                await sql`ALTER TABLE santri ADD COLUMN IF NOT EXISTS wali TEXT DEFAULT '';`;
+                await sql`ALTER TABLE santri ADD COLUMN IF NOT EXISTS alamat TEXT DEFAULT '';`;
+                await sql`ALTER TABLE santri ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'AKTIFF';`;
+                await sql`ALTER TABLE santri ADD COLUMN IF NOT EXISTS hafalan_juz INT DEFAULT 0;`;
+                await sql`ALTER TABLE santri ADD COLUMN IF NOT EXISTS hafalan_surah TEXT DEFAULT '';`;
+                await sql`ALTER TABLE santri ADD COLUMN IF NOT EXISTS spp INT DEFAULT 350000;`;
+                await sql`ALTER TABLE santri ADD COLUMN IF NOT EXISTS uang_makan INT DEFAULT 100000;`;
+                await sql`ALTER TABLE santri ADD COLUMN IF NOT EXISTS status_bayar TEXT DEFAULT 'Belum Lunas';`;
+                await sql`ALTER TABLE santri ADD COLUMN IF NOT EXISTS hafalan_data JSONB DEFAULT '[]'::jsonb;`;
+                await sql`ALTER TABLE santri ADD COLUMN IF NOT EXISTS payment_data JSONB DEFAULT '[]'::jsonb;`;
+                await sql`ALTER TABLE santri ADD COLUMN IF NOT EXISTS updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;`;
 
                 await syncFromNeon();
                 startPollingNeon();
@@ -1198,6 +1188,9 @@
                         nama: r.nama,
                         kelas: r.kelas,
                         kamar: r.kamar,
+                        wa: r.wa || '',
+                        wali: r.wali || '',
+                        alamat: r.alamat || '',
                         status: r.status,
                         hafalanJuz: r.hafalan_juz,
                         hafalanSurah: r.hafalan_surah,
@@ -1241,11 +1234,11 @@
 
                 await sql`
                     INSERT INTO santri (
-                        nis, password, nama, kelas, kamar, status,
+                        nis, password, nama, kelas, kamar, wa, wali, alamat, status,
                         hafalan_juz, hafalan_surah, spp, uang_makan, status_bayar,
                         hafalan_data, payment_data
                     ) VALUES (
-                        ${santriObj.nis}, ${santriObj.password || '123456'}, ${santriObj.nama}, ${santriObj.kelas}, ${santriObj.kamar}, ${santriObj.status},
+                        ${santriObj.nis}, ${santriObj.password || '123456'}, ${santriObj.nama}, ${santriObj.kelas}, ${santriObj.kamar}, ${santriObj.wa || ''}, ${santriObj.wali || ''}, ${santriObj.alamat || ''}, ${santriObj.status},
                         ${Number(santriObj.hafalanJuz || 0)}, ${santriObj.hafalanSurah || ''}, ${Number(santriObj.spp || 350000)}, ${Number(santriObj.uangMakan || 100000)}, ${santriObj.statusBayar || 'Belum Lunas'},
                         ${hDataJson}::jsonb, ${pDataJson}::jsonb
                     )
@@ -1254,6 +1247,9 @@
                         nama = EXCLUDED.nama,
                         kelas = EXCLUDED.kelas,
                         kamar = EXCLUDED.kamar,
+                        wa = EXCLUDED.wa,
+                        wali = EXCLUDED.wali,
+                        alamat = EXCLUDED.alamat,
                         status = EXCLUDED.status,
                         hafalan_juz = EXCLUDED.hafalan_juz,
                         hafalan_surah = EXCLUDED.hafalan_surah,
@@ -1306,6 +1302,9 @@
                 let actionButtons = '';
                 if (canManage) {
                     actionButtons = `
+                        <button onclick="viewSantriBiodata('${santri.nis}')" title="Lihat & Kelola Biodata" class="bg-blue-600 hover:bg-blue-700 text-white px-2.5 py-1.5 rounded-lg text-xs font-bold transition">
+                            <i class="fa-solid fa-address-card"></i> Biodata
+                        </button>
                         <button onclick="openEditSantriModal('${santri.nis}')" title="Edit Data & Pembayaran" class="bg-amber-500 hover:bg-amber-600 text-slate-950 px-2.5 py-1.5 rounded-lg text-xs font-bold transition">
                             <i class="fa-solid fa-pen-to-square"></i> Edit
                         </button>
@@ -1367,7 +1366,6 @@
             const totalJuz = masterSantriData.reduce((acc, curr) => acc + Number(curr.hafalanJuz || 0), 0);
             const avgJuz = totalCount > 0 ? (totalJuz / totalCount).toFixed(1) : 0;
             
-            // Calculate uncollected balances
             let totalUnpaidSpp = 0;
             let totalUnpaidMakan = 0;
 
@@ -1388,9 +1386,7 @@
             if (elAvg) elAvg.innerText = `${avgJuz} Juz`;
             if (elTagihan) elTagihan.innerText = uncollectedTotal === 0 ? 'Rp 0 (LUNAS)' : `Rp ${uncollectedTotal.toLocaleString('id-ID')}`;
 
-            // Update top executive cards & tab 3 financial cards based on current user view
             if (isManagementRole()) {
-                // PENGURUS UTAMA
                 const dashHafalan = document.getElementById('dashHafalanSummary');
                 if (dashHafalan) dashHafalan.innerText = `Rata2 ${avgJuz} Juz`;
 
@@ -1435,7 +1431,6 @@
                     }
                 }
             } else if (currentActiveSantri) {
-                // AKUN SANTRI BIASA
                 loadSantriIntoHeader(currentActiveSantri);
             }
         };
@@ -1541,10 +1536,8 @@
 
         window.switchDashTab = function(tabName) {
             const isMgmt = isManagementRole();
-            
-            // DIBATASI KHUSUS AKUN PENGURUS
+
             if (tabName === 'master-santri' && !isMgmt) {
-                showToast("Akses dibatasi. Tab Kelola Santri khusus Pengurus Utama.", "error");
                 tabName = 'hafalan';
             }
 
@@ -1573,7 +1566,6 @@
                 }
             });
 
-            // Sembunyikan secara mutlak tab master jika bukan pengurus
             const tabBtnMaster = document.getElementById('tabBtnMaster');
             const tabMasterSantri = document.getElementById('tabMasterSantri');
             if (!isMgmt) {
@@ -1582,26 +1574,82 @@
             } else {
                 if (tabBtnMaster) tabBtnMaster.classList.remove('hidden');
             }
+
+            if (tabName === 'detail-santri' && isMgmt) {
+                const selectorContainer = document.getElementById('bioSantriSelectorContainer');
+                const selectEl = document.getElementById('bioSantriSelect');
+                if (selectorContainer && selectEl) {
+                    selectorContainer.classList.remove('hidden');
+                    selectEl.innerHTML = masterSantriData.map(s => `<option value="${s.nis}">${s.nama} (NIS: ${s.nis} - ${s.kelas})</option>`).join('');
+                    if (masterSantriData.length > 0 && !selectEl.value) {
+                        selectEl.value = masterSantriData[0].nis;
+                        populateBiodataForm(masterSantriData[0]);
+                    } else if (selectEl.value) {
+                        const activeSelected = masterSantriData.find(s => s.nis === selectEl.value) || masterSantriData[0];
+                        if (activeSelected) populateBiodataForm(activeSelected);
+                    }
+                }
+            } else if (tabName === 'detail-santri' && !isMgmt && currentActiveSantri) {
+                const selectorContainer = document.getElementById('bioSantriSelectorContainer');
+                if (selectorContainer) selectorContainer.classList.add('hidden');
+                populateBiodataForm(currentActiveSantri);
+            }
         };
 
-        function updateUIPermissions() {
-            const isMgmt = isManagementRole();
+        window.viewSantriBiodata = function(nis) {
+            const santri = masterSantriData.find(s => s.nis === nis);
+            if (!santri) return;
             
-            const tabBtnMaster = document.getElementById('tabBtnMaster');
-            const tabMasterSantri = document.getElementById('tabMasterSantri');
-            const btnOpenAddSantri = document.getElementById('btnOpenAddSantri');
-            const btnAddHafalanNav = document.getElementById('btnAddHafalanNav');
+            window.switchDashTab('detail-santri');
+            populateBiodataForm(santri);
 
-            // Toggle visibility for public / user header buttons
+            const selectEl = document.getElementById('bioSantriSelect');
+            if (selectEl) selectEl.value = nis;
+        };
+
+        window.onSelectBioSantri = function(nis) {
+            const santri = masterSantriData.find(s => s.nis === nis);
+            if (santri) {
+                populateBiodataForm(santri);
+            }
+        };
+
+        function populateBiodataForm(santri) {
+            if (!santri) return;
+            const bioNamaInput = document.getElementById('bioNamaInput');
+            const bioNisInput = document.getElementById('bioNisInput');
+            const bioKelasInput = document.getElementById('bioKelasInput');
+            const bioKamarInput = document.getElementById('bioKamarInput');
+            const bioWaInput = document.getElementById('bioWaInput');
+            const bioWaliInput = document.getElementById('bioWaliInput');
+            const bioAlamatInput = document.getElementById('bioAlamatInput');
+
+            if (bioNamaInput) bioNamaInput.value = santri.nama || '';
+            if (bioNisInput) bioNisInput.value = santri.nis || '';
+            if (bioKelasInput) bioKelasInput.value = santri.kelas || '';
+            if (bioKamarInput) bioKamarInput.value = santri.kamar || '';
+            if (bioWaInput) bioWaInput.value = santri.wa || '';
+            if (bioWaliInput) bioWaliInput.value = santri.wali || '';
+            if (bioAlamatInput) bioAlamatInput.value = santri.alamat || '';
+        }
+
+        function updateUIPermissions() {
             const btnNavDashboard = document.getElementById('btnNavDashboard');
             const btnNavLogin = document.getElementById('btnNavLogin');
             const menuUserInfo = document.getElementById('menuUserInfo');
             const mobileUserLinks = document.getElementById('mobileUserLinks');
             const mobilePublicLinks = document.getElementById('mobilePublicLinks');
-            const heroPortalBtn = document.getElementById('heroPortalBtn');
-            const heroPortalBtnText = document.getElementById('heroPortalBtnText');
             const footerPublicLinks = document.getElementById('footerPublicLinks');
             const footerUserLinks = document.getElementById('footerUserLinks');
+            const heroPortalBtn = document.getElementById('heroPortalBtn');
+            const heroPortalBtnText = document.getElementById('heroPortalBtnText');
+
+            const tabBtnMaster = document.getElementById('tabBtnMaster');
+            const tabMasterSantri = document.getElementById('tabMasterSantri');
+            const btnOpenAddSantri = document.getElementById('btnOpenAddSantri');
+            const btnAddHafalanNav = document.getElementById('btnAddHafalanNav');
+
+            const isMgmt = isManagementRole();
 
             if (isLoggedIn) {
                 if (btnNavDashboard) btnNavDashboard.classList.remove('hidden');
@@ -1633,7 +1681,6 @@
                 }
             }
 
-            // Management specific privileges
             if (tabBtnMaster) {
                 if (isMgmt) {
                     tabBtnMaster.classList.remove('hidden');
@@ -1786,13 +1833,24 @@
             if (dashClass) dashClass.innerText = kelas;
             if (dashRoom) dashRoom.innerText = kamar;
 
-            const detailNama = document.getElementById('detailNamaDisplay');
-            const detailNis = document.getElementById('detailNisDisplay');
-            const detailKamar = document.getElementById('detailKamarDisplay');
+            const bioNamaInput = document.getElementById('bioNamaInput');
+            const bioNisInput = document.getElementById('bioNisInput');
+            const bioKelasInput = document.getElementById('bioKelasInput');
+            const bioKamarInput = document.getElementById('bioKamarInput');
+            const bioWaInput = document.getElementById('bioWaInput');
+            const bioWaliInput = document.getElementById('bioWaliInput');
+            const bioAlamatInput = document.getElementById('bioAlamatInput');
 
-            if (detailNama) detailNama.innerText = name;
-            if (detailNis) detailNis.innerText = nis;
-            if (detailKamar) detailKamar.innerText = kamar;
+            if (bioNamaInput) bioNamaInput.value = name;
+            if (bioNisInput) bioNisInput.value = nis;
+            if (bioKelasInput) bioKelasInput.value = kelas;
+            if (bioKamarInput) bioKamarInput.value = kamar;
+
+            if (currentActiveSantri) {
+                if (bioWaInput) bioWaInput.value = currentActiveSantri.wa || '';
+                if (bioWaliInput) bioWaliInput.value = currentActiveSantri.wali || '';
+                if (bioAlamatInput) bioAlamatInput.value = currentActiveSantri.alamat || '';
+            }
         }
 
         function loadSantriIntoHeader(santri) {
@@ -1904,6 +1962,43 @@
             showToast(`Selamat datang, ${matchedRole ? managementAccounts[matchedRole].name : matchedSantri.nama}!`, 'success');
         };
 
+        window.handleSaveBiodataSubmit = async function(event) {
+            event.preventDefault();
+
+            const nama = document.getElementById('bioNamaInput').value.trim();
+            const nis = document.getElementById('bioNisInput').value.trim();
+            const kelas = document.getElementById('bioKelasInput').value.trim();
+            const kamar = document.getElementById('bioKamarInput').value.trim();
+            const wa = document.getElementById('bioWaInput').value.trim();
+            const wali = document.getElementById('bioWaliInput').value.trim();
+            const alamat = document.getElementById('bioAlamatInput').value.trim();
+
+            const targetSantri = isManagementRole() 
+                ? masterSantriData.find(s => s.nis === nis) 
+                : currentActiveSantri;
+
+            if (targetSantri) {
+                targetSantri.nama = nama;
+                targetSantri.kelas = kelas;
+                targetSantri.kamar = kamar;
+                targetSantri.wa = wa;
+                targetSantri.wali = wali;
+                targetSantri.alamat = alamat;
+
+                saveToLocal();
+                if (currentActiveSantri && currentActiveSantri.nis === targetSantri.nis) {
+                    loadSantriIntoHeader(targetSantri);
+                }
+                window.filterMasterSantri();
+                window.updateAllSummaries();
+
+                await saveSantriToNeon(targetSantri);
+                showToast(`Biodata ${targetSantri.nama} berhasil diperbarui!`, "success");
+            } else if (isManagementRole()) {
+                showToast("Pilih santri terlebih dahulu untuk menyimpan biodata.", "error");
+            }
+        };
+
         window.handleChangePasswordSubmit = async function(event) {
             event.preventDefault();
             const oldPass = document.getElementById('oldPasswordInput').value.trim();
@@ -1963,6 +2058,9 @@
                 nama,
                 kelas: kelas || '10 MA Tahfidz',
                 kamar: kamar || 'Al-Farabi 01',
+                wa: '',
+                wali: '',
+                alamat: '',
                 status: status || 'AKTIFF',
                 hafalanJuz: hafalanJuz || 0,
                 hafalanSurah: hafalanSurah || 'An-Nas',
@@ -2134,7 +2232,6 @@
             const gridEl = document.getElementById('prayerTimesGrid');
             if (!gridEl) return;
 
-            // Default fallback times for Jember if offline
             const defaultTimings = {
                 'Imsak': '04:12',
                 'Subuh': '04:22',
@@ -2146,7 +2243,6 @@
             };
 
             try {
-                // Fetch live data for Jember
                 const response = await fetch('https://api.aladhan.com/v1/timingsByCity?city=Jember&country=Indonesia&method=20');
                 const data = await response.json();
 
@@ -2250,7 +2346,6 @@
                     }
                 }
 
-                // If all prayers today passed, next is Subuh tomorrow
                 if (!nextPrayer) {
                     nextPrayer = 'Subuh';
                     const [h, m] = sholatTimings['Subuh'].split(':').map(Number);
