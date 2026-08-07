@@ -35,11 +35,12 @@
     <style>
         .font-arabic { font-family: 'Amiri', serif; }
         .scrollbar-none::-webkit-scrollbar { display: none; }
-        .scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
+        .scrollbar-none { -ms-scrollbar-style: none; scrollbar-width: none; }
     </style>
 </head>
 <body class="bg-slate-100 font-sans text-slate-800 antialiased min-h-screen flex flex-col">
 
+    <!-- HEADER NAVIGATION -->
     <header class="bg-emerald-900 text-white sticky top-0 z-40 shadow-md border-b border-emerald-800/50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-20">
@@ -128,6 +129,7 @@
 
     <main class="flex-grow">
 
+        <!-- PUBLIC LANDING VIEW -->
         <div id="publicContainer" class="space-y-16 pb-16">
             
             <!-- Hero Banner Section -->
@@ -228,6 +230,7 @@
 
         </div>
 
+        <!-- DASHBOARD SYSTEM VIEW -->
         <div id="dashboardContainer" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
             
             <!-- Dashboard Executive Top Summary -->
@@ -260,7 +263,7 @@
                     </div>
                     <div class="bg-amber-50/80 p-4 rounded-xl border border-amber-100">
                         <span class="text-[11px] font-bold text-amber-800 uppercase tracking-wider block">Status Tanggungan Syahriyah</span>
-                        <div id="dashTanggunganSummary" class="text-xl font-bold text-rose-600 mt-2">Rp 0 (LUNAS)</div>
+                        <div id="dashTanggunganSummary" class="text-xl font-bold text-emerald-600 mt-2">Rp 0 (LUNAS)</div>
                         <span id="dashTanggunganLabel" class="text-[10px] text-slate-500">Jatuh Tempo: Tanggal 10 Tiap Bulan</span>
                     </div>
                     <div class="bg-blue-50/80 p-4 rounded-xl border border-blue-100">
@@ -279,7 +282,8 @@
             <!-- Dashboard Main Navigation Tabs -->
             <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
                 <div class="flex border-b border-slate-200 overflow-x-auto scrollbar-none bg-slate-50/50">
-                    <button onclick="switchDashTab('master-santri')" id="tabBtnMaster" class="dash-tab-btn px-6 py-4 font-semibold text-sm border-b-2 border-emerald-600 text-emerald-700 whitespace-nowrap flex items-center space-x-2">
+                    <!-- KHUSUS AKUN PENGURUS (KETUA UMUM, SEKRETARIS, BENDAHARA) -->
+                    <button onclick="switchDashTab('master-santri')" id="tabBtnMaster" class="dash-tab-btn hidden px-6 py-4 font-semibold text-sm border-b-2 border-emerald-600 text-emerald-700 whitespace-nowrap flex items-center space-x-2">
                         <i class="fa-solid fa-users-gear"></i>
                         <span>Kelola Data Santri (Pengurus)</span>
                     </button>
@@ -300,7 +304,7 @@
                 <div class="p-6">
                     
                     <!-- TAB 1: MASTER SANTRI (Pengurus Only) -->
-                    <div id="tabMasterSantri" class="dash-tab-content space-y-6">
+                    <div id="tabMasterSantri" class="dash-tab-content space-y-6 hidden">
                         <div class="bg-gradient-to-r from-emerald-900 via-emerald-800 to-slate-900 text-white p-6 rounded-2xl shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                             <div>
                                 <span class="inline-block px-3 py-0.5 bg-amber-400 text-slate-950 font-bold text-[10px] rounded-full uppercase tracking-wider mb-2">Khusus Pengurus Utama</span>
@@ -319,7 +323,7 @@
                                 </div>
                                 <div class="h-8 w-px bg-white/20"></div>
                                 <div class="text-center px-2">
-                                    <div class="text-2xl font-bold text-rose-300" id="totalTagihanCount">Rp 0</div>
+                                    <div class="text-2xl font-bold text-emerald-300" id="totalTagihanCount">Rp 0 (LUNAS)</div>
                                     <div class="text-[10px] text-emerald-200">Tagihan Total</div>
                                 </div>
                             </div>
@@ -361,7 +365,7 @@
                     </div>
 
                     <!-- TAB 2: HAFALAN AL-QUR'AN -->
-                    <div id="tabHafalan" class="dash-tab-content space-y-6 hidden">
+                    <div id="tabHafalan" class="dash-tab-content space-y-6">
                         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b pb-4">
                             <div>
                                 <h3 class="text-lg font-bold text-slate-900">Perkembangan Setoran Hafalan</h3>
@@ -884,7 +888,7 @@
         let hafalanData = [];
         let paymentData = [];
         let chartInstance = null;
-        let currentRole = 'ketua'; // 'ketua', 'bendahara', 'sekretaris', or 'santri'
+        let currentRole = 'santri'; // default 'santri', set to 'ketua'/'bendahara'/'sekretaris' when logged in as management
         let isLoggedIn = false;
         let pollingTimer = null;
 
@@ -1196,7 +1200,7 @@
                     </td>
                     <td class="p-3.5">
                         <div class="font-bold ${isLunas ? 'text-emerald-600' : 'text-rose-600'}">
-                            ${isLunas ? 'Rp 0 (Lunas)' : 'Rp ' + totalTagihan.toLocaleString('id-ID')}
+                            ${isLunas ? 'Rp 0 (LUNAS)' : 'Rp ' + totalTagihan.toLocaleString('id-ID')}
                         </div>
                     </td>
                     <td class="p-3.5 text-center space-x-1">
@@ -1242,7 +1246,7 @@
 
             if (elTotal) elTotal.innerText = totalCount;
             if (elAvg) elAvg.innerText = `${avgJuz} Juz`;
-            if (elTagihan) elTagihan.innerText = uncollectedTotal === 0 ? 'Rp 0 (Lunas)' : `Rp ${uncollectedTotal.toLocaleString('id-ID')}`;
+            if (elTagihan) elTagihan.innerText = uncollectedTotal === 0 ? 'Rp 0 (LUNAS)' : `Rp ${uncollectedTotal.toLocaleString('id-ID')}`;
 
             // Update top executive cards & tab 3 financial cards based on current user view
             if (isManagementRole()) {
@@ -1396,6 +1400,7 @@
         };
 
         window.switchDashTab = function(tabName) {
+            // DIBATASI KHUSUS AKUN PENGURUS
             if (tabName === 'master-santri' && !isManagementRole()) {
                 showToast("Akses dibatasi. Tab Kelola Santri khusus Pengurus Utama.", "error");
                 tabName = 'hafalan';
@@ -1434,9 +1439,13 @@
             const btnNavNeon = document.getElementById('btnNavNeon');
             const btnMobileNeon = document.getElementById('btnMobileNeon');
 
+            // HANYA ACCESSIBLE OLEH KETUA UMUM, SEKRETARIS, BENDAHARA
             if (tabBtnMaster) {
-                if (isMgmt) tabBtnMaster.classList.remove('hidden');
-                else tabBtnMaster.classList.add('hidden');
+                if (isMgmt) {
+                    tabBtnMaster.classList.remove('hidden');
+                } else {
+                    tabBtnMaster.classList.add('hidden');
+                }
             }
 
             if (btnOpenAddSantri) {
