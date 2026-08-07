@@ -1400,8 +1400,9 @@
         };
 
         window.switchDashTab = function(tabName) {
+            const isMgmt = isManagementRole();
             // DIBATASI KHUSUS AKUN PENGURUS
-            if (tabName === 'master-santri' && !isManagementRole()) {
+            if (tabName === 'master-santri' && !isMgmt) {
                 showToast("Akses dibatasi. Tab Kelola Santri khusus Pengurus Utama.", "error");
                 tabName = 'hafalan';
             }
@@ -1418,22 +1419,35 @@
                     if (t === tabName) {
                         content.classList.remove('hidden');
                         if (btn) {
-                            btn.className = "dash-tab-btn px-6 py-4 font-semibold text-sm border-b-2 border-emerald-600 text-emerald-700 whitespace-nowrap flex items-center space-x-2";
+                            btn.classList.add('border-emerald-600', 'text-emerald-700');
+                            btn.classList.remove('border-transparent', 'text-slate-600');
                         }
                     } else {
                         content.classList.add('hidden');
                         if (btn) {
-                            btn.className = "dash-tab-btn px-6 py-4 font-semibold text-sm border-b-2 border-transparent text-slate-600 hover:text-emerald-700 whitespace-nowrap flex items-center space-x-2";
+                            btn.classList.remove('border-emerald-600', 'text-emerald-700');
+                            btn.classList.add('border-transparent', 'text-slate-600');
                         }
                     }
                 }
             });
+
+            // Sembunyikan secara mutlak tab master jika bukan pengurus
+            const tabBtnMaster = document.getElementById('tabBtnMaster');
+            const tabMasterSantri = document.getElementById('tabMasterSantri');
+            if (!isMgmt) {
+                if (tabBtnMaster) tabBtnMaster.classList.add('hidden');
+                if (tabMasterSantri) tabMasterSantri.classList.add('hidden');
+            } else {
+                if (tabBtnMaster) tabBtnMaster.classList.remove('hidden');
+            }
         };
 
         function updateUIPermissions() {
             const isMgmt = isManagementRole();
             
             const tabBtnMaster = document.getElementById('tabBtnMaster');
+            const tabMasterSantri = document.getElementById('tabMasterSantri');
             const btnOpenAddSantri = document.getElementById('btnOpenAddSantri');
             const btnAddHafalanNav = document.getElementById('btnAddHafalanNav');
             const btnNavNeon = document.getElementById('btnNavNeon');
@@ -1446,6 +1460,10 @@
                 } else {
                     tabBtnMaster.classList.add('hidden');
                 }
+            }
+
+            if (tabMasterSantri && !isMgmt) {
+                tabMasterSantri.classList.add('hidden');
             }
 
             if (btnOpenAddSantri) {
@@ -1923,4 +1941,4 @@
         };
     </script>
 </body>
-</html>
+                                                                                                                                          </html>
