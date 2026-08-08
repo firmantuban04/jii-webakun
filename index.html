@@ -369,7 +369,6 @@
             </footer>
         </div>
 
-        <!-- DASHBOARD SYSTEM VIEW -->
         <div id="dashboardContainer" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
             <div class="bg-white rounded-2xl shadow-lg border border-slate-200/60 p-6">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
@@ -495,7 +494,7 @@
                             <div id="absensiDownloadBtnWrapper">
                                 <button onclick="exportAbsensiToExcel()" class="bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 font-extrabold px-5 py-3 rounded-xl text-xs shadow-lg transition transform hover:scale-105 flex items-center space-x-2">
                                     <i class="fa-solid fa-file-excel text-emerald-950 text-sm"></i>
-                                    <span>Download Rekap Excel (Total Hadir/Izin/Pulang/Alpha)</span>
+                                    <span>Download Rekap Excel (Dengan Rentang Tanggal)</span>
                                 </button>
                             </div>
                         </div>
@@ -526,11 +525,9 @@
                                     <label class="block text-xs font-bold text-slate-700 mb-1">Pilih Mahasantri:</label>
                                     <select id="absensiSantriSelect" onchange="renderAbsensiTableForSelected()" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-xs font-semibold focus:ring-2 focus:ring-emerald-600 focus:outline-none"></select>
                                 </div>
-                                <div id="absensiSaveBtnWrapper" class="w-full sm:w-auto pt-4 sm:pt-0">
-                                    <button onclick="saveAktifAbsensi()" class="bg-gradient-to-r from-emerald-700 to-emerald-800 hover:from-emerald-600 hover:to-emerald-700 text-white font-bold px-6 py-2.5 rounded-xl text-xs shadow-lg transition transform hover:scale-105 flex items-center space-x-2">
-                                        <i class="fa-solid fa-floppy-disk"></i>
-                                        <span>Simpan Absensi Mutaba'ah</span>
-                                    </button>
+                                <div class="p-3 bg-emerald-50 rounded-xl border border-emerald-200 text-xs text-emerald-900 flex items-center space-x-2">
+                                    <i class="fa-solid fa-cloud-arrow-up text-emerald-600"></i>
+                                    <span>Auto-Save Aktif: Setiap perubahan langsung tersimpan instan ke server & lokal.</span>
                                 </div>
                             </div>
 
@@ -1100,10 +1097,10 @@
 
         const DEFAULT_NEON_CONN = "postgresql://neondb_owner:npg_EXJTxs4q2heD@ep-dry-bonus-axcu6ybn-pooler.c-4.us-east-2.aws.neon.tech/neondb?sslmode=require";
         
-        const NEON_STORAGE_KEY = 'jii_neon_connection_string_v2';
-        const LOCAL_SANTRI_KEY = 'jii_master_santri_local_v2';
-        const SESSION_STORAGE_KEY = 'jii_user_session_v2';
-        const LAST_RESET_WEEK_KEY = 'jii_last_reset_week_v2';
+        const NEON_STORAGE_KEY = 'jii_neon_connection_string_v3';
+        const LOCAL_SANTRI_KEY = 'jii_master_santri_local_v4';
+        const SESSION_STORAGE_KEY = 'jii_user_session_v3';
+        const LAST_RESET_WEEK_KEY = 'jii_last_reset_week_v4';
 
         let neonConnectionString = localStorage.getItem(NEON_STORAGE_KEY) || DEFAULT_NEON_CONN;
         let sql = null;
@@ -1204,31 +1201,41 @@
         let isLoggedIn = false;
         let pollingTimer = null;
 
-        // Cek reset mingguan otomatis (Sabtu jam 23:59 atau pergantian minggu baru)
         function checkWeeklyReset() {
-            const now = new Date();
-            const dayOfWeek = now.getDay(); // 0 = Minggu, 6 = Sabtu
-            const hour = now.getHours();
-            const minute = now.getMinutes();
-            
-            const startOfYear = new Date(now.getFullYear(), 0, 1);
-            const weekNumber = Math.ceil((((now - startOfYear) / 86400000) + startOfYear.getDay() + 1) / 7);
-            const weekIdentifier = `${now.getFullYear()}-W${weekNumber}`;
+            try {
+                const now = new Date();
+                const dtf = new Intl.DateTimeFormat('en-US', { timeZone: 'Asia/Jakarta', weekday: 'short', hour: 'numeric', minute: 'numeric', hour12: false });
+                const parts = dtf.formatToParts(now);
+                
+                let dayName = parts.find(p => p.type === 'weekday')?.value || '';
+                let hour = parseInt(parts.find(p => p.type === 'hour')?.value || '0', 10);
+                let minute = parseInt(parts.find(p => p.type === 'minute')?.value || '0', 10);
+                
+                const dayMap = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 };
+                const dayOfWeek = dayMap[dayName] !== undefined ? dayMap[dayName] : now.getDay();
 
-            const lastReset = localStorage.getItem(LAST_RESET_WEEK_KEY);
+                const startOfYear = new Date(now.getFullYear(), 0, 1);
+                const weekNumber = Math.ceil((((now - startOfYear) / 86400000) + startOfYear.getDay() + 1) / 7);
+                const weekIdentifier = `${now.getFullYear()}-W${weekNumber}`;
+                
+                const lastReset = localStorage.getItem(LAST_RESET_WEEK_KEY);
 
-            if ((dayOfWeek === 6 && hour === 23 && minute >= 59) || (lastReset !== weekIdentifier && dayOfWeek === 0)) {
-                if (lastReset !== weekIdentifier) {
+                if (lastReset !== weekIdentifier && ((dayOfWeek === 6 && hour === 23 && minute >= 59) || dayOfWeek === 0)) {
                     masterSantriData.forEach(santri => {
                         if (santri.mutabaahAbsensi) {
                             defaultActivitiesList.forEach(act => {
                                 santri.mutabaahAbsensi[act] = ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'];
                             });
+                            saveSantriToNeon(santri);
                         }
                     });
                     saveToLocal();
                     localStorage.setItem(LAST_RESET_WEEK_KEY, weekIdentifier);
+                    window.showToast("Absensi mingguan telah di-reset otomatis!", "success");
+                    window.initAbsensiTab();
                 }
+            } catch (e) {
+                console.error("Reset check error:", e);
             }
         }
 
@@ -1385,25 +1392,36 @@
             try {
                 const rows = await sql`SELECT * FROM santri ORDER BY nis ASC`;
                 if (rows && rows.length > 0) {
-                    masterSantriData = rows.map(r => ({
-                        nis: r.nis,
-                        password: r.password || '123456',
-                        nama: r.nama,
-                        kelas: r.kelas,
-                        kamar: r.kamar,
-                        wa: r.wa || '',
-                        wali: r.wali || '',
-                        alamat: r.alamat || '',
-                        status: r.status,
-                        hafalanJuz: r.hafalan_juz,
-                        hafalanSurah: r.hafalan_surah,
-                        spp: r.spp,
-                        uangMakan: r.uang_makan,
-                        statusBayar: r.status_bayar,
-                        mutabaahAbsensi: typeof r.mutabaah_absensi === 'string' ? JSON.parse(r.mutabaah_absensi) : (r.mutabaah_absensi || {}),
-                        hafalanData: typeof r.hafalan_data === 'string' ? JSON.parse(r.hafalan_data) : (r.hafalan_data || []),
-                        paymentData: typeof r.payment_data === 'string' ? JSON.parse(r.payment_data) : (r.payment_data || [])
-                    }));
+                    rows.forEach(r => {
+                        const existingSantri = masterSantriData.find(s => s.nis === r.nis);
+                        const remoteAbsensi = typeof r.mutabaah_absensi === 'string' ? JSON.parse(r.mutabaah_absensi) : (r.mutabaah_absensi || {});
+                        
+                        if (existingSantri) {
+                            if (!existingSantri.mutabaahAbsensi) {
+                                existingSantri.mutabaahAbsensi = remoteAbsensi;
+                            }
+                        } else {
+                            masterSantriData.push({
+                                nis: r.nis,
+                                password: r.password || '123456',
+                                nama: r.nama,
+                                kelas: r.kelas,
+                                kamar: r.kamar,
+                                wa: r.wa || '',
+                                wali: r.wali || '',
+                                alamat: r.alamat || '',
+                                status: r.status,
+                                hafalanJuz: r.hafalan_juz,
+                                hafalanSurah: r.hafalan_surah,
+                                spp: r.spp,
+                                uangMakan: r.uang_makan,
+                                statusBayar: r.status_bayar,
+                                mutabaahAbsensi: remoteAbsensi,
+                                hafalanData: typeof r.hafalan_data === 'string' ? JSON.parse(r.hafalan_data) : (r.hafalan_data || []),
+                                paymentData: typeof r.payment_data === 'string' ? JSON.parse(r.payment_data) : (r.payment_data || [])
+                            });
+                        }
+                    });
                     saveToLocal();
                 } else {
                     for (const s of masterSantriData) {
@@ -1463,7 +1481,9 @@
 
         function startPollingNeon() {
             if (pollingTimer) clearInterval(pollingTimer);
-            pollingTimer = setInterval(() => { if (sql) syncFromNeon(); checkWeeklyReset(); }, 5000);
+            pollingTimer = setInterval(() => { 
+                checkWeeklyReset(); 
+            }, 15000);
         }
 
         window.renderMasterSantriTable = function(data) {
@@ -1516,10 +1536,9 @@
             });
         };
 
-        // Mendapatkan tanggal Minggu s.d. Sabtu dari minggu berjalan (Hari 1 = Minggu)
         function getWeeklyCalendarDates() {
             const curr = new Date();
-            const firstDayOfWeek = curr.getDate() - curr.getDay(); // Minggu sebagai awal
+            const firstDayOfWeek = curr.getDate() - curr.getDay();
             const dates = [];
             const dayNames = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
             
@@ -1529,7 +1548,8 @@
                 const monthStr = String(nextDate.getMonth() + 1).padStart(2, '0');
                 dates.push({
                     dayName: dayNames[i],
-                    dateFormatted: `${dayStr}/${monthStr}`
+                    dateFormatted: `${dayStr}/${monthStr}`,
+                    rawDate: nextDate
                 });
             }
             return dates;
@@ -1541,14 +1561,11 @@
 
             const isKetua = isKetuaUmum();
             const selectWrapper = document.getElementById('absensiSelectWrapper');
-            const saveBtnWrapper = document.getElementById('absensiSaveBtnWrapper');
             const downloadBtnWrapper = document.getElementById('absensiDownloadBtnWrapper');
             const roleBadge = document.getElementById('absensiRoleBadge');
 
             if (!isKetua) {
-                // Santri biasa melihat absensi mandirinya sendiri secara read-only tanpa tombol simpan & download
                 if (selectWrapper) selectWrapper.classList.add('hidden');
-                if (saveBtnWrapper) saveBtnWrapper.classList.add('hidden');
                 if (downloadBtnWrapper) downloadBtnWrapper.classList.add('hidden');
                 if (roleBadge) roleBadge.innerText = "Mode Lihat Absensi Mandiri (Read-Only)";
                 
@@ -1558,9 +1575,8 @@
                 return;
             } else {
                 if (selectWrapper) selectWrapper.classList.remove('hidden');
-                if (saveBtnWrapper) saveBtnWrapper.classList.remove('hidden');
                 if (downloadBtnWrapper) downloadBtnWrapper.classList.remove('hidden');
-                if (roleBadge) roleBadge.innerText = "Eksklusif Ketua Umum (Kelola & Simpan)";
+                if (roleBadge) roleBadge.innerText = "Eksklusif Ketua Umum (Auto-Save Aktif)";
             }
 
             const currentSelected = selectEl.value;
@@ -1627,29 +1643,35 @@
                     else if (status === 'Pulang') totalP++;
                     else if (status === 'Tidak Hadir') totalTH++;
 
+                    let selectColorClass = 'text-emerald-700 bg-emerald-50 border-emerald-300 font-bold';
+                    if (status === 'Izin') {
+                        selectColorClass = 'text-amber-700 bg-amber-50 border-amber-300 font-bold';
+                    } else if (status === 'Pulang') {
+                        selectColorClass = 'text-blue-700 bg-blue-50 border-blue-300 font-bold';
+                    } else if (status === 'Tidak Hadir') {
+                        selectColorClass = 'text-rose-700 bg-rose-50 border-rose-300 font-bold';
+                    }
+
                     if (isKetua) {
                         cells += `
                             <td class="p-2 text-center">
-                                <select onchange="updateAbsensiCell('${santri.nis}', '${act}', ${d}, this.value)" class="px-2 py-1 rounded border border-slate-300 text-[11px] font-semibold bg-white ${
-                                    status === 'Hadir' ? 'text-emerald-700 bg-emerald-50' : 
-                                    status === 'Izin' ? 'text-amber-700 bg-amber-50' : 
-                                    status === 'Pulang' ? 'text-blue-700 bg-blue-50' : 'text-rose-700 bg-rose-50'
-                                }">
-                                    <option value="Hadir" ${status === 'Hadir' ? 'selected' : ''}>Hadir</option>
-                                    <option value="Izin" ${status === 'Izin' ? 'selected' : ''}>Izin</option>
-                                    <option value="Pulang" ${status === 'Pulang' ? 'selected' : ''}>Pulang</option>
-                                    <option value="Tidak Hadir" ${status === 'Tidak Hadir' ? 'selected' : ''}>Tidak Hadir</option>
+                                <select onchange="updateAbsensiCell('${santri.nis}', '${act}', ${d}, this.value)" class="px-2.5 py-1.5 rounded-lg border text-[11px] transition shadow-sm focus:ring-2 focus:ring-emerald-600 focus:outline-none ${selectColorClass}">
+                                    <option value="Hadir" ${status === 'Hadir' ? 'selected' : ''} class="text-emerald-700 font-semibold bg-emerald-50">Hadir</option>
+                                    <option value="Izin" ${status === 'Izin' ? 'selected' : ''} class="text-amber-700 font-semibold bg-amber-50">Izin</option>
+                                    <option value="Pulang" ${status === 'Pulang' ? 'selected' : ''} class="text-blue-700 font-semibold bg-blue-50">Pulang</option>
+                                    <option value="Tidak Hadir" ${status === 'Tidak Hadir' ? 'selected' : ''} class="text-rose-700 font-semibold bg-rose-50">Tidak Hadir</option>
                                 </select>
                             </td>
                         `;
                     } else {
+                        let badgeColor = 'text-emerald-700 bg-emerald-50 border-emerald-200';
+                        if (status === 'Izin') badgeColor = 'text-amber-700 bg-amber-50 border-amber-200';
+                        else if (status === 'Pulang') badgeColor = 'text-blue-700 bg-blue-50 border-blue-200';
+                        else if (status === 'Tidak Hadir') badgeColor = 'text-rose-700 bg-rose-50 border-rose-200';
+
                         cells += `
                             <td class="p-2 text-center">
-                                <span class="px-2.5 py-1 rounded text-[11px] font-bold inline-block ${
-                                    status === 'Hadir' ? 'text-emerald-700 bg-emerald-50 border border-emerald-200' : 
-                                    status === 'Izin' ? 'text-amber-700 bg-amber-50 border border-amber-200' : 
-                                    status === 'Pulang' ? 'text-blue-700 bg-blue-50 border border-blue-200' : 'text-rose-700 bg-rose-50 border border-rose-200'
-                                }">${status}</span>
+                                <span class="px-2.5 py-1 rounded-md text-[11px] font-bold inline-block border shadow-sm ${badgeColor}">${status}</span>
                             </td>
                         `;
                     }
@@ -1671,6 +1693,7 @@
             if (!santri.mutabaahAbsensi[act]) santri.mutabaahAbsensi[act] = ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'];
 
             santri.mutabaahAbsensi[act][dayIndex] = val;
+            
             saveToLocal();
             
             let totalH = 0, totalI = 0, totalP = 0, totalTH = 0;
@@ -1688,29 +1711,24 @@
             document.getElementById('rekapPulangCount').innerText = totalP;
             document.getElementById('rekapTidakHadirCount').innerText = totalTH;
 
-            await saveSantriToNeon(santri);
-        };
+            window.renderAbsensiTableForSantri(santri);
 
-        window.saveAktifAbsensi = async function() {
-            if (!isKetuaUmum()) {
-                window.showToast("Hanya Ketua Umum yang dapat menyimpan absensi mutaba'ah harian.", "error");
-                return;
-            }
-            const selectEl = document.getElementById('absensiSantriSelect');
-            if (!selectEl) return;
-            const santri = masterSantriData.find(s => s.nis === selectEl.value);
-            if (!santri) return;
-
-            saveToLocal();
             await saveSantriToNeon(santri);
-            window.showToast(`Absensi mutaba'ah untuk ${santri.nama} berhasil disimpan!`, "success");
+            window.showToast("Absensi otomatis tersimpan", "success");
         };
 
         window.exportAbsensiToExcel = function() {
             if (!isKetuaUmum()) return;
+
+            const weeklyDates = getWeeklyCalendarDates();
+            const startStr = weeklyDates[0] ? `${weeklyDates[0].rawDate.getDate()} ${weeklyDates[0].rawDate.toLocaleString('id-ID', { month: 'long' })} ${weeklyDates[0].rawDate.getFullYear()}` : '';
+            const endStr = weeklyDates[6] ? `${weeklyDates[6].rawDate.getDate()} ${weeklyDates[6].rawDate.toLocaleString('id-ID', { month: 'long' })} ${weeklyDates[6].rawDate.getFullYear()}` : '';
+            const rangeText = `${startStr} s.d. ${endStr}`;
+
             let csvContent = "data:text/csv;charset=utf-8,";
-            csvContent += "REKAP TOTAL ABSENSI MUTABAAH HARIAN MAHASANTRI (7 HARI)\r\n";
-            csvContent += "Jember Islamic Institute\r\n\r\n";
+            csvContent += "REKAP TOTAL ABSENSI MUTABAAH HARIAN MAHASANTRI\r\n";
+            csvContent += `Jember Islamic Institute\r\n`;
+            csvContent += `Periode Tanggal: "${rangeText}"\r\n\r\n`;
             csvContent += "No,Nama Santri,NIS,Kelas,Total Hadir,Total Izin,Total Pulang,Total Tidak Hadir\r\n";
 
             masterSantriData.forEach((santri, idx) => {
@@ -1730,11 +1748,11 @@
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
             link.setAttribute("href", encodedUri);
-            link.setAttribute("download", `Rekap_Total_Absensi_Mutabaah_${new Date().toISOString().slice(0,10)}.csv`);
+            link.setAttribute("download", `Rekap_Absensi_${startStr.replace(/ /g, '_')}_sampai_${endStr.replace(/ /g, '_')}.csv`);
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-            window.showToast("File rekap total Excel berhasil diunduh!", "success");
+            window.showToast("File rekap Excel lengkap dengan rentang tanggal berhasil diunduh!", "success");
         };
 
         window.filterMasterSantri = function() {
@@ -1891,7 +1909,6 @@
 
         window.switchDashTab = function(tabName) {
             const isMgmt = isManagementRole();
-
             if (tabName === 'master-santri' && !isMgmt) tabName = 'absensi';
 
             const tabs = ['master-santri', 'absensi', 'hafalan', 'tanggungan', 'detail-santri'];
@@ -2110,8 +2127,7 @@
 
         function loadSantriIntoHeader(santri) {
             if (!santri) return;
-            const avatar = santri.nama ? santri.nama.substring(0, 2).toUpperCase() : 'ST';
-            setLoggedInUser(santri.nama, 'Santri Tahfidz', avatar, santri.nis, santri.kelas, santri.kamar);
+            setLoggedInUser(santri.nama, 'Santri Tahfidz', 'ST', santri.nis, santri.kelas, santri.kamar);
             document.getElementById('dashHafalanSummary').innerText = `${santri.hafalanJuz || 0} Juz (${santri.hafalanSurah || '-'})`;
         }
 
@@ -2183,7 +2199,6 @@
 
         window.handleChangePasswordSubmit = async function(event) {
             event.preventDefault();
-            const oldPass = document.getElementById('oldPasswordInput').value.trim();
             const newPass = document.getElementById('newPasswordInput').value.trim();
 
             if (isManagementRole()) {
@@ -2466,12 +2481,12 @@
 
         window.onload = async function() {
             checkWeeklyReset();
+            await initNeonDatabase();
             window.renderMasterSantriTable(masterSantriData);
             window.renderHafalanTable();
             window.renderPaymentTable();
             window.initHafalanChart();
             window.updateAllSummaries();
-            await initNeonDatabase();
             if (restoreSession()) {
                 updateUIPermissions();
                 window.updateAllSummaries();
