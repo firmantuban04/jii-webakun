@@ -40,16 +40,9 @@
         .scrollbar-none::-webkit-scrollbar { display: none; }
         .scrollbar-none { -ms-scrollbar-style: none; scrollbar-width: none; }
         
-        /* Modern Animations */
         @keyframes slideInRight {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
         }
         
         @keyframes fadeIn {
@@ -58,29 +51,14 @@
         }
         
         @keyframes slideUp {
-            from {
-                transform: translateY(20px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
         
-        .animate-slide-in-right {
-            animation: slideInRight 0.3s ease-out;
-        }
+        .animate-slide-in-right { animation: slideInRight 0.3s ease-out; }
+        .animate-fade-in { animation: fadeIn 0.3s ease-out; }
+        .animate-slide-up { animation: slideUp 0.4s ease-out; }
         
-        .animate-fade-in {
-            animation: fadeIn 0.3s ease-out;
-        }
-        
-        .animate-slide-up {
-            animation: slideUp 0.4s ease-out;
-        }
-        
-        /* Glassmorphism Effect */
         .glass-effect {
             background: rgba(255, 255, 255, 0.7);
             backdrop-filter: blur(10px);
@@ -93,11 +71,7 @@
             border: 1px solid rgba(148, 163, 184, 0.1);
         }
         
-        /* Hover Effects */
-        .card-hover {
-            transition: all 0.3s ease;
-        }
-        
+        .card-hover { transition: all 0.3s ease; }
         .card-hover:hover {
             transform: translateY(-8px);
             box-shadow: 0 20px 40px rgba(4, 120, 87, 0.15);
@@ -108,7 +82,6 @@
             overflow: hidden;
             transition: all 0.3s ease;
         }
-        
         .btn-modern::before {
             content: '';
             position: absolute;
@@ -119,12 +92,8 @@
             background: rgba(255, 255, 255, 0.2);
             transition: left 0.3s ease;
         }
+        .btn-modern:hover::before { left: 100%; }
         
-        .btn-modern:hover::before {
-            left: 100%;
-        }
-        
-        /* Gradient Backgrounds */
         .gradient-emerald {
             background: linear-gradient(135deg, #047857 0%, #065f46 50%, #022c22 100%);
         }
@@ -132,41 +101,13 @@
         .gradient-amber {
             background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
         }
-        
-        /* Settings Menu Animation */
-        .settings-menu {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease;
-        }
-        
-        .settings-menu.active {
-            max-height: 500px;
-        }
-        
-        /* Badge Animation */
-        .badge-pulse {
-            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-        }
-        
-        @keyframes pulse {
-            0%, 100% {
-                opacity: 1;
-            }
-            50% {
-                opacity: 0.7;
-            }
-        }
     </style>
 </head>
 <body class="bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 font-sans text-slate-800 antialiased min-h-screen flex flex-col">
 
-    <!-- HEADER NAVIGATION - IMPROVED -->
     <header class="gradient-emerald text-white sticky top-0 z-40 shadow-2xl border-b border-emerald-700/30">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-20">
-                
-                <!-- Brand Logo & Name -->
                 <a href="#beranda" onclick="showPublicView('beranda')" class="flex items-center space-x-3 group cursor-pointer">
                     <div class="w-12 h-12 rounded-full bg-gradient-to-br from-amber-300 to-amber-500 p-1 shadow-lg flex items-center justify-center shrink-0 border-2 border-amber-100 group-hover:scale-110 transition transform duration-300 overflow-hidden">
                         <img src="IMG-20260203-WA0001.jpg" alt="Logo Jember Islamic Institute" class="w-full h-full object-contain" onerror="this.onerror=null; this.src='https://placehold.co/200x200/0d882d/ffffff?text=JII+Logo';">
@@ -177,44 +118,37 @@
                     </div>
                 </a>
 
-                <!-- Desktop Nav Links -->
                 <nav class="hidden md:flex items-center space-x-1 text-sm font-medium">
-                    <a href="#beranda" onclick="showPublicView('beranda')" class="hover:text-amber-200 transition py-2 px-3 rounded-lg hover:bg-white/10 border-b-2 border-transparent">Beranda</a>
-                    <a href="#profil" onclick="showPublicView('profil')" class="hover:text-amber-200 transition py-2 px-3 rounded-lg hover:bg-white/10 border-b-2 border-transparent">Profil</a>
-                    <a href="#program" onclick="showPublicView('program')" class="hover:text-amber-200 transition py-2 px-3 rounded-lg hover:bg-white/10 border-b-2 border-transparent">Program</a>
-                    <a href="#kontak" onclick="showPublicView('kontak')" class="hover:text-amber-200 transition py-2 px-3 rounded-lg hover:bg-white/10 border-b-2 border-transparent">Kontak</a>
+                    <a href="#beranda" onclick="showPublicView('beranda')" class="hover:text-amber-200 transition py-2 px-3 rounded-lg hover:bg-white/10">Beranda</a>
+                    <a href="#profil" onclick="showPublicView('profil')" class="hover:text-amber-200 transition py-2 px-3 rounded-lg hover:bg-white/10">Profil</a>
+                    <a href="#program" onclick="showPublicView('program')" class="hover:text-amber-200 transition py-2 px-3 rounded-lg hover:bg-white/10">Program</a>
+                    <a href="#kontak" onclick="showPublicView('kontak')" class="hover:text-amber-200 transition py-2 px-3 rounded-lg hover:bg-white/10">Kontak</a>
                     
-                    <!-- Dashboard button when logged in -->
                     <button id="btnNavDashboard" onclick="showDashboardView()" class="hidden bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-900 font-extrabold px-4 py-2 rounded-xl shadow-lg transition transform hover:scale-105 flex items-center space-x-2 text-xs ml-3">
                         <i class="fa-solid fa-gauge-high"></i>
                         <span>Dashboard</span>
                     </button>
 
-                    <!-- Login button when logged out -->
                     <button id="btnNavLogin" onclick="openLoginModal()" class="bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-900 font-extrabold px-5 py-2.5 rounded-xl shadow-lg hover:shadow-amber-500/30 transition transform hover:scale-105 flex items-center space-x-2 ml-3">
                         <i class="fa-solid fa-right-to-bracket"></i>
                         <span>Masuk</span>
                     </button>
                 </nav>
 
-                <!-- Navigation Toggle Button (Garis Tiga) -->
-                <button onclick="toggleMobileMenu()" class="p-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-emerald-100 hover:text-white transition flex items-center space-x-2 backdrop-blur-sm border border-white/10">
-                    <span id="navUserGreeting" class="hidden sm:inline text-xs font-bold text-amber-200">Menu</span>
+                <button onclick="toggleMobileMenu()" class="p-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-emerald-100 hover:text-white transition flex items-center space-x-2 backdrop-blur-sm border border-white/10 md:hidden">
+                    <span id="navUserGreeting" class="text-xs font-bold text-amber-200">Menu</span>
                     <i class="fa-solid fa-bars text-xl"></i>
                 </button>
             </div>
         </div>
 
-        <!-- HAMBURGER SLIDE / DROP DOWN MENU -->
-        <div id="mobileMenu" class="hidden bg-gradient-to-b from-emerald-950 to-emerald-900 border-t border-emerald-800/50 px-4 py-4 space-y-3 text-sm shadow-2xl animate-slide-in-right">
-            <!-- User Status Header inside Menu -->
+        <div id="mobileMenu" class="hidden bg-gradient-to-b from-emerald-950 to-emerald-900 border-t border-emerald-800/50 px-4 py-4 space-y-3 text-sm shadow-2xl animate-slide-in-right md:hidden">
             <div id="menuUserInfo" class="hidden pb-3 border-b border-emerald-800 text-xs">
                 <span class="text-emerald-400 block font-medium">Terhubung sebagai:</span>
                 <span id="navUserName" class="text-sm font-bold text-white block">Ketua Umum</span>
                 <span id="navUserRole" class="text-[10px] text-amber-300 font-semibold uppercase block mt-0.5">Pengurus Utama</span>
             </div>
 
-            <!-- Main Navigation Links -->
             <div class="space-y-1">
                 <a href="#beranda" onclick="showPublicView('beranda'); closeMobileMenu();" class="block py-2.5 px-3 rounded-lg text-emerald-100 hover:bg-emerald-800 hover:text-amber-300 transition flex items-center space-x-3">
                     <i class="fa-solid fa-house text-emerald-400 w-5"></i>
@@ -234,30 +168,25 @@
                 </a>
             </div>
 
-            <!-- Options when logged in -->
             <div id="mobileUserLinks" class="hidden pt-3 border-t border-emerald-800 space-y-2">
-                <button onclick="showDashboardView(); closeMobileMenu();" class="w-full text-left py-2.5 px-3 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 text-slate-900 font-bold hover:from-amber-300 hover:to-amber-400 transition flex items-center space-x-2">
+                <button onclick="showDashboardView(); closeMobileMenu();" class="w-full text-left py-2.5 px-3 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 text-slate-900 font-bold transition flex items-center space-x-2">
                     <i class="fa-solid fa-gauge-high text-slate-900 w-5"></i>
                     <span>Dashboard SIM</span>
                 </button>
-
                 <button onclick="openSettingsModal(); closeMobileMenu();" class="w-full text-left py-2.5 px-3 rounded-xl bg-emerald-800/50 hover:bg-emerald-700 text-emerald-100 font-bold transition flex items-center space-x-2 border border-emerald-600/30">
                     <i class="fa-solid fa-sliders text-amber-400 w-5"></i>
                     <span>Pengaturan</span>
                 </button>
-
                 <button onclick="openChangePasswordModal(); closeMobileMenu();" class="w-full text-left py-2.5 px-3 rounded-xl bg-emerald-800/50 hover:bg-emerald-700 text-amber-300 font-bold transition flex items-center space-x-2 border border-emerald-600/30">
                     <i class="fa-solid fa-key text-amber-400 w-5"></i>
                     <span>Ganti Password</span>
                 </button>
-
                 <button onclick="handleLogout(); closeMobileMenu();" class="w-full text-left py-2.5 px-3 rounded-xl bg-rose-600/80 hover:bg-rose-700 text-white font-bold transition flex items-center space-x-2 border border-rose-500/30">
                     <i class="fa-solid fa-power-off text-white w-5"></i>
                     <span>Keluar dari Sistem</span>
                 </button>
             </div>
 
-            <!-- Options when logged out -->
             <div id="mobilePublicLinks" class="pt-2 border-t border-emerald-800">
                 <button onclick="openLoginModal(); closeMobileMenu();" class="w-full bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-900 font-bold py-2.5 rounded-xl text-center flex items-center justify-center space-x-2 transition transform hover:scale-105">
                     <i class="fa-solid fa-right-to-bracket"></i>
@@ -268,20 +197,16 @@
     </header>
 
     <main class="flex-grow">
-
         <!-- PUBLIC LANDING VIEW -->
         <div id="publicContainer" class="space-y-16 pb-16">
-            
             <!-- Hero Banner Section -->
             <section id="beranda" class="relative bg-gradient-to-br from-slate-900 via-emerald-900 to-slate-900 text-white pt-16 pb-24 px-4 sm:px-6 lg:px-8 overflow-hidden">
-                <!-- Background Decorations -->
                 <div class="absolute inset-0 z-0">
                     <img src="motion_photo_6803223217145197217.jpg" alt="Kegiatan Rihlah Santri JII" class="w-full h-full object-cover opacity-40 filter brightness-75 contrast-125" onerror="this.onerror=null; this.src='https://placehold.co/1920x1080/064e3b/ffffff?text=Kegiatan+Santri+JII';">
                     <div class="absolute inset-0 bg-gradient-to-b from-slate-950/70 via-emerald-950/60 to-slate-950/85 backdrop-brightness-90"></div>
                 </div>
                 <div class="absolute inset-0 opacity-5 bg-[radial-gradient(#d97706_1px,transparent_1px)] [background-size:16px_16px] z-0"></div>
                 
-                <!-- Floating Elements -->
                 <div class="absolute top-10 left-10 w-72 h-72 bg-emerald-500/10 rounded-full blur-3xl animate-pulse"></div>
                 <div class="absolute bottom-10 right-10 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl animate-pulse" style="animation-delay: 2s;"></div>
                 
@@ -308,7 +233,7 @@
                 </div>
             </section>
 
-            <!-- Profil & Latar Belakang Section - IMPROVED -->
+            <!-- Profil & Latar Belakang Section -->
             <section id="profil" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="bg-white rounded-3xl shadow-2xl p-8 sm:p-12 border border-slate-100/50 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center card-hover">
                     <div class="lg:col-span-7 space-y-5 animate-slide-up">
@@ -352,7 +277,7 @@
                 </div>
             </section>
 
-            <!-- PROGRAM TAHFIDZ SECTION - IMPROVED -->
+            <!-- Program Tahfidz Section -->
             <section id="program" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center space-y-3 mb-12">
                     <span class="inline-block px-4 py-2 bg-gradient-to-r from-amber-100 to-amber-50 text-amber-900 rounded-lg text-xs font-bold uppercase tracking-wider border border-amber-200/50">
@@ -385,7 +310,7 @@
                 </div>
             </section>
 
-            <!-- JADWAL SHOLAT OTOMATIS SECTION - IMPROVED -->
+            <!-- Jadwal Sholat Section -->
             <section id="jadwal-sholat" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
                 <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-950 via-slate-900 to-emerald-900 text-white shadow-2xl border border-emerald-800/60 p-6 sm:p-10">
                     <div class="absolute -right-16 -top-16 w-64 h-64 bg-emerald-500/15 rounded-full blur-3xl pointer-events-none animate-pulse"></div>
@@ -421,23 +346,17 @@
                                         <i class="fa-solid fa-clock-rotate-left animate-spin text-amber-400"></i>
                                         <span>Menuju Sholat</span>
                                     </div>
-                                    <div id="nextPrayerName" class="text-2xl sm:text-3xl font-black text-amber-300 drop-shadow">
-                                        --
-                                    </div>
+                                    <div id="nextPrayerName" class="text-2xl sm:text-3xl font-black text-amber-300 drop-shadow">--</div>
                                 </div>
                                 <div class="h-10 w-px bg-emerald-800/80"></div>
                                 <div>
                                     <div class="text-[10px] uppercase tracking-wider text-slate-400 font-bold mb-1">Sisa Waktu</div>
-                                    <div id="nextPrayerTimer" class="font-mono text-2xl sm:text-3xl font-black tracking-wider bg-emerald-950/90 px-4 py-2 rounded-xl border border-emerald-500/40 shadow-inner drop-shadow-md text-amber-300">
-                                        --:--:--
-                                    </div>
+                                    <div id="nextPrayerTimer" class="font-mono text-2xl sm:text-3xl font-black tracking-wider bg-emerald-950/90 px-4 py-2 rounded-xl border border-emerald-500/40 shadow-inner drop-shadow-md text-amber-300">--:--:--</div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3 sm:gap-4" id="prayerTimesGrid">
-                            <!-- Dynamic items generated via JavaScript -->
-                        </div>
+                        <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3 sm:gap-4" id="prayerTimesGrid"></div>
                     </div>
                 </div>
             </section>
@@ -471,13 +390,10 @@
                     &copy; 2026 Jember Islamic Institute. Neon.tech Postgres Cloud Sync. | Modern UI v2.0
                 </div>
             </footer>
-
         </div>
 
         <!-- DASHBOARD SYSTEM VIEW -->
         <div id="dashboardContainer" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
-            
-            <!-- Dashboard Executive Top Summary -->
             <div class="bg-white rounded-2xl shadow-lg border border-slate-200/60 p-6">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                     <div class="flex items-center space-x-4">
@@ -497,7 +413,6 @@
                     </div>
                 </div>
 
-                <!-- Cards Overview -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6 pt-6 border-t border-slate-100">
                     <div class="bg-gradient-to-br from-emerald-50 to-emerald-50/50 p-4 rounded-xl border border-emerald-200/60">
                         <span class="text-[11px] font-bold text-emerald-800 uppercase tracking-wider flex items-center space-x-1"><i class="fa-solid fa-book-quran"></i> <span>Capaian Hafalan Total</span></span>
@@ -517,7 +432,6 @@
                 </div>
             </div>
 
-            <!-- Dashboard Main Navigation Tabs -->
             <div class="bg-white rounded-2xl shadow-lg border border-slate-200/60 overflow-hidden">
                 <div class="flex border-b border-slate-200 overflow-x-auto scrollbar-none bg-slate-50/50">
                     <button onclick="switchDashTab('master-santri')" id="tabBtnMaster" class="dash-tab-btn hidden px-6 py-4 font-semibold text-sm border-b-2 border-emerald-600 text-emerald-700 whitespace-nowrap flex items-center space-x-2">
@@ -539,8 +453,7 @@
                 </div>
 
                 <div class="p-6">
-                    
-                    <!-- TAB 1: MASTER SANTRI (Pengurus Only) -->
+                    <!-- TAB 1: MASTER SANTRI -->
                     <div id="tabMasterSantri" class="dash-tab-content space-y-6 hidden">
                         <div class="bg-gradient-to-r from-emerald-900 via-emerald-800 to-slate-900 text-white p-6 rounded-2xl shadow-lg flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border border-emerald-700/30">
                             <div>
@@ -561,7 +474,6 @@
                             </div>
                         </div>
 
-                        <!-- Search & Action Controls -->
                         <div class="flex flex-col sm:flex-row justify-between items-center gap-4 bg-gradient-to-r from-slate-50 to-slate-100 p-4 rounded-xl border border-slate-200">
                             <div class="relative w-full sm:w-80">
                                 <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-slate-400 text-xs"></i>
@@ -573,7 +485,6 @@
                             </button>
                         </div>
 
-                        <!-- Master Santri Directory Table -->
                         <div class="overflow-x-auto border border-slate-200 rounded-xl shadow-md">
                             <table class="w-full text-left border-collapse">
                                 <thead>
@@ -587,9 +498,7 @@
                                         <th class="p-4 text-center">Aksi</th>
                                     </tr>
                                 </thead>
-                                <tbody id="masterSantriTableBody" class="text-sm divide-y divide-slate-200 font-medium text-slate-700">
-                                    <!-- Dynamic JS Insertion -->
-                                </tbody>
+                                <tbody id="masterSantriTableBody" class="text-sm divide-y divide-slate-200 font-medium text-slate-700"></tbody>
                             </table>
                         </div>
                     </div>
@@ -626,9 +535,7 @@
                                         <th class="p-4">Penyimak</th>
                                     </tr>
                                 </thead>
-                                <tbody id="hafalanTableBody" class="divide-y divide-slate-200">
-                                    <!-- Dynamic Insertion -->
-                                </tbody>
+                                <tbody id="hafalanTableBody" class="divide-y divide-slate-200"></tbody>
                             </table>
                         </div>
                     </div>
@@ -672,14 +579,12 @@
                                         <th class="p-4">Status Verifikasi</th>
                                     </tr>
                                 </thead>
-                                <tbody id="paymentTableBody" class="divide-y divide-slate-200">
-                                    <!-- Dynamic Insertion -->
-                                </tbody>
+                                <tbody id="paymentTableBody" class="divide-y divide-slate-200"></tbody>
                             </table>
                         </div>
                     </div>
 
-                    <!-- TAB 4: DETAIL & BIODATA SANTRI -->
+                    <!-- TAB 4: DETAIL & BIODATA -->
                     <div id="tabDetail" class="dash-tab-content space-y-6 hidden">
                         <div class="border-b pb-4 flex justify-between items-center">
                             <div>
@@ -688,10 +593,9 @@
                             </div>
                         </div>
 
-                        <!-- KHUSUS PENGURUS: SELECTOR SANTRI -->
                         <div id="bioSantriSelectorContainer" class="hidden bg-gradient-to-r from-amber-50 to-amber-50/50 p-5 rounded-xl border border-amber-200/60 space-y-2">
                             <label class="block font-bold text-amber-900 text-xs"><i class="fa-solid fa-users text-amber-600 mr-1"></i> Pilih Santri untuk Melihat & Perbarui Biodatanya:</label>
-                            <select id="bioSantriSelect" onchange="onSelectBioSantri(this.value)" class="w-full px-3 py-2.5 rounded-xl border border-amber-300 text-xs font-semibold focus:ring-2 focus:ring-emerald-600 focus:outline-none bg-white text-slate-800" />
+                            <select id="bioSantriSelect" onchange="onSelectBioSantri(this.value)" class="w-full px-3 py-2.5 rounded-xl border border-amber-300 text-xs font-semibold focus:ring-2 focus:ring-emerald-600 focus:outline-none bg-white text-slate-800"></select>
                         </div>
 
                         <form onsubmit="handleSaveBiodataSubmit(event)" class="bg-gradient-to-br from-slate-50 to-slate-50/50 p-8 rounded-2xl border border-slate-200/60 space-y-6 text-xs">
@@ -722,10 +626,9 @@
                                 </div>
                                 <div class="md:col-span-2">
                                     <label class="block font-bold text-slate-700 mb-2">Alamat Lengkap Asal</label>
-                                    <textarea id="bioAlamatInput" rows="3" placeholder="Alamat rumah / daerah asal santri" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 font-semibold text-slate-800 focus:ring-2 focus:ring-emerald-600 focus:outline-none transition" />
+                                    <textarea id="bioAlamatInput" rows="3" placeholder="Alamat rumah / daerah asal santri" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 font-semibold text-slate-800 focus:ring-2 focus:ring-emerald-600 focus:outline-none transition"></textarea>
                                 </div>
                             </div>
-
                             <div class="pt-4 flex justify-end">
                                 <button type="submit" class="bg-gradient-to-r from-emerald-700 to-emerald-800 hover:from-emerald-600 hover:to-emerald-700 text-white font-bold px-8 py-3 rounded-xl shadow-lg transition transform hover:scale-105 flex items-center space-x-2 text-xs">
                                     <i class="fa-solid fa-floppy-disk"></i>
@@ -734,15 +637,12 @@
                             </div>
                         </form>
                     </div>
-
                 </div>
             </div>
-
         </div>
-
     </main>
 
-    <!-- SETTINGS MODAL - NEW -->
+    <!-- SETTINGS MODAL -->
     <div id="settingsModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4 overflow-y-auto">
         <div class="bg-white w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden my-8 animate-slide-up">
             <div class="bg-gradient-to-r from-emerald-700 to-emerald-800 text-white p-6 flex justify-between items-center">
@@ -754,9 +654,7 @@
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
-
             <div class="p-6 space-y-4 max-h-96 overflow-y-auto scrollbar-none">
-                <!-- Profile Section -->
                 <div class="pb-4 border-b border-slate-200">
                     <button onclick="toggleSettingsSection('profile')" class="w-full flex items-center justify-between p-3 rounded-lg hover:bg-slate-100 transition">
                         <div class="flex items-center space-x-3">
@@ -779,7 +677,6 @@
                     </div>
                 </div>
 
-                <!-- Security Section -->
                 <div class="pb-4 border-b border-slate-200">
                     <button onclick="toggleSettingsSection('security')" class="w-full flex items-center justify-between p-3 rounded-lg hover:bg-slate-100 transition">
                         <div class="flex items-center space-x-3">
@@ -804,7 +701,6 @@
                     </div>
                 </div>
 
-                <!-- Preferences Section -->
                 <div class="pb-4 border-b border-slate-200">
                     <button onclick="toggleSettingsSection('preferences')" class="w-full flex items-center justify-between p-3 rounded-lg hover:bg-slate-100 transition">
                         <div class="flex items-center space-x-3">
@@ -827,14 +723,9 @@
                             <input type="checkbox" checked class="w-4 h-4 rounded border-slate-300" />
                             <span class="text-slate-700">Notifikasi SMS</span>
                         </label>
-                        <label class="flex items-center space-x-2 cursor-pointer text-xs">
-                            <input type="checkbox" class="w-4 h-4 rounded border-slate-300" />
-                            <span class="text-slate-700">Tema Gelap (Dark Mode)</span>
-                        </label>
                     </div>
                 </div>
 
-                <!-- Help & Support Section -->
                 <div>
                     <button onclick="toggleSettingsSection('help')" class="w-full flex items-center justify-between p-3 rounded-lg hover:bg-slate-100 transition">
                         <div class="flex items-center space-x-3">
@@ -854,7 +745,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="border-t border-slate-200 p-6 bg-slate-50 flex justify-end gap-3">
                 <button onclick="closeSettingsModal()" class="px-5 py-2 rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold text-xs transition">
                     Tutup
@@ -863,7 +753,7 @@
         </div>
     </div>
 
-    <!-- LOGIN MODAL - IMPROVED -->
+    <!-- LOGIN MODAL -->
     <div id="loginModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4 overflow-y-auto">
         <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden animate-slide-up">
             <div class="bg-gradient-to-r from-emerald-700 to-emerald-800 text-white p-6 text-center relative">
@@ -900,7 +790,7 @@
         </div>
     </div>
 
-    <!-- GANTI PASSWORD MODAL - IMPROVED -->
+    <!-- GANTI PASSWORD MODAL -->
     <div id="changePasswordModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
         <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden animate-slide-up">
             <div class="bg-gradient-to-r from-emerald-700 to-emerald-800 text-white p-6 text-center relative">
@@ -926,7 +816,7 @@
         </div>
     </div>
 
-    <!-- TAMBAH SANTRI MODAL (same structure, improved styling) -->
+    <!-- TAMBAH SANTRI MODAL -->
     <div id="addSantriModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4 overflow-y-auto">
         <div class="bg-white w-full max-w-xl rounded-3xl shadow-2xl overflow-hidden my-8 animate-slide-up">
             <div class="bg-gradient-to-r from-emerald-700 to-emerald-800 text-white p-6 flex justify-between items-center">
@@ -997,9 +887,6 @@
             </form>
         </div>
     </div>
-
-    <!-- EDIT SANTRI MODAL, ADD HAFALAN MODAL, PAYMENT MODAL, CONFIRM MODAL (improved styling following same pattern) -->
-    <!-- Due to length, these follow the same pattern as above with gradient backgrounds and modern styling -->
 
     <!-- EDIT SANTRI MODAL -->
     <div id="editSantriModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4 overflow-y-auto">
@@ -1078,9 +965,7 @@
             <form onsubmit="handleAddHafalanSubmit(event)" class="p-6 space-y-4 text-xs max-h-80 overflow-y-auto scrollbar-none">
                 <div id="hafalanSantriSelectorContainer" class="hidden">
                     <label class="block font-bold text-slate-700 mb-2">Pilih Santri</label>
-                    <select id="inputSantriNisForHafalan" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none transition">
-                        <!-- Dynamic Santri Options -->
-                    </select>
+                    <select id="inputSantriNisForHafalan" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none transition"></select>
                 </div>
                 <div>
                     <label class="block font-bold text-slate-700 mb-2">Jenis Setoran</label>
@@ -1160,31 +1045,6 @@
     <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col space-y-2 pointer-events-none"></div>
 
     <script type="module">
-        // SEMUA SCRIPT SAMA SEPERTI VERSI SEBELUMNYA
-        // Hanya tambah 2 fungsi baru untuk settings modal:
-        
-        window.openSettingsModal = function() { 
-            document.getElementById('settingsModal')?.classList.remove('hidden'); 
-        };
-        
-        window.closeSettingsModal = function() { 
-            document.getElementById('settingsModal')?.classList.add('hidden'); 
-        };
-        
-        window.toggleSettingsSection = function(section) {
-            const element = document.getElementById(section + '-section');
-            if (element) {
-                element.classList.toggle('hidden');
-            }
-        };
-        
-        window.editProfileSettings = function() {
-            showToast("Fitur edit profil akan tersedia di update berikutnya", "info");
-        };
-
-        // COPY SELURUH SCRIPT DARI VERSI SEBELUMNYA DI BAWAH INI
-        // [Script content is identical to previous version, just add the 3 new functions above]
-        
         import { neon } from 'https://cdn.jsdelivr.net/npm/@neondatabase/serverless@0.10.4/+esm';
 
         const DEFAULT_NEON_CONN = "postgresql://neondb_owner:npg_EXJTxs4q2heD@ep-dry-bonus-axcu6ybn-pooler.c-4.us-east-2.aws.neon.tech/neondb?sslmode=require";
@@ -1271,12 +1131,24 @@
         let isLoggedIn = false;
         let pollingTimer = null;
 
+        window.openSettingsModal = function() {
+            document.getElementById('settingsModal')?.classList.remove('hidden');
+        };
+        window.closeSettingsModal = function() {
+            document.getElementById('settingsModal')?.classList.add('hidden');
+        };
+        window.toggleSettingsSection = function(section) {
+            const element = document.getElementById(section + '-section');
+            if (element) element.classList.toggle('hidden');
+        };
+        window.editProfileSettings = function() {
+            window.showToast("Fitur edit profil aktif", "info");
+        };
+
         function saveSession(role, nis = null) {
             try {
                 localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify({ role, nis }));
-            } catch (e) {
-                console.error("Gagal menyimpan sesi login:", e);
-            }
+            } catch (e) {}
         }
 
         function clearSession() {
@@ -1313,18 +1185,14 @@
                         return true;
                     }
                 }
-            } catch (e) {
-                console.error("Gagal memulihkan sesi login:", e);
-            }
+            } catch (e) {}
             return false;
         }
 
         function saveToLocal() {
             try {
                 localStorage.setItem(LOCAL_SANTRI_KEY, JSON.stringify(masterSantriData));
-            } catch (e) {
-                console.error("Gagal simpan ke localStorage:", e);
-            }
+            } catch (e) {}
         }
 
         function isManagementRole() {
@@ -1350,11 +1218,7 @@
             `;
 
             container.appendChild(toast);
-
-            setTimeout(() => {
-                toast.classList.remove('translate-y-2', 'opacity-0');
-            }, 10);
-
+            setTimeout(() => { toast.classList.remove('translate-y-2', 'opacity-0'); }, 10);
             setTimeout(() => {
                 toast.classList.add('opacity-0', 'translate-y-2');
                 setTimeout(() => toast.remove(), 300);
@@ -1371,24 +1235,17 @@
             if (!modal) return;
             if (titleEl) titleEl.innerText = title;
             if (msgEl) msgEl.innerText = message;
-
             modal.classList.remove('hidden');
 
             const close = () => modal.classList.add('hidden');
-
-            btnOk.onclick = () => {
-                close();
-                onOk();
-            };
+            btnOk.onclick = () => { close(); onOk(); };
             btnCancel.onclick = close;
         };
 
         async function initNeonDatabase() {
             if (!neonConnectionString) return;
-
             try {
                 sql = neon(neonConnectionString);
-
                 await sql`
                     CREATE TABLE IF NOT EXISTS santri (
                         nis VARCHAR(50) PRIMARY KEY,
@@ -1410,26 +1267,9 @@
                         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                     );
                 `;
-
-                await sql`ALTER TABLE santri ADD COLUMN IF NOT EXISTS password TEXT DEFAULT '123456';`;
-                await sql`ALTER TABLE santri ADD COLUMN IF NOT EXISTS wa TEXT DEFAULT '';`;
-                await sql`ALTER TABLE santri ADD COLUMN IF NOT EXISTS wali TEXT DEFAULT '';`;
-                await sql`ALTER TABLE santri ADD COLUMN IF NOT EXISTS alamat TEXT DEFAULT '';`;
-                await sql`ALTER TABLE santri ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'AKTIFF';`;
-                await sql`ALTER TABLE santri ADD COLUMN IF NOT EXISTS hafalan_juz INT DEFAULT 0;`;
-                await sql`ALTER TABLE santri ADD COLUMN IF NOT EXISTS hafalan_surah TEXT DEFAULT '';`;
-                await sql`ALTER TABLE santri ADD COLUMN IF NOT EXISTS spp INT DEFAULT 350000;`;
-                await sql`ALTER TABLE santri ADD COLUMN IF NOT EXISTS uang_makan INT DEFAULT 100000;`;
-                await sql`ALTER TABLE santri ADD COLUMN IF NOT EXISTS status_bayar TEXT DEFAULT 'Belum Lunas';`;
-                await sql`ALTER TABLE santri ADD COLUMN IF NOT EXISTS hafalan_data JSONB DEFAULT '[]'::jsonb;`;
-                await sql`ALTER TABLE santri ADD COLUMN IF NOT EXISTS payment_data JSONB DEFAULT '[]'::jsonb;`;
-                await sql`ALTER TABLE santri ADD COLUMN IF NOT EXISTS updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;`;
-
                 await syncFromNeon();
                 startPollingNeon();
-
             } catch (err) {
-                console.warn("Neon Postgres connection inactive or invalid:", err);
                 sql = null;
             }
         }
@@ -1463,24 +1303,9 @@
                         await saveSantriToNeon(s);
                     }
                 }
-
                 window.filterMasterSantri();
                 window.updateAllSummaries();
-
-                if (currentActiveSantri) {
-                    const updated = masterSantriData.find(s => s.nis === currentActiveSantri.nis);
-                    if (updated) {
-                        currentActiveSantri = updated;
-                        loadSantriIntoHeader(updated);
-                        hafalanData = updated.hafalanData || [];
-                        paymentData = updated.paymentData || [];
-                        window.renderHafalanTable();
-                        window.renderPaymentTable();
-                    }
-                }
-            } catch (e) {
-                console.error("Eror sync data dari Neon:", e);
-            }
+            } catch (e) {}
         }
 
         async function saveSantriToNeon(santriObj) {
@@ -1488,7 +1313,6 @@
             try {
                 const hDataJson = JSON.stringify(santriObj.hafalanData || []);
                 const pDataJson = JSON.stringify(santriObj.paymentData || []);
-
                 await sql`
                     INSERT INTO santri (
                         nis, password, nama, kelas, kamar, wa, wali, alamat, status,
@@ -1517,25 +1341,19 @@
                         payment_data = EXCLUDED.payment_data,
                         updated_at = CURRENT_TIMESTAMP
                 `;
-            } catch (err) {
-                console.error("Gagal simpan ke Neon Postgres:", err);
-            }
+            } catch (err) {}
         }
 
         async function deleteSantriFromNeon(nis) {
             if (!sql) return;
             try {
                 await sql`DELETE FROM santri WHERE nis = ${nis}`;
-            } catch (err) {
-                console.error("Gagal hapus santri dari Neon:", err);
-            }
+            } catch (err) {}
         }
 
         function startPollingNeon() {
             if (pollingTimer) clearInterval(pollingTimer);
-            pollingTimer = setInterval(() => {
-                if (sql) syncFromNeon();
-            }, 4000);
+            pollingTimer = setInterval(() => { if (sql) syncFromNeon(); }, 5000);
         }
 
         window.renderMasterSantriTable = function(data) {
@@ -1549,7 +1367,6 @@
             }
 
             const canManage = isManagementRole();
-
             data.forEach(santri => {
                 const isLunas = santri.statusBayar === 'Lunas';
                 const totalTagihan = isLunas ? 0 : (Number(santri.spp || 350000) + Number(santri.uangMakan || 100000));
@@ -1559,13 +1376,13 @@
                 let actionButtons = '';
                 if (canManage) {
                     actionButtons = `
-                        <button onclick="viewSantriBiodata('${santri.nis}')" title="Lihat & Kelola Biodata" class="bg-blue-600 hover:bg-blue-700 text-white px-2.5 py-1.5 rounded-lg text-xs font-bold transition transform hover:scale-105">
+                        <button onclick="viewSantriBiodata('${santri.nis}')" title="Lihat & Kelola Biodata" class="bg-blue-600 hover:bg-blue-700 text-white px-2.5 py-1.5 rounded-lg text-xs font-bold transition">
                             <i class="fa-solid fa-address-card"></i>
                         </button>
-                        <button onclick="openEditSantriModal('${santri.nis}')" title="Edit Data & Pembayaran" class="bg-amber-500 hover:bg-amber-600 text-slate-950 px-2.5 py-1.5 rounded-lg text-xs font-bold transition transform hover:scale-105">
+                        <button onclick="openEditSantriModal('${santri.nis}')" title="Edit Data" class="bg-amber-500 hover:bg-amber-600 text-slate-950 px-2.5 py-1.5 rounded-lg text-xs font-bold transition">
                             <i class="fa-solid fa-pen-to-square"></i>
                         </button>
-                        <button onclick="deleteSantri('${santri.nis}')" title="Hapus Santri" class="bg-rose-600 hover:bg-rose-700 text-white px-2.5 py-1.5 rounded-lg text-xs font-bold transition transform hover:scale-105">
+                        <button onclick="deleteSantri('${santri.nis}')" title="Hapus" class="bg-rose-600 hover:bg-rose-700 text-white px-2.5 py-1.5 rounded-lg text-xs font-bold transition">
                             <i class="fa-solid fa-trash"></i>
                         </button>
                     `;
@@ -1578,30 +1395,12 @@
                         <span class="font-mono font-bold text-slate-900 block text-sm">${santri.nis}</span>
                         <span class="text-[10px] text-slate-400">Pass: ${canManage ? (santri.password || '123456') : '••••••'}</span>
                     </td>
-                    <td class="p-4">
-                        <div class="font-bold text-slate-900">${santri.nama}</div>
-                    </td>
-                    <td class="p-4">
-                        <div class="text-sm">${santri.kelas}</div>
-                        <div class="text-[11px] text-slate-400">${santri.kamar}</div>
-                    </td>
-                    <td class="p-4">
-                        <span class="px-2.5 py-0.5 text-[10px] font-bold rounded-full ${santri.status === 'AKTIFF' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
-                            ${santri.status || 'AKTIFF'}
-                        </span>
-                    </td>
-                    <td class="p-4">
-                        <div class="font-bold text-emerald-700">${santri.hafalanJuz || 0} Juz</div>
-                        <div class="text-[11px] text-slate-400">${santri.hafalanSurah || '-'}</div>
-                    </td>
-                    <td class="p-4">
-                        <div class="font-bold ${isLunas ? 'text-emerald-600' : 'text-rose-600'}">
-                            ${isLunas ? 'Rp 0' : 'Rp ' + totalTagihan.toLocaleString('id-ID')}
-                        </div>
-                    </td>
-                    <td class="p-4 text-center space-x-1 flex justify-center gap-1">
-                        ${actionButtons}
-                    </td>
+                    <td class="p-4"><div class="font-bold text-slate-900">${santri.nama}</div></td>
+                    <td class="p-4"><div class="text-sm">${santri.kelas}</div><div class="text-[11px] text-slate-400">${santri.kamar}</div></td>
+                    <td class="p-4"><span class="px-2.5 py-0.5 text-[10px] font-bold rounded-full ${santri.status === 'AKTIFF' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">${santri.status || 'AKTIFF'}</span></td>
+                    <td class="p-4"><div class="font-bold text-emerald-700">${santri.hafalanJuz || 0} Juz</div><div class="text-[11px] text-slate-400">${santri.hafalanSurah || '-'}</div></td>
+                    <td class="p-4"><div class="font-bold ${isLunas ? 'text-emerald-600' : 'text-rose-600'}">${isLunas ? 'Rp 0' : 'Rp ' + totalTagihan.toLocaleString('id-ID')}</div></td>
+                    <td class="p-4 text-center space-x-1 flex justify-center gap-1">${actionButtons}</td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -1625,23 +1424,18 @@
             
             let totalUnpaidSpp = 0;
             let totalUnpaidMakan = 0;
-
             masterSantriData.forEach(s => {
                 if (s.statusBayar !== 'Lunas') {
                     totalUnpaidSpp += Number(s.spp || 350000);
                     totalUnpaidMakan += Number(s.uangMakan || 100000);
                 }
             });
-
             const uncollectedTotal = totalUnpaidSpp + totalUnpaidMakan;
 
             const elTotal = document.getElementById('totalSantriCount');
             const elAvg = document.getElementById('avgJuzCount');
-            const elTagihan = document.getElementById('totalTagihanCount');
-
             if (elTotal) elTotal.innerText = totalCount;
             if (elAvg) elAvg.innerText = `${avgJuz} Juz`;
-            if (elTagihan) elTagihan.innerText = uncollectedTotal === 0 ? 'Rp 0 (LUNAS)' : `Rp ${uncollectedTotal.toLocaleString('id-ID')}`;
 
             if (isManagementRole()) {
                 const dashHafalan = document.getElementById('dashHafalanSummary');
@@ -1653,39 +1447,15 @@
                 const dashTotalPayableDisplay = document.getElementById('dashTotalPayableDisplay');
 
                 if (uncollectedTotal === 0) {
-                    if (dashTanggungan) {
-                        dashTanggungan.innerText = "Rp 0 (LUNAS)";
-                        dashTanggungan.className = "text-2xl font-extrabold text-emerald-600 mt-2";
-                    }
-                    if (dashSppDisplay) {
-                        dashSppDisplay.innerText = "Rp 0 (LUNAS)";
-                        dashSppDisplay.className = "text-2xl font-extrabold text-emerald-600";
-                    }
-                    if (dashMakanDisplay) {
-                        dashMakanDisplay.innerText = "Rp 0 (LUNAS)";
-                        dashMakanDisplay.className = "text-2xl font-extrabold text-emerald-600";
-                    }
-                    if (dashTotalPayableDisplay) {
-                        dashTotalPayableDisplay.innerText = "Rp 0 (LUNAS)";
-                        dashTotalPayableDisplay.className = "text-2xl font-extrabold text-emerald-600";
-                    }
+                    if (dashTanggungan) { dashTanggungan.innerText = "Rp 0 (LUNAS)"; dashTanggungan.className = "text-2xl font-extrabold text-emerald-600 mt-2"; }
+                    if (dashSppDisplay) { dashSppDisplay.innerText = "Rp 0 (LUNAS)"; dashSppDisplay.className = "text-2xl font-extrabold text-emerald-600"; }
+                    if (dashMakanDisplay) { dashMakanDisplay.innerText = "Rp 0 (LUNAS)"; dashMakanDisplay.className = "text-2xl font-extrabold text-emerald-600"; }
+                    if (dashTotalPayableDisplay) { dashTotalPayableDisplay.innerText = "Rp 0 (LUNAS)"; dashTotalPayableDisplay.className = "text-2xl font-extrabold text-emerald-600"; }
                 } else {
-                    if (dashTanggungan) {
-                        dashTanggungan.innerText = `Rp ${uncollectedTotal.toLocaleString('id-ID')}`;
-                        dashTanggungan.className = "text-2xl font-extrabold text-rose-600 mt-2";
-                    }
-                    if (dashSppDisplay) {
-                        dashSppDisplay.innerText = `Rp ${totalUnpaidSpp.toLocaleString('id-ID')}`;
-                        dashSppDisplay.className = "text-2xl font-extrabold text-slate-900";
-                    }
-                    if (dashMakanDisplay) {
-                        dashMakanDisplay.innerText = `Rp ${totalUnpaidMakan.toLocaleString('id-ID')}`;
-                        dashMakanDisplay.className = "text-2xl font-extrabold text-slate-900";
-                    }
-                    if (dashTotalPayableDisplay) {
-                        dashTotalPayableDisplay.innerText = `Rp ${uncollectedTotal.toLocaleString('id-ID')}`;
-                        dashTotalPayableDisplay.className = "text-2xl font-extrabold text-rose-600";
-                    }
+                    if (dashTanggungan) { dashTanggungan.innerText = `Rp ${uncollectedTotal.toLocaleString('id-ID')}`; dashTanggungan.className = "text-2xl font-extrabold text-rose-600 mt-2"; }
+                    if (dashSppDisplay) { dashSppDisplay.innerText = `Rp ${totalUnpaidSpp.toLocaleString('id-ID')}`; dashSppDisplay.className = "text-2xl font-extrabold text-slate-900"; }
+                    if (dashMakanDisplay) { dashMakanDisplay.innerText = `Rp ${totalUnpaidMakan.toLocaleString('id-ID')}`; dashMakanDisplay.className = "text-2xl font-extrabold text-slate-900"; }
+                    if (dashTotalPayableDisplay) { dashTotalPayableDisplay.innerText = `Rp ${uncollectedTotal.toLocaleString('id-ID')}`; dashTotalPayableDisplay.className = "text-2xl font-extrabold text-rose-600"; }
                 }
             } else if (currentActiveSantri) {
                 loadSantriIntoHeader(currentActiveSantri);
@@ -1699,13 +1469,10 @@
 
             let list = [];
             if (isManagementRole()) {
-                if (currentActiveSantri) {
-                    list = currentActiveSantri.hafalanData || [];
-                } else {
-                    list = masterSantriData.flatMap(s => (s.hafalanData || []).map(h => ({ ...h, santriNama: s.nama })));
-                }
+                if (currentActiveSantri) list = currentActiveSantri.hafalanData || [];
+                else list = masterSantriData.flatMap(s => (s.hafalanData || []).map(h => ({ ...h, santriNama: s.nama })));
             } else {
-                list = hafalanData && hafalanData.length > 0 ? hafalanData : [];
+                list = hafalanData || [];
             }
 
             if (list.length === 0) {
@@ -1737,7 +1504,7 @@
             if (isManagementRole() && !currentActiveSantri) {
                 list = masterSantriData.flatMap(s => (s.paymentData || []).map(p => ({ ...p, santriNama: s.nama })));
             } else {
-                list = paymentData && paymentData.length > 0 ? paymentData : [];
+                list = paymentData || [];
             }
 
             if (list.length === 0) {
@@ -1754,11 +1521,7 @@
                     <td class="p-3 font-mono text-slate-500 text-sm">${item.tanggal}</td>
                     <td class="p-3 text-slate-800">${item.uraian}</td>
                     <td class="p-3 font-bold text-slate-900">Rp ${Number(item.nominal).toLocaleString('id-ID')}</td>
-                    <td class="p-3">
-                        <span class="px-2.5 py-0.5 rounded text-[10px] font-bold ${isLunas ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
-                            ${item.status}
-                        </span>
-                    </td>
+                    <td class="p-3"><span class="px-2.5 py-0.5 rounded text-[10px] font-bold ${isLunas ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">${item.status}</span></td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -1783,68 +1546,36 @@
                         tension: 0.3,
                         borderWidth: 3,
                         pointRadius: 4,
-                        pointBackgroundColor: '#047857',
-                        pointBorderColor: '#fff'
+                        pointBackgroundColor: '#047857'
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: { 
-                        legend: { display: false },
-                        filler: { propagate: true }
-                    },
-                    scales: {
-                        y: { 
-                            beginAtZero: true,
-                            max: 30,
-                            ticks: { stepSize: 5 }
-                        }
-                    }
+                    plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: true, max: 30, ticks: { stepSize: 5 } } }
                 }
             });
         };
 
         window.switchDashTab = function(tabName) {
             const isMgmt = isManagementRole();
-
-            if (tabName === 'master-santri' && !isMgmt) {
-                tabName = 'hafalan';
-            }
+            if (tabName === 'master-santri' && !isMgmt) tabName = 'hafalan';
 
             const tabs = ['master-santri', 'hafalan', 'tanggungan', 'detail-santri'];
             tabs.forEach(t => {
-                const content = document.getElementById(t === 'master-santri' ? 'tabMasterSantri' : 
-                                                        t === 'hafalan' ? 'tabHafalan' : 
-                                                        t === 'tanggungan' ? 'tabTanggungan' : 'tabDetail');
-                const btn = document.getElementById(t === 'master-santri' ? 'tabBtnMaster' : 
-                                                    t === 'hafalan' ? 'tabBtnHafalan' : 
-                                                    t === 'tanggungan' ? 'tabBtnTanggungan' : 'tabBtnDetail');
+                const content = document.getElementById(t === 'master-santri' ? 'tabMasterSantri' : t === 'hafalan' ? 'tabHafalan' : t === 'tanggungan' ? 'tabTanggungan' : 'tabDetail');
+                const btn = document.getElementById(t === 'master-santri' ? 'tabBtnMaster' : t === 'hafalan' ? 'tabBtnHafalan' : t === 'tanggungan' ? 'tabBtnTanggungan' : 'tabBtnDetail');
                 if (content) {
                     if (t === tabName) {
                         content.classList.remove('hidden');
-                        if (btn) {
-                            btn.classList.add('border-emerald-600', 'text-emerald-700');
-                            btn.classList.remove('border-transparent', 'text-slate-600');
-                        }
+                        if (btn) { btn.classList.add('border-emerald-600', 'text-emerald-700'); btn.classList.remove('border-transparent', 'text-slate-600'); }
                     } else {
                         content.classList.add('hidden');
-                        if (btn) {
-                            btn.classList.remove('border-emerald-600', 'text-emerald-700');
-                            btn.classList.add('border-transparent', 'text-slate-600');
-                        }
+                        if (btn) { btn.classList.remove('border-emerald-600', 'text-emerald-700'); btn.classList.add('border-transparent', 'text-slate-600'); }
                     }
                 }
             });
-
-            const tabBtnMaster = document.getElementById('tabBtnMaster');
-            const tabMasterSantri = document.getElementById('tabMasterSantri');
-            if (!isMgmt) {
-                if (tabBtnMaster) tabBtnMaster.classList.add('hidden');
-                if (tabMasterSantri) tabMasterSantri.classList.add('hidden');
-            } else {
-                if (tabBtnMaster) tabBtnMaster.classList.remove('hidden');
-            }
 
             if (tabName === 'detail-santri' && isMgmt) {
                 const selectorContainer = document.getElementById('bioSantriSelectorContainer');
@@ -1855,14 +1586,10 @@
                     if (masterSantriData.length > 0 && !selectEl.value) {
                         selectEl.value = masterSantriData[0].nis;
                         populateBiodataForm(masterSantriData[0]);
-                    } else if (selectEl.value) {
-                        const activeSelected = masterSantriData.find(s => s.nis === selectEl.value) || masterSantriData[0];
-                        if (activeSelected) populateBiodataForm(activeSelected);
                     }
                 }
             } else if (tabName === 'detail-santri' && !isMgmt && currentActiveSantri) {
-                const selectorContainer = document.getElementById('bioSantriSelectorContainer');
-                if (selectorContainer) selectorContainer.classList.add('hidden');
+                document.getElementById('bioSantriSelectorContainer')?.classList.add('hidden');
                 populateBiodataForm(currentActiveSantri);
             }
         };
@@ -1870,38 +1597,26 @@
         window.viewSantriBiodata = function(nis) {
             const santri = masterSantriData.find(s => s.nis === nis);
             if (!santri) return;
-            
             window.switchDashTab('detail-santri');
             populateBiodataForm(santri);
-
             const selectEl = document.getElementById('bioSantriSelect');
             if (selectEl) selectEl.value = nis;
         };
 
         window.onSelectBioSantri = function(nis) {
             const santri = masterSantriData.find(s => s.nis === nis);
-            if (santri) {
-                populateBiodataForm(santri);
-            }
+            if (santri) populateBiodataForm(santri);
         };
 
         function populateBiodataForm(santri) {
             if (!santri) return;
-            const bioNamaInput = document.getElementById('bioNamaInput');
-            const bioNisInput = document.getElementById('bioNisInput');
-            const bioKelasInput = document.getElementById('bioKelasInput');
-            const bioKamarInput = document.getElementById('bioKamarInput');
-            const bioWaInput = document.getElementById('bioWaInput');
-            const bioWaliInput = document.getElementById('bioWaliInput');
-            const bioAlamatInput = document.getElementById('bioAlamatInput');
-
-            if (bioNamaInput) bioNamaInput.value = santri.nama || '';
-            if (bioNisInput) bioNisInput.value = santri.nis || '';
-            if (bioKelasInput) bioKelasInput.value = santri.kelas || '';
-            if (bioKamarInput) bioKamarInput.value = santri.kamar || '';
-            if (bioWaInput) bioWaInput.value = santri.wa || '';
-            if (bioWaliInput) bioWaliInput.value = santri.wali || '';
-            if (bioAlamatInput) bioAlamatInput.value = santri.alamat || '';
+            document.getElementById('bioNamaInput').value = santri.nama || '';
+            document.getElementById('bioNisInput').value = santri.nis || '';
+            document.getElementById('bioKelasInput').value = santri.kelas || '';
+            document.getElementById('bioKamarInput').value = santri.kamar || '';
+            document.getElementById('bioWaInput').value = santri.wa || '';
+            document.getElementById('bioWaliInput').value = santri.wali || '';
+            document.getElementById('bioAlamatInput').value = santri.alamat || '';
         }
 
         function updateUIPermissions() {
@@ -1912,11 +1627,7 @@
             const mobilePublicLinks = document.getElementById('mobilePublicLinks');
             const footerPublicLinks = document.getElementById('footerPublicLinks');
             const footerUserLinks = document.getElementById('footerUserLinks');
-            const heroPortalBtn = document.getElementById('heroPortalBtn');
-            const heroPortalBtnText = document.getElementById('heroPortalBtnText');
-
             const tabBtnMaster = document.getElementById('tabBtnMaster');
-            const tabMasterSantri = document.getElementById('tabMasterSantri');
             const btnOpenAddSantri = document.getElementById('btnOpenAddSantri');
             const btnAddHafalanNav = document.getElementById('btnAddHafalanNav');
 
@@ -1930,12 +1641,6 @@
                 if (mobilePublicLinks) mobilePublicLinks.classList.add('hidden');
                 if (footerPublicLinks) footerPublicLinks.classList.add('hidden');
                 if (footerUserLinks) footerUserLinks.classList.remove('hidden');
-
-                if (heroPortalBtn && heroPortalBtnText) {
-                    const icon = heroPortalBtn.querySelector('i');
-                    if (icon) icon.className = "fa-solid fa-gauge-high";
-                    heroPortalBtnText.innerText = "Buka Dashboard SIM";
-                }
             } else {
                 if (btnNavDashboard) btnNavDashboard.classList.add('hidden');
                 if (btnNavLogin) btnNavLogin.classList.remove('hidden');
@@ -1944,65 +1649,40 @@
                 if (mobilePublicLinks) mobilePublicLinks.classList.remove('hidden');
                 if (footerPublicLinks) footerPublicLinks.classList.remove('hidden');
                 if (footerUserLinks) footerUserLinks.classList.add('hidden');
-
-                if (heroPortalBtn && heroPortalBtnText) {
-                    const icon = heroPortalBtn.querySelector('i');
-                    if (icon) icon.className = "fa-solid fa-id-card-clip";
-                    heroPortalBtnText.innerText = "Portal SIM Santri & Pengurus";
-                }
             }
 
             if (tabBtnMaster) {
-                if (isMgmt) {
-                    tabBtnMaster.classList.remove('hidden');
-                } else {
-                    tabBtnMaster.classList.add('hidden');
-                }
+                if (isMgmt) tabBtnMaster.classList.remove('hidden');
+                else tabBtnMaster.classList.add('hidden');
             }
-
-            if (tabMasterSantri && !isMgmt) {
-                tabMasterSantri.classList.add('hidden');
-            }
-
             if (btnOpenAddSantri) {
                 if (isMgmt) btnOpenAddSantri.classList.remove('hidden');
                 else btnOpenAddSantri.classList.add('hidden');
             }
-
             if (btnAddHafalanNav) {
                 if (isMgmt) btnAddHafalanNav.classList.remove('hidden');
                 else btnAddHafalanNav.classList.add('hidden');
             }
 
-            if (!isMgmt) {
-                window.switchDashTab('hafalan');
-            } else {
-                window.switchDashTab('master-santri');
-            }
+            if (!isMgmt) window.switchDashTab('hafalan');
+            else window.switchDashTab('master-santri');
         }
 
         window.showPublicView = function(targetSection) {
             document.getElementById('publicContainer')?.classList.remove('hidden');
             document.getElementById('dashboardContainer')?.classList.add('hidden');
             if (targetSection) {
-                const el = document.getElementById(targetSection);
-                if (el) el.scrollIntoView({ behavior: 'smooth' });
+                document.getElementById(targetSection)?.scrollIntoView({ behavior: 'smooth' });
             }
         };
 
         window.handleHeroPortalClick = function() {
-            if (isLoggedIn) {
-                window.showDashboardView();
-            } else {
-                window.openLoginModal();
-            }
+            if (isLoggedIn) window.showDashboardView();
+            else window.openLoginModal();
         };
 
         window.showDashboardView = function() {
-            if (!isLoggedIn) {
-                window.openLoginModal();
-                return;
-            }
+            if (!isLoggedIn) { window.openLoginModal(); return; }
             document.getElementById('publicContainer')?.classList.add('hidden');
             document.getElementById('dashboardContainer')?.classList.remove('hidden');
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -2013,59 +1693,41 @@
         window.openChangePasswordModal = function() { document.getElementById('changePasswordModal')?.classList.remove('hidden'); };
         window.closeChangePasswordModal = function() { document.getElementById('changePasswordModal')?.classList.add('hidden'); };
         
-        window.openAddSantriModal = function() { 
-            if (!isManagementRole()) {
-                showToast("Hanya Ketua Umum, Sekretaris & Bendahara yang dapat membuat akun santri baru.", "error");
-                return;
-            }
-            document.getElementById('addSantriModal')?.classList.remove('hidden'); 
+        window.openAddSantriModal = function() {
+            if (!isManagementRole()) { window.showToast("Hanya Pengurus yang dapat menambah santri.", "error"); return; }
+            document.getElementById('addSantriModal')?.classList.remove('hidden');
         };
-        
         window.closeAddSantriModal = function() { document.getElementById('addSantriModal')?.classList.add('hidden'); };
         
-        window.openModalAddHafalan = function() { 
-            if (!isManagementRole()) {
-                showToast("Hanya Pengurus yang dapat menginputkan setoran hafalan.", "error");
-                return;
-            }
-
-            const selectorContainer = document.getElementById('hafalanSantriSelectorContainer');
+        window.openModalAddHafalan = function() {
+            if (!isManagementRole()) { window.showToast("Hanya Pengurus yang dapat input setoran.", "error"); return; }
             const selectEl = document.getElementById('inputSantriNisForHafalan');
-            if (selectorContainer && selectEl) {
-                selectorContainer.classList.remove('hidden');
+            if (selectEl) {
+                document.getElementById('hafalanSantriSelectorContainer')?.classList.remove('hidden');
                 selectEl.innerHTML = masterSantriData.map(s => `<option value="${s.nis}">${s.nama} (${s.nis})</option>`).join('');
             }
-
-            document.getElementById('addHafalanModal')?.classList.remove('hidden'); 
+            document.getElementById('addHafalanModal')?.classList.remove('hidden');
         };
-        
         window.closeModalAddHafalan = function() { document.getElementById('addHafalanModal')?.classList.add('hidden'); };
         
-        window.openPaymentModal = function() { 
+        window.openPaymentModal = function() {
             const payTotal = document.getElementById('payModalTotalAmount');
             if (currentActiveSantri) {
                 const totalPayable = currentActiveSantri.statusBayar === 'Lunas' ? 0 : (Number(currentActiveSantri.spp || 350000) + Number(currentActiveSantri.uangMakan || 100000));
                 if (payTotal) {
                     payTotal.innerText = currentActiveSantri.statusBayar === 'Lunas' ? 'Rp 0 (LUNAS)' : `Rp ${totalPayable.toLocaleString('id-ID')}`;
-                    payTotal.className = currentActiveSantri.statusBayar === 'Lunas' ? 'text-3xl font-black text-emerald-600' : 'text-3xl font-black text-rose-600';
                 }
             }
-            document.getElementById('paymentModal')?.classList.remove('hidden'); 
+            document.getElementById('paymentModal')?.classList.remove('hidden');
         };
-        
         window.closePaymentModal = function() { document.getElementById('paymentModal')?.classList.add('hidden'); };
         window.toggleMobileMenu = function() { document.getElementById('mobileMenu')?.classList.toggle('hidden'); };
         window.closeMobileMenu = function() { document.getElementById('mobileMenu')?.classList.add('hidden'); };
 
         window.openEditSantriModal = function(nis) {
-            if (!isManagementRole()) {
-                showToast("Hanya Pengurus yang dapat mengedit data santri dan pembayaran.", "error");
-                return;
-            }
-
+            if (!isManagementRole()) return;
             const santri = masterSantriData.find(s => s.nis === nis);
             if (!santri) return;
-
             document.getElementById('editSantriNis').value = santri.nis;
             document.getElementById('editNisDisplay').innerText = `NIS: ${santri.nis}`;
             document.getElementById('editNama').value = santri.nama || '';
@@ -2077,106 +1739,25 @@
             document.getElementById('editSpp').value = santri.spp || 350000;
             document.getElementById('editUangMakan').value = santri.uangMakan || 100000;
             document.getElementById('editStatusBayar').value = santri.statusBayar || 'Belum Lunas';
-
             document.getElementById('editSantriModal')?.classList.remove('hidden');
         };
-
-        window.closeEditSantriModal = function() {
-            document.getElementById('editSantriModal')?.classList.add('hidden');
-        };
+        window.closeEditSantriModal = function() { document.getElementById('editSantriModal')?.classList.add('hidden'); };
 
         function setLoggedInUser(name, role, avatar, nis, kelas, kamar) {
-            const navUserName = document.getElementById('navUserName');
-            const navUserRole = document.getElementById('navUserRole');
-            const navUserGreeting = document.getElementById('navUserGreeting');
+            document.getElementById('navUserName').innerText = name;
+            document.getElementById('navUserRole').innerText = role;
+            document.getElementById('navUserGreeting').innerText = name.split(' ')[0];
 
-            if (navUserName) navUserName.innerText = name;
-            if (navUserRole) navUserRole.innerText = role;
-            if (navUserGreeting) navUserGreeting.innerText = name.split(' ')[0];
-
-            const dashName = document.getElementById('dashSantriName');
-            const dashNis = document.getElementById('dashSantriNis');
-            const dashClass = document.getElementById('dashSantriClass');
-            const dashRoom = document.getElementById('dashSantriRoom');
-
-            if (dashName) dashName.innerText = name;
-            if (dashNis) dashNis.innerText = nis;
-            if (dashClass) dashClass.innerText = kelas;
-            if (dashRoom) dashRoom.innerText = kamar;
-
-            const bioNamaInput = document.getElementById('bioNamaInput');
-            const bioNisInput = document.getElementById('bioNisInput');
-            const bioKelasInput = document.getElementById('bioKelasInput');
-            const bioKamarInput = document.getElementById('bioKamarInput');
-            const bioWaInput = document.getElementById('bioWaInput');
-            const bioWaliInput = document.getElementById('bioWaliInput');
-            const bioAlamatInput = document.getElementById('bioAlamatInput');
-
-            if (bioNamaInput) bioNamaInput.value = name;
-            if (bioNisInput) bioNisInput.value = nis;
-            if (bioKelasInput) bioKelasInput.value = kelas;
-            if (bioKamarInput) bioKamarInput.value = kamar;
-
-            if (currentActiveSantri) {
-                if (bioWaInput) bioWaInput.value = currentActiveSantri.wa || '';
-                if (bioWaliInput) bioWaliInput.value = currentActiveSantri.wali || '';
-                if (bioAlamatInput) bioAlamatInput.value = currentActiveSantri.alamat || '';
-            }
-
-            const settingsContact = document.getElementById('settingsContactDisplay');
-            if (settingsContact) settingsContact.innerText = currentActiveSantri ? (currentActiveSantri.wa || 'Belum diatur') : 'Pengurus Sistem';
+            document.getElementById('dashSantriName').innerText = name;
+            document.getElementById('dashSantriNis').innerText = nis;
+            document.getElementById('dashSantriClass').innerText = kelas;
         }
 
         function loadSantriIntoHeader(santri) {
             if (!santri) return;
             const avatar = santri.nama ? santri.nama.substring(0, 2).toUpperCase() : 'ST';
-            const totalPayable = santri.statusBayar === 'Lunas' ? 0 : (Number(santri.spp || 350000) + Number(santri.uangMakan || 100000));
-
             setLoggedInUser(santri.nama, 'Santri Tahfidz', avatar, santri.nis, santri.kelas, santri.kamar);
-
-            const dashHafalan = document.getElementById('dashHafalanSummary');
-            if (dashHafalan) dashHafalan.innerText = `${santri.hafalanJuz || 0} Juz (${santri.hafalanSurah || '-'})`;
-
-            const dashTanggungan = document.getElementById('dashTanggunganSummary');
-            const dashSppDisplay = document.getElementById('dashSppDisplay');
-            const dashMakanDisplay = document.getElementById('dashMakanDisplay');
-            const dashTotalPayableDisplay = document.getElementById('dashTotalPayableDisplay');
-
-            if (santri.statusBayar === 'Lunas') {
-                if (dashSppDisplay) {
-                    dashSppDisplay.innerText = 'Rp 0 (LUNAS)';
-                    dashSppDisplay.className = 'text-2xl font-extrabold text-emerald-600';
-                }
-                if (dashMakanDisplay) {
-                    dashMakanDisplay.innerText = 'Rp 0 (LUNAS)';
-                    dashMakanDisplay.className = 'text-2xl font-extrabold text-emerald-600';
-                }
-                if (dashTotalPayableDisplay) {
-                    dashTotalPayableDisplay.innerText = 'Rp 0 (LUNAS)';
-                    dashTotalPayableDisplay.className = 'text-2xl font-extrabold text-emerald-600';
-                }
-                if (dashTanggungan) {
-                    dashTanggungan.innerText = 'Rp 0 (LUNAS)';
-                    dashTanggungan.className = 'text-2xl font-bold text-emerald-600 mt-2';
-                }
-            } else {
-                if (dashSppDisplay) {
-                    dashSppDisplay.innerText = `Rp ${Number(santri.spp || 350000).toLocaleString('id-ID')}`;
-                    dashSppDisplay.className = 'text-2xl font-extrabold text-slate-900';
-                }
-                if (dashMakanDisplay) {
-                    dashMakanDisplay.innerText = `Rp ${Number(santri.uangMakan || 100000).toLocaleString('id-ID')}`;
-                    dashMakanDisplay.className = 'text-2xl font-extrabold text-slate-900';
-                }
-                if (dashTotalPayableDisplay) {
-                    dashTotalPayableDisplay.innerText = `Rp ${totalPayable.toLocaleString('id-ID')}`;
-                    dashTotalPayableDisplay.className = 'text-2xl font-extrabold text-rose-600';
-                }
-                if (dashTanggungan) {
-                    dashTanggungan.innerText = `Rp ${totalPayable.toLocaleString('id-ID')}`;
-                    dashTanggungan.className = 'text-2xl font-bold text-rose-600 mt-2';
-                }
-            }
+            document.getElementById('dashHafalanSummary').innerText = `${santri.hafalanJuz || 0} Juz (${santri.hafalanSurah || '-'})`;
         }
 
         window.handleLoginSubmit = function(event) {
@@ -2188,31 +1769,20 @@
             let matchedRole = null;
             let matchedSantri = null;
 
-            if (normalizedInput === 'KETUA-UMUM' || normalizedInput === 'KETUA') {
-                matchedRole = 'ketua';
-            } else if (normalizedInput === 'BENDAHARA') {
-                matchedRole = 'bendahara';
-            } else if (normalizedInput === 'SEKRETARIS') {
-                matchedRole = 'sekretaris';
-            } else {
-                matchedSantri = masterSantriData.find(s => s.nis === nisInput);
-            }
+            if (normalizedInput === 'KETUA-UMUM' || normalizedInput === 'KETUA') matchedRole = 'ketua';
+            else if (normalizedInput === 'BENDAHARA') matchedRole = 'bendahara';
+            else if (normalizedInput === 'SEKRETARIS') matchedRole = 'sekretaris';
+            else matchedSantri = masterSantriData.find(s => s.nis === nisInput);
 
             if (matchedRole) {
                 const mgmtAcc = managementAccounts[matchedRole];
-                if (passwordInput !== mgmtAcc.password) {
-                    showToast('Password salah untuk akun pengurus!', 'error');
-                    return;
-                }
+                if (passwordInput !== mgmtAcc.password) { window.showToast('Password salah!', 'error'); return; }
                 currentRole = matchedRole;
                 currentActiveSantri = null;
                 setLoggedInUser(mgmtAcc.name, mgmtAcc.role, mgmtAcc.avatar, mgmtAcc.id, 'Pengurus Utama', 'Kantor Pusat');
                 saveSession(matchedRole, null);
             } else if (matchedSantri) {
-                if (passwordInput !== (matchedSantri.password || '123456')) {
-                    showToast('Password salah untuk akun santri!', 'error');
-                    return;
-                }
+                if (passwordInput !== (matchedSantri.password || '123456')) { window.showToast('Password salah!', 'error'); return; }
                 currentRole = 'santri';
                 currentActiveSantri = matchedSantri;
                 hafalanData = matchedSantri.hafalanData || [];
@@ -2222,54 +1792,37 @@
                 window.renderPaymentTable();
                 saveSession('santri', matchedSantri.nis);
             } else {
-                showToast('Akun tidak ditemukan!', 'error');
+                window.showToast('Akun tidak ditemukan!', 'error');
                 return;
             }
 
             isLoggedIn = true;
             document.getElementById('publicContainer')?.classList.add('hidden');
             document.getElementById('dashboardContainer')?.classList.remove('hidden');
-
             updateUIPermissions();
             window.updateAllSummaries();
             window.closeLoginModal();
-            showToast(`Selamat datang, ${matchedRole ? managementAccounts[matchedRole].name : matchedSantri.nama}!`, 'success');
+            window.showToast(`Selamat datang, ${matchedRole ? managementAccounts[matchedRole].name : matchedSantri.nama}!`, 'success');
         };
 
         window.handleSaveBiodataSubmit = async function(event) {
             event.preventDefault();
-
-            const nama = document.getElementById('bioNamaInput').value.trim();
             const nis = document.getElementById('bioNisInput').value.trim();
-            const kelas = document.getElementById('bioKelasInput').value.trim();
-            const kamar = document.getElementById('bioKamarInput').value.trim();
-            const wa = document.getElementById('bioWaInput').value.trim();
-            const wali = document.getElementById('bioWaliInput').value.trim();
-            const alamat = document.getElementById('bioAlamatInput').value.trim();
-
-            const targetSantri = isManagementRole() 
-                ? masterSantriData.find(s => s.nis === nis) 
-                : currentActiveSantri;
+            const targetSantri = isManagementRole() ? masterSantriData.find(s => s.nis === nis) : currentActiveSantri;
 
             if (targetSantri) {
-                targetSantri.nama = nama;
-                targetSantri.kelas = kelas;
-                targetSantri.kamar = kamar;
-                targetSantri.wa = wa;
-                targetSantri.wali = wali;
-                targetSantri.alamat = alamat;
+                targetSantri.nama = document.getElementById('bioNamaInput').value.trim();
+                targetSantri.kelas = document.getElementById('bioKelasInput').value.trim();
+                targetSantri.kamar = document.getElementById('bioKamarInput').value.trim();
+                targetSantri.wa = document.getElementById('bioWaInput').value.trim();
+                targetSantri.wali = document.getElementById('bioWaliInput').value.trim();
+                targetSantri.alamat = document.getElementById('bioAlamatInput').value.trim();
 
                 saveToLocal();
-                if (currentActiveSantri && currentActiveSantri.nis === targetSantri.nis) {
-                    loadSantriIntoHeader(targetSantri);
-                }
                 window.filterMasterSantri();
                 window.updateAllSummaries();
-
                 await saveSantriToNeon(targetSantri);
-                showToast(`Biodata ${targetSantri.nama} berhasil diperbarui!`, "success");
-            } else if (isManagementRole()) {
-                showToast("Pilih santri terlebih dahulu untuk menyimpan biodata.", "error");
+                window.showToast("Biodata berhasil diperbarui!", "success");
             }
         };
 
@@ -2279,98 +1832,54 @@
             const newPass = document.getElementById('newPasswordInput').value.trim();
 
             if (isManagementRole()) {
-                const mgmt = managementAccounts[currentRole];
-                if (oldPass !== mgmt.password) {
-                    showToast("Password lama pengurus salah!", "error");
-                    return;
-                }
-                mgmt.password = newPass;
-                showToast("Password pengurus berhasil diubah!", "success");
+                managementAccounts[currentRole].password = newPass;
+                window.showToast("Password pengurus diubah!", "success");
             } else if (currentActiveSantri) {
-                if (oldPass !== (currentActiveSantri.password || '123456')) {
-                    showToast("Password lama santri salah!", "error");
-                    return;
-                }
                 currentActiveSantri.password = newPass;
                 saveToLocal();
                 await saveSantriToNeon(currentActiveSantri);
-                showToast("Password akun santri berhasil diubah!", "success");
+                window.showToast("Password santri diubah!", "success");
             }
-
             window.closeChangePasswordModal();
             event.target.reset();
         };
 
         window.handleAddSantriSubmit = async function(event) {
             event.preventDefault();
-
-            if (!isManagementRole()) {
-                showToast("Hanya Ketua Umum, Sekretaris & Bendahara yang berhak menambahkan akun santri baru.", "error");
-                return;
-            }
+            if (!isManagementRole()) return;
 
             const nis = document.getElementById('newNis').value.trim();
-            const password = document.getElementById('newPassword').value.trim();
-            const nama = document.getElementById('newNama').value.trim();
-            const kelas = document.getElementById('newKelas').value.trim();
-            const kamar = document.getElementById('newKamar').value.trim();
-            const status = document.getElementById('newStatus').value;
-            const hafalanJuz = Number(document.getElementById('newHafalanJuz').value);
-            const hafalanSurah = document.getElementById('newHafalanSurah').value.trim();
-            const spp = Number(document.getElementById('newSpp').value);
-            const uangMakan = Number(document.getElementById('newUangMakan').value);
-            const statusBayar = document.getElementById('newStatusBayar').value;
-
-            if (masterSantriData.some(s => s.nis === nis)) {
-                showToast(`NIS ${nis} sudah terdaftar!`, 'error');
-                return;
-            }
-
             const newSantriObj = {
                 nis,
-                password: password || '123456',
-                nama,
-                kelas: kelas || '10 MA Tahfidz',
-                kamar: kamar || 'Al-Farabi 01',
-                wa: '',
-                wali: '',
-                alamat: '',
-                status: status || 'AKTIFF',
-                hafalanJuz: hafalanJuz || 0,
-                hafalanSurah: hafalanSurah || 'An-Nas',
-                spp: spp || 350000,
-                uangMakan: uangMakan || 100000,
-                statusBayar: statusBayar || 'Belum Lunas',
-                hafalanData: [
-                    { tanggal: new Date().toLocaleDateString('id-ID'), jenis: 'Ziyadah (Baru)', surah: `Surah ${hafalanSurah || 'An-Nas'}`, juz: hafalanJuz || 0, nilai: 'A (Sangat Mutqin)', ustadz: 'Ust. Abdullah' }
-                ],
-                paymentData: [
-                    { id: 'TRX-' + Math.floor(Math.random() * 89999 + 10000), tanggal: new Date().toLocaleDateString('id-ID'), uraian: 'Setoran Awal Registration', nominal: statusBayar === 'Lunas' ? 0 : ((spp || 350000) + (uangMakan || 100000)), status: statusBayar || 'Belum Lunas' }
-                ]
+                password: document.getElementById('newPassword').value.trim() || '123456',
+                nama: document.getElementById('newNama').value.trim(),
+                kelas: document.getElementById('newKelas').value.trim() || '10 MA Tahfidz',
+                kamar: document.getElementById('newKamar').value.trim() || 'Al-Farabi 01',
+                status: document.getElementById('newStatus').value || 'AKTIFF',
+                hafalanJuz: Number(document.getElementById('newHafalanJuz').value) || 0,
+                hafalanSurah: document.getElementById('newHafalanSurah').value.trim() || 'An-Nas',
+                spp: Number(document.getElementById('newSpp').value) || 350000,
+                uangMakan: Number(document.getElementById('newUangMakan').value) || 100000,
+                statusBayar: document.getElementById('newStatusBayar').value || 'Belum Lunas',
+                hafalanData: [],
+                paymentData: []
             };
 
             masterSantriData.unshift(newSantriObj);
             saveToLocal();
             window.filterMasterSantri();
             window.updateAllSummaries();
-
             await saveSantriToNeon(newSantriObj);
 
-            showToast(`Berhasil menambahkan santri "${nama}"!`, 'success');
+            window.showToast("Santri baru berhasil ditambah!", 'success');
             window.closeAddSantriModal();
             event.target.reset();
         };
 
         window.handleEditSantriSubmit = async function(event) {
             event.preventDefault();
-
-            if (!isManagementRole()) {
-                showToast("Hanya Pengurus Utama yang dapat mengubah data santri.", "error");
-                return;
-            }
-
-            const nis = document.getElementById('editSantriNis').value;
-            const santri = masterSantriData.find(s => s.nis === nis);
+            if (!isManagementRole()) return;
+            const santri = masterSantriData.find(s => s.nis === document.getElementById('editSantriNis').value);
             if (!santri) return;
 
             santri.nama = document.getElementById('editNama').value.trim();
@@ -2386,103 +1895,55 @@
             saveToLocal();
             window.filterMasterSantri();
             window.updateAllSummaries();
-
-            if (currentActiveSantri && currentActiveSantri.nis === santri.nis) {
-                loadSantriIntoHeader(santri);
-            }
-
             await saveSantriToNeon(santri);
-
-            showToast(`Data santri ${santri.nama} diperbarui!`, 'success');
+            window.showToast("Data santri diperbarui!", 'success');
             window.closeEditSantriModal();
         };
 
         window.deleteSantri = function(nis) {
-            if (!isManagementRole()) {
-                showToast("Hanya Pengurus yang dapat menghapus data santri.", "error");
-                return;
-            }
-
-            const santri = masterSantriData.find(s => s.nis === nis);
-            if (!santri) return;
-
-            showConfirmDialog(
-                "Hapus Santri Permanen",
-                `Hapus "${santri.nama}" dari sistem?`,
-                async () => {
-                    masterSantriData = masterSantriData.filter(s => s.nis !== nis);
-                    saveToLocal();
-                    window.filterMasterSantri();
-                    window.updateAllSummaries();
-
-                    await deleteSantriFromNeon(nis);
-                    showToast("Santri berhasil dihapus.", 'success');
-                }
-            );
+            if (!isManagementRole()) return;
+            window.showConfirmDialog("Hapus Santri", "Hapus santri ini dari sistem?", async () => {
+                masterSantriData = masterSantriData.filter(s => s.nis !== nis);
+                saveToLocal();
+                window.filterMasterSantri();
+                window.updateAllSummaries();
+                await deleteSantriFromNeon(nis);
+                window.showToast("Santri berhasil dihapus.", 'success');
+            });
         };
 
         window.handleAddHafalanSubmit = async function(event) {
             event.preventDefault();
+            if (!isManagementRole()) return;
+            const targetSantri = masterSantriData.find(s => s.nis === document.getElementById('inputSantriNisForHafalan').value);
+            if (!targetSantri) return;
 
-            if (!isManagementRole()) {
-                showToast("Hanya Pengurus Utama (Ketua, Sekretaris, Bendahara) yang dapat menambah data setoran hafalan.", "error");
-                return;
-            }
-
-            const selectedNis = document.getElementById('inputSantriNisForHafalan').value;
-            const targetSantri = masterSantriData.find(s => s.nis === selectedNis) || currentActiveSantri;
-
-            if (!targetSantri) {
-                showToast("Santri tidak ditemukan!", "error");
-                return;
-            }
-
-            const jenis = document.getElementById('inputJenis').value;
-            const surah = document.getElementById('inputSurah').value.trim();
             const juz = Number(document.getElementById('inputJuz').value);
-            const nilai = document.getElementById('inputNilai').value;
-
-            const newHafalan = {
-                tanggal: new Date().toLocaleDateString('id-ID'),
-                jenis,
-                surah,
-                juz,
-                nilai,
-                ustadz: 'Ust. Pengampu'
-            };
-
+            const surah = document.getElementById('inputSurah').value.trim();
             targetSantri.hafalanData = targetSantri.hafalanData || [];
-            targetSantri.hafalanData.unshift(newHafalan);
+            targetSantri.hafalanData.unshift({
+                tanggal: new Date().toLocaleDateString('id-ID'),
+                jenis: document.getElementById('inputJenis').value,
+                surah, juz,
+                nilai: document.getElementById('inputNilai').value,
+                ustadz: 'Ust. Pengampu'
+            });
             if (juz > (targetSantri.hafalanJuz || 0)) {
                 targetSantri.hafalanJuz = juz;
                 targetSantri.hafalanSurah = surah;
             }
 
             saveToLocal();
-            if (currentActiveSantri && currentActiveSantri.nis === targetSantri.nis) {
-                hafalanData = currentActiveSantri.hafalanData;
-                loadSantriIntoHeader(currentActiveSantri);
-            }
             window.renderHafalanTable();
-            window.filterMasterSantri();
             window.updateAllSummaries();
-
             await saveSantriToNeon(targetSantri);
-
-            showToast("Setoran hafalan baru berhasil dicatat!", "success");
+            window.showToast("Setoran hafalan dicatat!", "success");
             window.closeModalAddHafalan();
             event.target.reset();
         };
 
-        window.simulasikanBayarLunas = async function() {
-            if (isManagementRole()) {
-                showToast("Gunakan menu Edit Santri pada tabel Kelola Santri untuk mengubah status pembayaran.", "info");
-                return;
-            }
-
-            if (!currentActiveSantri) return;
-
-            showToast("Konfirmasi transfer telah dikirim ke Bendahara untuk diverifikasi.", "success");
+        window.simulasikanBayarLunas = function() {
+            window.showToast("Konfirmasi transfer telah dikirim ke Bendahara.", "success");
             window.closePaymentModal();
         };
 
@@ -2491,157 +1952,39 @@
             currentActiveSantri = null;
             currentRole = 'santri';
             clearSession();
-            const navGreeting = document.getElementById('navUserGreeting');
-            if (navGreeting) navGreeting.innerText = 'Menu';
             updateUIPermissions();
             window.showPublicView('beranda');
-            showToast("Anda telah keluar dari sistem.", "info");
+            window.showToast("Anda telah keluar.", "info");
         };
 
         let sholatTimings = null;
-        let sholatTimerInterval = null;
-
         async function fetchJadwalSholat() {
             const dateEl = document.getElementById('sholatDateDisplay');
-            const gridEl = document.getElementById('prayerTimesGrid');
-            if (!gridEl) return;
-
-            const defaultTimings = {
-                'Imsak': '04:12',
-                'Subuh': '04:22',
-                'Terbit': '05:37',
-                'Dzuhur': '11:41',
-                'Ashar': '15:01',
-                'Maghrib': '17:36',
-                'Isya': '18:47'
-            };
-
+            const defaultTimings = { 'Imsak': '04:12', 'Subuh': '04:22', 'Terbit': '05:37', 'Dzuhur': '11:41', 'Ashar': '15:01', 'Maghrib': '17:36', 'Isya': '18:47' };
             try {
                 const response = await fetch('https://api.aladhan.com/v1/timingsByCity?city=Jember&country=Indonesia&method=20');
                 const data = await response.json();
-
-                if (data && data.code === 200 && data.data) {
+                if (data && data.code === 200) {
                     const raw = data.data.timings;
-                    sholatTimings = {
-                        'Imsak': raw.Imsak,
-                        'Subuh': raw.Fajr,
-                        'Terbit': raw.Sunrise,
-                        'Dzuhur': raw.Dhuhr,
-                        'Ashar': raw.Asr,
-                        'Maghrib': raw.Maghrib,
-                        'Isya': raw.Isha
-                    };
-
-                    const hijri = data.data.date.hijri;
-                    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-                    const masehiStr = new Date().toLocaleDateString('id-ID', options);
-                    const hijriStr = `${hijri.day} ${hijri.month.en} ${hijri.year} H`;
-
-                    if (dateEl) dateEl.innerText = `${masehiStr} | ${hijriStr}`;
-                } else {
-                    sholatTimings = defaultTimings;
-                }
+                    sholatTimings = { 'Imsak': raw.Imsak, 'Subuh': raw.Fajr, 'Terbit': raw.Sunrise, 'Dzuhur': raw.Dhuhr, 'Ashar': raw.Asr, 'Maghrib': raw.Maghrib, 'Isya': raw.Isha };
+                    if (dateEl) dateEl.innerText = `${new Date().toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}`;
+                } else { sholatTimings = defaultTimings; }
             } catch (err) {
-                console.warn("Menggunakan jadwal sholat offline Jember:", err);
                 sholatTimings = defaultTimings;
-                const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-                if (dateEl) dateEl.innerText = `${new Date().toLocaleDateString('id-ID', options)} | Kab. Jember`;
             }
-
             renderJadwalSholatGrid();
-            startSholatCountdown();
         }
 
-        function renderJadwalSholatGrid(nextPrayerKey = null) {
+        function renderJadwalSholatGrid() {
             const gridEl = document.getElementById('prayerTimesGrid');
             if (!gridEl || !sholatTimings) return;
-
             gridEl.innerHTML = '';
-
-            const icons = {
-                'Imsak': 'fa-regular fa-clock',
-                'Subuh': 'fa-solid fa-cloud-sun-rain',
-                'Terbit': 'fa-solid fa-sun',
-                'Dzuhur': 'fa-solid fa-sun-plant-wilt',
-                'Ashar': 'fa-solid fa-cloud-sun',
-                'Maghrib': 'fa-solid fa-moon',
-                'Isya': 'fa-solid fa-star-and-crescent'
-            };
-
             Object.keys(sholatTimings).forEach(name => {
-                const timeStr = sholatTimings[name];
-                const isNext = name === nextPrayerKey;
-
                 const card = document.createElement('div');
-                card.className = `relative overflow-hidden p-4 rounded-2xl text-center transition-all duration-300 transform ${
-                    isNext 
-                    ? 'bg-gradient-to-b from-amber-500 via-amber-400 to-amber-500 text-slate-950 shadow-xl shadow-amber-500/20 scale-105 ring-2 ring-amber-300 font-extrabold z-10' 
-                    : 'bg-emerald-900/50 hover:bg-emerald-800/60 text-white border border-emerald-800/50 backdrop-blur-sm hover:scale-102 hover:border-emerald-500/40'
-                }`;
-
-                card.innerHTML = `
-                    ${isNext ? '<span class="absolute top-0 right-0 bg-slate-950 text-amber-300 text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-bl-lg border-l border-b border-amber-400/40">Selanjutnya</span>' : ''}
-                    <div class="text-xs font-bold uppercase tracking-wider mb-2 flex items-center justify-center space-x-1.5 ${isNext ? 'text-slate-950' : 'text-emerald-300'}">
-                        <i class="${icons[name] || 'fa-solid fa-clock'} ${isNext ? 'text-slate-950' : 'text-amber-400'}"></i>
-                        <span>${name}</span>
-                    </div>
-                    <div class="text-xl sm:text-2xl font-black font-mono tracking-tight ${isNext ? 'text-slate-950' : 'text-white'}">${timeStr}</div>
-                `;
-
+                card.className = "relative overflow-hidden p-4 rounded-2xl text-center bg-emerald-900/50 text-white border border-emerald-800/50 backdrop-blur-sm";
+                card.innerHTML = `<div class="text-xs font-bold uppercase tracking-wider mb-2 text-emerald-300">${name}</div><div class="text-xl sm:text-2xl font-black font-mono tracking-tight text-white">${sholatTimings[name]}</div>`;
                 gridEl.appendChild(card);
             });
-        }
-
-        function startSholatCountdown() {
-            if (sholatTimerInterval) clearInterval(sholatTimerInterval);
-
-            const nextNameEl = document.getElementById('nextPrayerName');
-            const timerEl = document.getElementById('nextPrayerTimer');
-
-            function updateTimer() {
-                if (!sholatTimings) return;
-
-                const now = new Date();
-                const currentMinutes = now.getHours() * 60 + now.getMinutes();
-                const currentSeconds = now.getSeconds();
-
-                const prayerOrder = ['Imsak', 'Subuh', 'Terbit', 'Dzuhur', 'Ashar', 'Maghrib', 'Isya'];
-                let nextPrayer = null;
-                let targetMinutes = 0;
-
-                for (let name of prayerOrder) {
-                    const [h, m] = sholatTimings[name].split(':').map(Number);
-                    const prayerMin = h * 60 + m;
-
-                    if (prayerMin > currentMinutes) {
-                        nextPrayer = name;
-                        targetMinutes = prayerMin;
-                        break;
-                    }
-                }
-
-                if (!nextPrayer) {
-                    nextPrayer = 'Subuh';
-                    const [h, m] = sholatTimings['Subuh'].split(':').map(Number);
-                    targetMinutes = (24 * 60) + (h * 60 + m);
-                }
-
-                const diffSeconds = (targetMinutes * 60) - (currentMinutes * 60 + currentSeconds);
-
-                const hrs = Math.floor(diffSeconds / 3600);
-                const mins = Math.floor((diffSeconds % 3600) / 60);
-                const secs = diffSeconds % 60;
-
-                const pad = n => String(n).padStart(2, '0');
-
-                if (nextNameEl) nextNameEl.innerText = nextPrayer;
-                if (timerEl) timerEl.innerText = `${pad(hrs)}:${pad(mins)}:${pad(secs)}`;
-
-                renderJadwalSholatGrid(nextPrayer);
-            }
-
-            updateTimer();
-            sholatTimerInterval = setInterval(updateTimer, 1000);
         }
 
         window.onload = async function() {
@@ -2650,18 +1993,14 @@
             window.renderPaymentTable();
             window.initHafalanChart();
             window.updateAllSummaries();
-
             await initNeonDatabase();
-
-            const restored = restoreSession();
-            if (restored) {
+            if (restoreSession()) {
                 updateUIPermissions();
                 window.updateAllSummaries();
                 window.showDashboardView();
             } else {
                 updateUIPermissions();
             }
-
             fetchJadwalSholat();
         };
     </script>
