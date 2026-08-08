@@ -44,12 +44,10 @@
             from { transform: translateX(100%); opacity: 0; }
             to { transform: translateX(0); opacity: 1; }
         }
-        
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
         }
-        
         @keyframes slideUp {
             from { transform: translateY(20px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
@@ -58,18 +56,6 @@
         .animate-slide-in-right { animation: slideInRight 0.3s ease-out; }
         .animate-fade-in { animation: fadeIn 0.3s ease-out; }
         .animate-slide-up { animation: slideUp 0.4s ease-out; }
-        
-        .glass-effect {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        
-        .glass-effect-dark {
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(148, 163, 184, 0.1);
-        }
         
         .card-hover { transition: all 0.3s ease; }
         .card-hover:hover {
@@ -97,10 +83,6 @@
         .gradient-emerald {
             background: linear-gradient(135deg, #047857 0%, #065f46 50%, #022c22 100%);
         }
-        
-        .gradient-amber {
-            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-        }
     </style>
 </head>
 <body class="bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 font-sans text-slate-800 antialiased min-h-screen flex flex-col">
@@ -108,10 +90,9 @@
     <header class="gradient-emerald text-white sticky top-0 z-40 shadow-2xl border-b border-emerald-700/30">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-20">
-                <!-- Brand Logo & Name -->
                 <a href="#beranda" onclick="showPublicView('beranda')" class="flex items-center space-x-3 group cursor-pointer">
-                    <div class="w-12 h-12 rounded-full shadow-lg flex items-center justify-center shrink-0 border-2 border-amber-100 group-hover:scale-110 transition transform duration-300 overflow-hidden bg-emerald-950">
-                        <img src="IMG-20260203-WA0001.jpg" alt="Logo Jember Islamic Institute" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/200x200/0d882d/ffffff?text=JII+Logo';">
+                    <div class="w-12 h-12 rounded-full shadow-lg flex items-center justify-center shrink-0 border-2 border-amber-200/50 group-hover:scale-110 transition transform duration-300 overflow-hidden bg-emerald-950 p-0">
+                        <img src="IMG-20260203-WA0001.jpg" alt="Logo Jember Islamic Institute" class="w-full h-full object-cover scale-110" onerror="this.onerror=null; this.src='https://placehold.co/200x200/0d882d/ffffff?text=JII+Logo';">
                     </div>
                     <div>
                         <span class="block text-base sm:text-lg font-black tracking-wider text-emerald-50 group-hover:text-amber-200 transition leading-tight">JEMBER ISLAMIC INSTITUTE</span>
@@ -200,7 +181,6 @@
     <main class="flex-grow">
         <!-- PUBLIC LANDING VIEW -->
         <div id="publicContainer" class="space-y-16 pb-16">
-            <!-- Hero Banner Section -->
             <section id="beranda" class="relative bg-gradient-to-br from-slate-900 via-emerald-900 to-slate-900 text-white pt-16 pb-24 px-4 sm:px-6 lg:px-8 overflow-hidden">
                 <div class="absolute inset-0 z-0">
                     <img src="motion_photo_6803223217145197217.jpg" alt="Kegiatan Rihlah Santri JII" class="w-full h-full object-cover opacity-40 filter brightness-75 contrast-125" onerror="this.onerror=null; this.src='https://placehold.co/1920x1080/064e3b/ffffff?text=Kegiatan+Santri+JII';">
@@ -234,7 +214,6 @@
                 </div>
             </section>
 
-            <!-- Profil & Latar Belakang Section -->
             <section id="profil" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="bg-white rounded-3xl shadow-2xl p-8 sm:p-12 border border-slate-100/50 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center card-hover">
                     <div class="lg:col-span-7 space-y-5 animate-slide-up">
@@ -268,8 +247,8 @@
 
                     <div class="lg:col-span-5 bg-gradient-to-br from-emerald-800 via-emerald-900 to-slate-900 text-white rounded-3xl p-8 space-y-6 flex flex-col justify-center shadow-2xl border border-emerald-700/30">
                         <div class="text-center space-y-4 animate-slide-up" style="animation-delay: 0.1s;">
-                            <div class="w-24 h-24 rounded-full mx-auto flex items-center justify-center text-2xl shadow-xl border-2 border-amber-100 overflow-hidden bg-emerald-950">
-                                <img src="IMG-20260203-WA0001.jpg" alt="Logo JII" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/200x200/0d882d/ffffff?text=JII';">
+                            <div class="w-24 h-24 rounded-full mx-auto flex items-center justify-center text-2xl shadow-xl border-2 border-amber-200/50 overflow-hidden bg-emerald-950 p-0">
+                                <img src="IMG-20260203-WA0001.jpg" alt="Logo JII" class="w-full h-full object-cover scale-110" onerror="this.onerror=null; this.src='https://placehold.co/200x200/0d882d/ffffff?text=JII';">
                             </div>
                             <h3 class="text-2xl font-bold text-amber-300">Pondok Pesantren Tahfidz</h3>
                             <p class="text-xs text-emerald-100/80 italic">"Sebaik-baik kalian adalah orang yang mempelajari Al-Qur'an dan mengajarkannya." (HR. Bukhari)</p>
@@ -278,7 +257,6 @@
                 </div>
             </section>
 
-            <!-- Program Tahfidz Section -->
             <section id="program" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center space-y-3 mb-12">
                     <span class="inline-block px-4 py-2 bg-gradient-to-r from-amber-100 to-amber-50 text-amber-900 rounded-lg text-xs font-bold uppercase tracking-wider border border-amber-200/50">
@@ -311,7 +289,6 @@
                 </div>
             </section>
 
-            <!-- Jadwal Sholat Section -->
             <section id="jadwal-sholat" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
                 <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-950 via-slate-900 to-emerald-900 text-white shadow-2xl border border-emerald-800/60 p-6 sm:p-10">
                     <div class="absolute -right-16 -top-16 w-64 h-64 bg-emerald-500/15 rounded-full blur-3xl pointer-events-none animate-pulse"></div>
@@ -362,7 +339,6 @@
                 </div>
             </section>
 
-            <!-- Footer & Kontak -->
             <footer id="kontak" class="gradient-emerald text-emerald-100 border-t border-emerald-900/50 pt-12 pb-8">
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-8 mb-8 text-xs">
                     <div class="space-y-3">
@@ -439,6 +415,10 @@
                         <i class="fa-solid fa-users-gear"></i>
                         <span>Kelola Data Santri</span>
                     </button>
+                    <button onclick="switchDashTab('absensi')" id="tabBtnAbsensi" class="dash-tab-btn px-6 py-4 font-semibold text-sm border-b-2 border-transparent text-slate-600 hover:text-emerald-700 whitespace-nowrap flex items-center space-x-2">
+                        <i class="fa-solid fa-calendar-check text-emerald-600"></i>
+                        <span>Absensi Mutaba'ah (7 Hari)</span>
+                    </button>
                     <button onclick="switchDashTab('hafalan')" id="tabBtnHafalan" class="dash-tab-btn px-6 py-4 font-semibold text-sm border-b-2 border-transparent text-slate-600 hover:text-emerald-700 whitespace-nowrap flex items-center space-x-2">
                         <i class="fa-solid fa-book-quran"></i>
                         <span>Hafalan Al-Qur'an</span>
@@ -504,8 +484,78 @@
                         </div>
                     </div>
 
+                    <!-- TAB ABSENSI MUTABA'AH HARIAN -->
+                    <div id="tabAbsensi" class="dash-tab-content space-y-6">
+                        <div class="bg-gradient-to-r from-emerald-900 via-emerald-800 to-slate-900 text-white p-6 rounded-2xl shadow-lg flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border border-emerald-700/30">
+                            <div>
+                                <span id="absensiRoleBadge" class="inline-block px-3 py-1 bg-amber-400/20 text-amber-200 font-bold text-[10px] rounded-full uppercase tracking-wider border border-amber-400/30 mb-2">Absensi Mutaba'ah Harian</span>
+                                <h3 class="text-xl font-extrabold">Absensi Mutaba'ah Harian Mahasantri (7 Hari - Mulai Minggu)</h3>
+                                <p id="absensiWeekRangeLabel" class="text-xs text-emerald-200 mt-1">Periode Minggu Ini: Memuat tanggal...</p>
+                            </div>
+                            <div id="absensiDownloadBtnWrapper">
+                                <button onclick="exportAbsensiToExcel()" class="bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 font-extrabold px-5 py-3 rounded-xl text-xs shadow-lg transition transform hover:scale-105 flex items-center space-x-2">
+                                    <i class="fa-solid fa-file-excel text-emerald-950 text-sm"></i>
+                                    <span>Download Rekap Excel (Total Hadir/Izin/Pulang/Alpha)</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Rekap Ringkasan -->
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                            <div class="bg-gradient-to-br from-emerald-50 to-emerald-50/50 p-4 rounded-xl border border-emerald-200">
+                                <span class="text-[11px] font-bold text-emerald-800 uppercase tracking-wider">Total Hadir</span>
+                                <div id="rekapHadirCount" class="text-2xl font-black text-emerald-700 mt-1">0</div>
+                            </div>
+                            <div class="bg-gradient-to-br from-amber-50 to-amber-50/50 p-4 rounded-xl border border-amber-200">
+                                <span class="text-[11px] font-bold text-amber-800 uppercase tracking-wider">Total Izin</span>
+                                <div id="rekapIzinCount" class="text-2xl font-black text-amber-600 mt-1">0</div>
+                            </div>
+                            <div class="bg-gradient-to-br from-blue-50 to-blue-50/50 p-4 rounded-xl border border-blue-200">
+                                <span class="text-[11px] font-bold text-blue-800 uppercase tracking-wider">Total Pulang</span>
+                                <div id="rekapPulangCount" class="text-2xl font-black text-blue-700 mt-1">0</div>
+                            </div>
+                            <div class="bg-gradient-to-br from-rose-50 to-rose-50/50 p-4 rounded-xl border border-rose-200">
+                                <span class="text-[11px] font-bold text-rose-800 uppercase tracking-wider">Total Tidak Hadir</span>
+                                <div id="rekapTidakHadirCount" class="text-2xl font-black text-rose-700 mt-1">0</div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-md space-y-4">
+                            <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
+                                <div id="absensiSelectWrapper" class="w-full sm:w-1/2">
+                                    <label class="block text-xs font-bold text-slate-700 mb-1">Pilih Mahasantri:</label>
+                                    <select id="absensiSantriSelect" onchange="renderAbsensiTableForSelected()" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-xs font-semibold focus:ring-2 focus:ring-emerald-600 focus:outline-none"></select>
+                                </div>
+                                <div id="absensiSaveBtnWrapper" class="w-full sm:w-auto pt-4 sm:pt-0">
+                                    <button onclick="saveAktifAbsensi()" class="bg-gradient-to-r from-emerald-700 to-emerald-800 hover:from-emerald-600 hover:to-emerald-700 text-white font-bold px-6 py-2.5 rounded-xl text-xs shadow-lg transition transform hover:scale-105 flex items-center space-x-2">
+                                        <i class="fa-solid fa-floppy-disk"></i>
+                                        <span>Simpan Absensi Mutaba'ah</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="overflow-x-auto border border-slate-200 rounded-xl shadow-inner mt-4">
+                                <table class="w-full text-left border-collapse text-xs">
+                                    <thead>
+                                        <tr id="absensiTableHeadRow" class="bg-gradient-to-r from-slate-100 to-slate-50 text-slate-700 uppercase font-bold border-b border-slate-200">
+                                            <th class="p-3">Rincian Kegiatan</th>
+                                            <th class="p-3 text-center">Minggu (-)</th>
+                                            <th class="p-3 text-center">Senin (-)</th>
+                                            <th class="p-3 text-center">Selasa (-)</th>
+                                            <th class="p-3 text-center">Rabu (-)</th>
+                                            <th class="p-3 text-center">Kamis (-)</th>
+                                            <th class="p-3 text-center">Jumat (-)</th>
+                                            <th class="p-3 text-center">Sabtu (-)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="absensiActivityTableBody" class="divide-y divide-slate-200 font-medium"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- TAB 2: HAFALAN AL-QUR'AN -->
-                    <div id="tabHafalan" class="dash-tab-content space-y-6">
+                    <div id="tabHafalan" class="dash-tab-content space-y-6 hidden">
                         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b pb-4">
                             <div>
                                 <h3 class="text-lg font-bold text-slate-900">Perkembangan Setoran Hafalan</h3>
@@ -757,12 +807,12 @@
     <!-- LOGIN MODAL -->
     <div id="loginModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4 overflow-y-auto">
         <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden animate-slide-up">
-            <div class="bg-gradient-to-r from-emerald-700 to-emerald-800 text-white p-6 text-center relative">
+            <div class="gradient-emerald text-white p-6 text-center relative">
                 <button onclick="closeLoginModal()" class="absolute right-4 top-4 text-emerald-200 hover:text-white transition text-lg">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
-                <div class="w-14 h-14 rounded-2xl mx-auto flex items-center justify-center text-2xl mb-3 shadow-lg border-2 border-amber-100 overflow-hidden bg-emerald-950">
-                    <img src="IMG-20260203-WA0001.jpg" alt="Logo JII" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/200x200/0d882d/ffffff?text=JII';">
+                <div class="w-14 h-14 rounded-2xl mx-auto flex items-center justify-center text-2xl mb-3 shadow-lg border-2 border-amber-200/50 overflow-hidden bg-emerald-950 p-0">
+                    <img src="IMG-20260203-WA0001.jpg" alt="Logo JII" class="w-full h-full object-cover scale-110" onerror="this.onerror=null; this.src='https://placehold.co/200x200/0d882d/ffffff?text=JII';">
                 </div>
                 <h3 class="font-extrabold text-lg">Masuk Portal SIM Santri</h3>
                 <p class="text-xs text-emerald-200 mt-0.5">Jember Islamic Institute</p>
@@ -784,7 +834,7 @@
                     <p>• <strong>Santri:</strong> NIS 202601001 (Pass: 123456)</p>
                 </div>
 
-                <button type="submit" class="w-full btn-modern bg-gradient-to-r from-emerald-700 to-emerald-800 hover:from-emerald-600 hover:to-emerald-700 text-white font-bold py-3 rounded-xl shadow-lg transition transform hover:scale-105 text-sm">
+                <button type="submit" class="w-full btn-modern gradient-emerald hover:opacity-95 text-white font-bold py-3 rounded-xl shadow-lg transition transform hover:scale-105 text-sm">
                     <i class="fa-solid fa-lock mr-2"></i> Masuk Sekarang
                 </button>
             </form>
@@ -794,7 +844,7 @@
     <!-- GANTI PASSWORD MODAL -->
     <div id="changePasswordModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
         <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden animate-slide-up">
-            <div class="bg-gradient-to-r from-emerald-700 to-emerald-800 text-white p-6 text-center relative">
+            <div class="gradient-emerald text-white p-6 text-center relative">
                 <button onclick="closeChangePasswordModal()" class="absolute right-4 top-4 text-emerald-200 hover:text-white transition text-lg">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
@@ -810,7 +860,7 @@
                     <label class="block text-xs font-bold text-slate-700 mb-2">Kata Sandi Baru</label>
                     <input type="password" id="newPasswordInput" required placeholder="Masukkan kata sandi baru" class="w-full px-4 py-3 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-emerald-600 focus:outline-none transition" />
                 </div>
-                <button type="submit" class="w-full btn-modern bg-gradient-to-r from-emerald-700 to-emerald-800 hover:from-emerald-600 hover:to-emerald-700 text-white font-bold py-3 rounded-xl shadow-lg transition transform hover:scale-105 text-sm">
+                <button type="submit" class="w-full btn-modern gradient-emerald hover:opacity-95 text-white font-bold py-3 rounded-xl shadow-lg transition transform hover:scale-105 text-sm">
                     <i class="fa-solid fa-check mr-2"></i> Simpan Perubahan
                 </button>
             </form>
@@ -820,7 +870,7 @@
     <!-- TAMBAH SANTRI MODAL -->
     <div id="addSantriModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4 overflow-y-auto">
         <div class="bg-white w-full max-w-xl rounded-3xl shadow-2xl overflow-hidden my-8 animate-slide-up">
-            <div class="bg-gradient-to-r from-emerald-700 to-emerald-800 text-white p-6 flex justify-between items-center">
+            <div class="gradient-emerald text-white p-6 flex justify-between items-center">
                 <div>
                     <h3 class="font-extrabold text-base">+ Tambah Santri & Terbitkan Akun</h3>
                     <p class="text-xs text-emerald-200">Hak Akses: Ketua Umum, Sekretaris & Bendahara</p>
@@ -881,7 +931,7 @@
                     </select>
                 </div>
                 <div class="md:col-span-2 pt-4">
-                    <button type="submit" class="w-full btn-modern bg-gradient-to-r from-emerald-700 to-emerald-800 hover:from-emerald-600 hover:to-emerald-700 text-white font-bold py-3 rounded-xl shadow-lg transition transform hover:scale-105">
+                    <button type="submit" class="w-full btn-modern gradient-emerald hover:opacity-95 text-white font-bold py-3 rounded-xl shadow-lg transition transform hover:scale-105">
                         <i class="fa-solid fa-user-plus mr-2"></i> Simpan & Terbitkan Akun
                     </button>
                 </div>
@@ -892,7 +942,7 @@
     <!-- EDIT SANTRI MODAL -->
     <div id="editSantriModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4 overflow-y-auto">
         <div class="bg-white w-full max-w-xl rounded-3xl shadow-2xl overflow-hidden my-8 animate-slide-up">
-            <div class="bg-gradient-to-r from-emerald-700 to-emerald-800 text-white p-6 flex justify-between items-center">
+            <div class="gradient-emerald text-white p-6 flex justify-between items-center">
                 <div>
                     <h3 class="font-extrabold text-base">Edit Data Santri & Pembayaran</h3>
                     <p class="text-xs text-emerald-200" id="editNisDisplay">NIS: -</p>
@@ -946,7 +996,7 @@
                     </select>
                 </div>
                 <div class="md:col-span-2 pt-4">
-                    <button type="submit" class="w-full btn-modern bg-gradient-to-r from-emerald-700 to-emerald-800 hover:from-emerald-600 hover:to-emerald-700 text-white font-bold py-3 rounded-xl shadow-lg transition transform hover:scale-105">
+                    <button type="submit" class="w-full btn-modern gradient-emerald hover:opacity-95 text-white font-bold py-3 rounded-xl shadow-lg transition transform hover:scale-105">
                         <i class="fa-solid fa-check mr-2"></i> Perbarui Data Santri
                     </button>
                 </div>
@@ -957,7 +1007,7 @@
     <!-- ADD HAFALAN MODAL -->
     <div id="addHafalanModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
         <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden animate-slide-up">
-            <div class="bg-gradient-to-r from-emerald-700 to-emerald-800 text-white p-6 flex justify-between items-center">
+            <div class="gradient-emerald text-white p-6 flex justify-between items-center">
                 <h3 class="font-extrabold text-base">Setoran Hafalan Al-Qur'an</h3>
                 <button onclick="closeModalAddHafalan()" class="text-emerald-200 hover:text-white transition text-2xl">
                     <i class="fa-solid fa-xmark"></i>
@@ -991,7 +1041,7 @@
                         <option value="B (Cukup)">B (Cukup)</option>
                     </select>
                 </div>
-                <button type="submit" class="w-full btn-modern bg-gradient-to-r from-emerald-700 to-emerald-800 hover:from-emerald-600 hover:to-emerald-700 text-white font-bold py-3 rounded-xl shadow-lg transition transform hover:scale-105">
+                <button type="submit" class="w-full btn-modern gradient-emerald hover:opacity-95 text-white font-bold py-3 rounded-xl shadow-lg transition transform hover:scale-105">
                     <i class="fa-solid fa-save mr-2"></i> Simpan Catatan Setoran
                 </button>
             </form>
@@ -1001,7 +1051,7 @@
     <!-- PAYMENT MODAL -->
     <div id="paymentModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
         <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden animate-slide-up">
-            <div class="bg-gradient-to-r from-emerald-700 to-emerald-800 text-white p-6 flex justify-between items-center">
+            <div class="gradient-emerald text-white p-6 flex justify-between items-center">
                 <h3 class="font-extrabold text-base">Konfirmasi Pembayaran Syahriyah</h3>
                 <button onclick="closePaymentModal()" class="text-emerald-200 hover:text-white transition text-2xl">
                     <i class="fa-solid fa-xmark"></i>
@@ -1018,7 +1068,7 @@
                     <div class="text-lg font-black text-amber-900">7123-4567-8901</div>
                     <div class="text-[10px] text-slate-500 italic">a.n. YAYASAN JEMBER ISLAMIC INSTITUTE</div>
                 </div>
-                <button id="btnConfirmPaySubmit" onclick="simulasikanBayarLunas()" class="w-full btn-modern bg-gradient-to-r from-emerald-700 to-emerald-800 hover:from-emerald-600 hover:to-emerald-700 text-white font-bold py-3 rounded-xl shadow-lg transition transform hover:scale-105">
+                <button id="btnConfirmPaySubmit" onclick="simulasikanBayarLunas()" class="w-full btn-modern gradient-emerald hover:opacity-95 text-white font-bold py-3 rounded-xl shadow-lg transition transform hover:scale-105">
                     <i class="fa-solid fa-check-circle mr-2"></i> Konfirmasi Pembayaran
                 </button>
             </div>
@@ -1053,6 +1103,7 @@
         const NEON_STORAGE_KEY = 'jii_neon_connection_string_v2';
         const LOCAL_SANTRI_KEY = 'jii_master_santri_local_v2';
         const SESSION_STORAGE_KEY = 'jii_user_session_v2';
+        const LAST_RESET_WEEK_KEY = 'jii_last_reset_week_v2';
 
         let neonConnectionString = localStorage.getItem(NEON_STORAGE_KEY) || DEFAULT_NEON_CONN;
         let sql = null;
@@ -1062,6 +1113,14 @@
             'bendahara': { id: 'BENDAHARA', password: '123456', name: 'H. Ridwan, S.E.', role: 'Bendahara Pondok', avatar: 'BD' },
             'sekretaris': { id: 'SEKRETARIS', password: '123456', name: 'Ust. M. Hidayat, S.Pd.', role: 'Sekretaris Pondok', avatar: 'SK' }
         };
+
+        const defaultActivitiesList = [
+            "Qiyamul Lail",
+            "Sholat Subuh",
+            "Sholat Dhuha",
+            "Sholat Maghrib + Isya’",
+            "Jam Malam"
+        ];
 
         const initialSampleSantri = [
             {
@@ -1079,9 +1138,15 @@
                 spp: 350000,
                 uangMakan: 100000,
                 statusBayar: 'Lunas',
+                mutabaahAbsensi: {
+                    "Qiyamul Lail": ['Hadir', 'Hadir', 'Hadir', 'Izin', 'Hadir', 'Hadir', 'Hadir'],
+                    "Sholat Subuh": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
+                    "Sholat Dhuha": ['Hadir', 'Hadir', 'Izin', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
+                    "Sholat Maghrib + Isya’": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
+                    "Jam Malam": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Pulang', 'Hadir', 'Hadir']
+                },
                 hafalanData: [
-                    { tanggal: '05/08/2026', jenis: 'Ziyadah (Baru)', surah: 'Surah At-Tawbah 1-30', juz: 10, nilai: 'A (Sangat Mutqin)', ustadz: 'Ust. Abdullah' },
-                    { tanggal: '01/08/2026', jenis: "Muraja'ah (Ulang)", surah: 'Surah An-Anfal 1-75', juz: 9, nilai: 'B+ (Lancar)', ustadz: 'Ust. Hasan' }
+                    { tanggal: '05/08/2026', jenis: 'Ziyadah (Baru)', surah: 'Surah At-Tawbah 1-30', juz: 10, nilai: 'A (Sangat Mutqin)', ustadz: 'Ust. Abdullah' }
                 ],
                 paymentData: [
                     { id: 'TRX-88219', tanggal: '10/07/2026', uraian: 'Syahriyah Bulan Juli 2026', nominal: 450000, status: 'Lunas' }
@@ -1102,6 +1167,13 @@
                 spp: 350000,
                 uangMakan: 100000,
                 statusBayar: 'Lunas',
+                mutabaahAbsensi: {
+                    "Qiyamul Lail": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
+                    "Sholat Subuh": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
+                    "Sholat Dhuha": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
+                    "Sholat Maghrib + Isya’": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
+                    "Jam Malam": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir']
+                },
                 hafalanData: [
                     { tanggal: '06/08/2026', jenis: 'Ziyadah (Baru)', surah: 'Surah Al-Kahf 1-110', juz: 18, nilai: 'A (Sangat Mutqin)', ustadz: 'Ustadzah Maryam' }
                 ],
@@ -1131,6 +1203,34 @@
         let currentRole = 'santri';
         let isLoggedIn = false;
         let pollingTimer = null;
+
+        // Cek reset mingguan otomatis (Sabtu jam 23:59 atau pergantian minggu baru)
+        function checkWeeklyReset() {
+            const now = new Date();
+            const dayOfWeek = now.getDay(); // 0 = Minggu, 6 = Sabtu
+            const hour = now.getHours();
+            const minute = now.getMinutes();
+            
+            const startOfYear = new Date(now.getFullYear(), 0, 1);
+            const weekNumber = Math.ceil((((now - startOfYear) / 86400000) + startOfYear.getDay() + 1) / 7);
+            const weekIdentifier = `${now.getFullYear()}-W${weekNumber}`;
+
+            const lastReset = localStorage.getItem(LAST_RESET_WEEK_KEY);
+
+            if ((dayOfWeek === 6 && hour === 23 && minute >= 59) || (lastReset !== weekIdentifier && dayOfWeek === 0)) {
+                if (lastReset !== weekIdentifier) {
+                    masterSantriData.forEach(santri => {
+                        if (santri.mutabaahAbsensi) {
+                            defaultActivitiesList.forEach(act => {
+                                santri.mutabaahAbsensi[act] = ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'];
+                            });
+                        }
+                    });
+                    saveToLocal();
+                    localStorage.setItem(LAST_RESET_WEEK_KEY, weekIdentifier);
+                }
+            }
+        }
 
         window.openSettingsModal = function() {
             document.getElementById('settingsModal')?.classList.remove('hidden');
@@ -1200,6 +1300,10 @@
             return ['ketua', 'bendahara', 'sekretaris'].includes(currentRole);
         }
 
+        function isKetuaUmum() {
+            return currentRole === 'ketua';
+        }
+
         window.showToast = function(message, type = 'success') {
             const container = document.getElementById('toastContainer');
             if (!container) return;
@@ -1263,6 +1367,7 @@
                         spp INT DEFAULT 350000,
                         uang_makan INT DEFAULT 100000,
                         status_bayar TEXT DEFAULT 'Belum Lunas',
+                        mutabaah_absensi JSONB DEFAULT '{}'::jsonb,
                         hafalan_data JSONB DEFAULT '[]'::jsonb,
                         payment_data JSONB DEFAULT '[]'::jsonb,
                         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -1295,6 +1400,7 @@
                         spp: r.spp,
                         uangMakan: r.uang_makan,
                         statusBayar: r.status_bayar,
+                        mutabaahAbsensi: typeof r.mutabaah_absensi === 'string' ? JSON.parse(r.mutabaah_absensi) : (r.mutabaah_absensi || {}),
                         hafalanData: typeof r.hafalan_data === 'string' ? JSON.parse(r.hafalan_data) : (r.hafalan_data || []),
                         paymentData: typeof r.payment_data === 'string' ? JSON.parse(r.payment_data) : (r.payment_data || [])
                     }));
@@ -1305,6 +1411,7 @@
                     }
                 }
                 window.filterMasterSantri();
+                window.initAbsensiTab();
                 window.updateAllSummaries();
             } catch (e) {}
         }
@@ -1312,17 +1419,18 @@
         async function saveSantriToNeon(santriObj) {
             if (!sql) return;
             try {
+                const mAbsJson = JSON.stringify(santriObj.mutabaahAbsensi || {});
                 const hDataJson = JSON.stringify(santriObj.hafalanData || []);
                 const pDataJson = JSON.stringify(santriObj.paymentData || []);
                 await sql`
                     INSERT INTO santri (
                         nis, password, nama, kelas, kamar, wa, wali, alamat, status,
                         hafalan_juz, hafalan_surah, spp, uang_makan, status_bayar,
-                        hafalan_data, payment_data
+                        mutabaah_absensi, hafalan_data, payment_data
                     ) VALUES (
                         ${santriObj.nis}, ${santriObj.password || '123456'}, ${santriObj.nama}, ${santriObj.kelas}, ${santriObj.kamar}, ${santriObj.wa || ''}, ${santriObj.wali || ''}, ${santriObj.alamat || ''}, ${santriObj.status},
                         ${Number(santriObj.hafalanJuz || 0)}, ${santriObj.hafalanSurah || ''}, ${Number(santriObj.spp || 350000)}, ${Number(santriObj.uangMakan || 100000)}, ${santriObj.statusBayar || 'Belum Lunas'},
-                        ${hDataJson}::jsonb, ${pDataJson}::jsonb
+                        ${mAbsJson}::jsonb, ${hDataJson}::jsonb, ${pDataJson}::jsonb
                     )
                     ON CONFLICT (nis) DO UPDATE SET
                         password = EXCLUDED.password,
@@ -1338,6 +1446,7 @@
                         spp = EXCLUDED.spp,
                         uang_makan = EXCLUDED.uang_makan,
                         status_bayar = EXCLUDED.status_bayar,
+                        mutabaah_absensi = EXCLUDED.mutabaah_absensi,
                         hafalan_data = EXCLUDED.hafalan_data,
                         payment_data = EXCLUDED.payment_data,
                         updated_at = CURRENT_TIMESTAMP
@@ -1354,7 +1463,7 @@
 
         function startPollingNeon() {
             if (pollingTimer) clearInterval(pollingTimer);
-            pollingTimer = setInterval(() => { if (sql) syncFromNeon(); }, 5000);
+            pollingTimer = setInterval(() => { if (sql) syncFromNeon(); checkWeeklyReset(); }, 5000);
         }
 
         window.renderMasterSantriTable = function(data) {
@@ -1405,6 +1514,227 @@
                 `;
                 tbody.appendChild(tr);
             });
+        };
+
+        // Mendapatkan tanggal Minggu s.d. Sabtu dari minggu berjalan (Hari 1 = Minggu)
+        function getWeeklyCalendarDates() {
+            const curr = new Date();
+            const firstDayOfWeek = curr.getDate() - curr.getDay(); // Minggu sebagai awal
+            const dates = [];
+            const dayNames = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+            
+            for (let i = 0; i < 7; i++) {
+                const nextDate = new Date(new Date().setDate(firstDayOfWeek + i));
+                const dayStr = String(nextDate.getDate()).padStart(2, '0');
+                const monthStr = String(nextDate.getMonth() + 1).padStart(2, '0');
+                dates.push({
+                    dayName: dayNames[i],
+                    dateFormatted: `${dayStr}/${monthStr}`
+                });
+            }
+            return dates;
+        }
+
+        window.initAbsensiTab = function() {
+            const selectEl = document.getElementById('absensiSantriSelect');
+            if (!selectEl) return;
+
+            const isKetua = isKetuaUmum();
+            const selectWrapper = document.getElementById('absensiSelectWrapper');
+            const saveBtnWrapper = document.getElementById('absensiSaveBtnWrapper');
+            const downloadBtnWrapper = document.getElementById('absensiDownloadBtnWrapper');
+            const roleBadge = document.getElementById('absensiRoleBadge');
+
+            if (!isKetua) {
+                // Santri biasa melihat absensi mandirinya sendiri secara read-only tanpa tombol simpan & download
+                if (selectWrapper) selectWrapper.classList.add('hidden');
+                if (saveBtnWrapper) saveBtnWrapper.classList.add('hidden');
+                if (downloadBtnWrapper) downloadBtnWrapper.classList.add('hidden');
+                if (roleBadge) roleBadge.innerText = "Mode Lihat Absensi Mandiri (Read-Only)";
+                
+                if (currentActiveSantri) {
+                    renderAbsensiTableForSantri(currentActiveSantri);
+                }
+                return;
+            } else {
+                if (selectWrapper) selectWrapper.classList.remove('hidden');
+                if (saveBtnWrapper) saveBtnWrapper.classList.remove('hidden');
+                if (downloadBtnWrapper) downloadBtnWrapper.classList.remove('hidden');
+                if (roleBadge) roleBadge.innerText = "Eksklusif Ketua Umum (Kelola & Simpan)";
+            }
+
+            const currentSelected = selectEl.value;
+            selectEl.innerHTML = masterSantriData.map(s => `<option value="${s.nis}">${s.nama} (NIS: ${s.nis})</option>`).join('');
+            if (currentSelected && masterSantriData.some(s => s.nis === currentSelected)) {
+                selectEl.value = currentSelected;
+            } else if (masterSantriData.length > 0) {
+                selectEl.value = masterSantriData[0].nis;
+            }
+            
+            const weeklyDates = getWeeklyCalendarDates();
+            const rangeLabel = document.getElementById('absensiWeekRangeLabel');
+            if (rangeLabel && weeklyDates.length === 7) {
+                rangeLabel.innerText = `Periode Minggu Ini: ${weeklyDates[0].dayName} (${weeklyDates[0].dateFormatted}) s.d. ${weeklyDates[6].dayName} (${weeklyDates[6].dateFormatted})`;
+            }
+
+            const headRow = document.getElementById('absensiTableHeadRow');
+            if (headRow && weeklyDates.length === 7) {
+                let html = `<th class="p-3">Rincian Kegiatan</th>`;
+                weeklyDates.forEach((wd) => {
+                    html += `<th class="p-3 text-center">${wd.dayName}<br><span class="text-[10px] text-amber-300 font-normal">(${wd.dateFormatted})</span></th>`;
+                });
+                headRow.innerHTML = html;
+            }
+
+            window.renderAbsensiTableForSelected();
+        };
+
+        window.renderAbsensiTableForSelected = function() {
+            const selectEl = document.getElementById('absensiSantriSelect');
+            if (!selectEl) return;
+            const santri = masterSantriData.find(s => s.nis === selectEl.value);
+            if (santri) renderAbsensiTableForSantri(santri);
+        };
+
+        window.renderAbsensiTableForSantri = function(santri) {
+            const tbody = document.getElementById('absensiActivityTableBody');
+            if (!tbody || !santri) return;
+
+            if (!santri.mutabaahAbsensi) {
+                santri.mutabaahAbsensi = {};
+            }
+
+            defaultActivitiesList.forEach(act => {
+                if (!santri.mutabaahAbsensi[act] || santri.mutabaahAbsensi[act].length !== 7) {
+                    santri.mutabaahAbsensi[act] = ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'];
+                }
+            });
+
+            tbody.innerHTML = '';
+            let totalH = 0, totalI = 0, totalP = 0, totalTH = 0;
+            const isKetua = isKetuaUmum();
+
+            defaultActivitiesList.forEach((act) => {
+                const arr = santri.mutabaahAbsensi[act];
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50 border-b border-slate-100";
+
+                let cells = `<td class="p-3 font-bold text-slate-900">${act}</td>`;
+                for (let d = 0; d < 7; d++) {
+                    const status = arr[d] || 'Hadir';
+                    if (status === 'Hadir') totalH++;
+                    else if (status === 'Izin') totalI++;
+                    else if (status === 'Pulang') totalP++;
+                    else if (status === 'Tidak Hadir') totalTH++;
+
+                    if (isKetua) {
+                        cells += `
+                            <td class="p-2 text-center">
+                                <select onchange="updateAbsensiCell('${santri.nis}', '${act}', ${d}, this.value)" class="px-2 py-1 rounded border border-slate-300 text-[11px] font-semibold bg-white ${
+                                    status === 'Hadir' ? 'text-emerald-700 bg-emerald-50' : 
+                                    status === 'Izin' ? 'text-amber-700 bg-amber-50' : 
+                                    status === 'Pulang' ? 'text-blue-700 bg-blue-50' : 'text-rose-700 bg-rose-50'
+                                }">
+                                    <option value="Hadir" ${status === 'Hadir' ? 'selected' : ''}>Hadir</option>
+                                    <option value="Izin" ${status === 'Izin' ? 'selected' : ''}>Izin</option>
+                                    <option value="Pulang" ${status === 'Pulang' ? 'selected' : ''}>Pulang</option>
+                                    <option value="Tidak Hadir" ${status === 'Tidak Hadir' ? 'selected' : ''}>Tidak Hadir</option>
+                                </select>
+                            </td>
+                        `;
+                    } else {
+                        cells += `
+                            <td class="p-2 text-center">
+                                <span class="px-2.5 py-1 rounded text-[11px] font-bold inline-block ${
+                                    status === 'Hadir' ? 'text-emerald-700 bg-emerald-50 border border-emerald-200' : 
+                                    status === 'Izin' ? 'text-amber-700 bg-amber-50 border border-amber-200' : 
+                                    status === 'Pulang' ? 'text-blue-700 bg-blue-50 border border-blue-200' : 'text-rose-700 bg-rose-50 border border-rose-200'
+                                }">${status}</span>
+                            </td>
+                        `;
+                    }
+                }
+                tr.innerHTML = cells;
+                tbody.appendChild(tr);
+            });
+
+            document.getElementById('rekapHadirCount').innerText = totalH;
+            document.getElementById('rekapIzinCount').innerText = totalI;
+            document.getElementById('rekapPulangCount').innerText = totalP;
+            document.getElementById('rekapTidakHadirCount').innerText = totalTH;
+        };
+
+        window.updateAbsensiCell = async function(nis, act, dayIndex, val) {
+            const santri = masterSantriData.find(s => s.nis === nis);
+            if (!santri) return;
+            if (!santri.mutabaahAbsensi) santri.mutabaahAbsensi = {};
+            if (!santri.mutabaahAbsensi[act]) santri.mutabaahAbsensi[act] = ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'];
+
+            santri.mutabaahAbsensi[act][dayIndex] = val;
+            saveToLocal();
+            
+            let totalH = 0, totalI = 0, totalP = 0, totalTH = 0;
+            defaultActivitiesList.forEach(a => {
+                const statuses = santri.mutabaahAbsensi[a] || [];
+                statuses.forEach(s => {
+                    if (s === 'Hadir') totalH++;
+                    else if (s === 'Izin') totalI++;
+                    else if (s === 'Pulang') totalP++;
+                    else if (s === 'Tidak Hadir') totalTH++;
+                });
+            });
+            document.getElementById('rekapHadirCount').innerText = totalH;
+            document.getElementById('rekapIzinCount').innerText = totalI;
+            document.getElementById('rekapPulangCount').innerText = totalP;
+            document.getElementById('rekapTidakHadirCount').innerText = totalTH;
+
+            await saveSantriToNeon(santri);
+        };
+
+        window.saveAktifAbsensi = async function() {
+            if (!isKetuaUmum()) {
+                window.showToast("Hanya Ketua Umum yang dapat menyimpan absensi mutaba'ah harian.", "error");
+                return;
+            }
+            const selectEl = document.getElementById('absensiSantriSelect');
+            if (!selectEl) return;
+            const santri = masterSantriData.find(s => s.nis === selectEl.value);
+            if (!santri) return;
+
+            saveToLocal();
+            await saveSantriToNeon(santri);
+            window.showToast(`Absensi mutaba'ah untuk ${santri.nama} berhasil disimpan!`, "success");
+        };
+
+        window.exportAbsensiToExcel = function() {
+            if (!isKetuaUmum()) return;
+            let csvContent = "data:text/csv;charset=utf-8,";
+            csvContent += "REKAP TOTAL ABSENSI MUTABAAH HARIAN MAHASANTRI (7 HARI)\r\n";
+            csvContent += "Jember Islamic Institute\r\n\r\n";
+            csvContent += "No,Nama Santri,NIS,Kelas,Total Hadir,Total Izin,Total Pulang,Total Tidak Hadir\r\n";
+
+            masterSantriData.forEach((santri, idx) => {
+                let h = 0, i = 0, p = 0, th = 0;
+                defaultActivitiesList.forEach(act => {
+                    const arr = (santri.mutabaahAbsensi && santri.mutabaahAbsensi[act]) ? santri.mutabaahAbsensi[act] : ['Hadir','Hadir','Hadir','Hadir','Hadir','Hadir','Hadir'];
+                    arr.forEach(status => {
+                        if (status === 'Hadir') h++;
+                        else if (status === 'Izin') i++;
+                        else if (status === 'Pulang') p++;
+                        else if (status === 'Tidak Hadir') th++;
+                    });
+                });
+                csvContent += `${idx + 1},"${santri.nama}","${santri.nis}","${santri.kelas}",${h},${i},${p},${th}\r\n`;
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `Rekap_Total_Absensi_Mutabaah_${new Date().toISOString().slice(0,10)}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.showToast("File rekap total Excel berhasil diunduh!", "success");
         };
 
         window.filterMasterSantri = function() {
@@ -1561,12 +1891,23 @@
 
         window.switchDashTab = function(tabName) {
             const isMgmt = isManagementRole();
-            if (tabName === 'master-santri' && !isMgmt) tabName = 'hafalan';
 
-            const tabs = ['master-santri', 'hafalan', 'tanggungan', 'detail-santri'];
+            if (tabName === 'master-santri' && !isMgmt) tabName = 'absensi';
+
+            const tabs = ['master-santri', 'absensi', 'hafalan', 'tanggungan', 'detail-santri'];
             tabs.forEach(t => {
-                const content = document.getElementById(t === 'master-santri' ? 'tabMasterSantri' : t === 'hafalan' ? 'tabHafalan' : t === 'tanggungan' ? 'tabTanggungan' : 'tabDetail');
-                const btn = document.getElementById(t === 'master-santri' ? 'tabBtnMaster' : t === 'hafalan' ? 'tabBtnHafalan' : t === 'tanggungan' ? 'tabBtnTanggungan' : 'tabBtnDetail');
+                const content = document.getElementById(
+                    t === 'master-santri' ? 'tabMasterSantri' : 
+                    t === 'absensi' ? 'tabAbsensi' :
+                    t === 'hafalan' ? 'tabHafalan' : 
+                    t === 'tanggungan' ? 'tabTanggungan' : 'tabDetail'
+                );
+                const btn = document.getElementById(
+                    t === 'master-santri' ? 'tabBtnMaster' : 
+                    t === 'absensi' ? 'tabBtnAbsensi' :
+                    t === 'hafalan' ? 'tabBtnHafalan' : 
+                    t === 'tanggungan' ? 'tabBtnTanggungan' : 'tabBtnDetail'
+                );
                 if (content) {
                     if (t === tabName) {
                         content.classList.remove('hidden');
@@ -1577,6 +1918,10 @@
                     }
                 }
             });
+
+            if (tabName === 'absensi') {
+                window.initAbsensiTab();
+            }
 
             if (tabName === 'detail-santri' && isMgmt) {
                 const selectorContainer = document.getElementById('bioSantriSelectorContainer');
@@ -1629,6 +1974,7 @@
             const footerPublicLinks = document.getElementById('footerPublicLinks');
             const footerUserLinks = document.getElementById('footerUserLinks');
             const tabBtnMaster = document.getElementById('tabBtnMaster');
+            const tabBtnAbsensi = document.getElementById('tabBtnAbsensi');
             const btnOpenAddSantri = document.getElementById('btnOpenAddSantri');
             const btnAddHafalanNav = document.getElementById('btnAddHafalanNav');
 
@@ -1656,6 +2002,11 @@
                 if (isMgmt) tabBtnMaster.classList.remove('hidden');
                 else tabBtnMaster.classList.add('hidden');
             }
+
+            if (tabBtnAbsensi) {
+                tabBtnAbsensi.classList.remove('hidden');
+            }
+
             if (btnOpenAddSantri) {
                 if (isMgmt) btnOpenAddSantri.classList.remove('hidden');
                 else btnOpenAddSantri.classList.add('hidden');
@@ -1665,8 +2016,11 @@
                 else btnAddHafalanNav.classList.add('hidden');
             }
 
-            if (!isMgmt) window.switchDashTab('hafalan');
-            else window.switchDashTab('master-santri');
+            if (isMgmt) {
+                window.switchDashTab('master-santri');
+            } else {
+                window.switchDashTab('absensi');
+            }
         }
 
         window.showPublicView = function(targetSection) {
@@ -1862,6 +2216,13 @@
                 spp: Number(document.getElementById('newSpp').value) || 350000,
                 uangMakan: Number(document.getElementById('newUangMakan').value) || 100000,
                 statusBayar: document.getElementById('newStatusBayar').value || 'Belum Lunas',
+                mutabaahAbsensi: {
+                    "Qiyamul Lail": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
+                    "Sholat Subuh": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
+                    "Sholat Dhuha": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
+                    "Sholat Maghrib + Isya’": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
+                    "Jam Malam": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir']
+                },
                 hafalanData: [],
                 paymentData: []
             };
@@ -1926,6 +2287,125 @@
                 tanggal: new Date().toLocaleDateString('id-ID'),
                 jenis: document.getElementById('inputJenis').value,
                 surah, juz,
+                nilai: document.getElementById('inputNilai').value,
+                ustadz: 'Ust. Pengampu'
+            });
+
+            if (juz > (targetSantri.hafalanJuz || 0)) {
+                targetSantri.hafalanJuz = juz;
+                targetSantri.hafalanSurah = surah;
+            }
+
+            saveToLocal();
+            window.renderHafalanTable();
+            window.filterMasterSantri();
+            window.updateAllSummaries();
+            await saveSantriToNeon(targetSantri);
+            window.showToast("Setoran hafalan baru dicatat!", "success");
+            window.closeModalAddHafalan();
+            event.target.reset();
+        };
+
+        window.simulasikanBayarLunas = async function() {
+            if (isManagementRole()) { window.showToast("Gunakan menu Edit Santri pada tabel.", "info"); return; }
+            if (!currentActiveSantri) return;
+            window.showToast("Konfirmasi transfer telah dikirim ke Bendahara.", "success");
+            window.closePaymentModal();
+        };
+
+        window.handleLogout = function() {
+            isLoggedIn = false;
+            currentActiveSantri = null;
+            currentRole = 'santri';
+            clearSession();
+            document.getElementById('navUserGreeting').innerText = 'Menu';
+            updateUIPermissions();
+            window.showPublicView('beranda');
+            window.showToast("Keluar dari sistem.", "info");
+        };
+
+        let sholatTimings = null;
+        let sholatTimerInterval = null;
+
+        async function fetchJadwalSholat() {
+            const dateEl = document.getElementById('sholatDateDisplay');
+            const defaultTimings = {
+                'Imsak': '04:12',
+                'Subuh': '04:22',
+                'Terbit': '05:37',
+                'Dzuhur': '11:41',
+                'Ashar': '15:01',
+                'Maghrib': '17:36',
+                'Isya': '18:47'
+            };
+
+            try {
+                const response = await fetch('https://api.aladhan.com/v1/timingsByCity?city=Jember&country=Indonesia&method=20');
+                const data = await response.json();
+                if (data && data.code === 200 && data.data) {
+                    const raw = data.data.timings;
+                    sholatTimings = {
+                        'Imsak': raw.Imsak,
+                        'Subuh': raw.Fajr,
+                        'Terbit': raw.Sunrise,
+                        'Dzuhur': raw.Dhuhr,
+                        'Ashar': raw.Asr,
+                        'Maghrib': raw.Maghrib,
+                        'Isya': raw.Isha
+                    };
+                    const hijri = data.data.date.hijri;
+                    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                    if (dateEl) dateEl.innerText = `${new Date().toLocaleDateString('id-ID', options)} | ${hijri.day} ${hijri.month.en} ${hijri.year} H`;
+                } else {
+                    sholatTimings = defaultTimings;
+                }
+            } catch (err) {
+                sholatTimings = defaultTimings;
+                const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                if (dateEl) dateEl.innerText = `${new Date().toLocaleDateString('id-ID', options)} | Kab. Jember`;
+            }
+
+            renderJadwalSholatGrid();
+            startSholatCountdown();
+        }
+
+        function renderJadwalSholatGrid(nextPrayerKey = null) {
+            const gridEl = document.getElementById('prayerTimesGrid');
+            if (!gridEl || !sholatTimings) return;
+            gridEl.innerHTML = '';
+
+            const icons = {
+                'Imsak': 'fa-regular fa-clock',
+                'Subuh': 'fa-solid fa-cloud-sun-rain',
+                'Terbit': 'fa-solid fa-sun',
+                'Dzuhur': 'fa-solid fa-sun-plant-wilt',
+                'Ashar': 'fa-solid fa-cloud-sun',
+                'Maghrib': 'fa-solid fa-moon',
+                'Isya': 'fa-solid fa-star-and-crescent'
+            };
+
+            Object.keys(sholatTimings).forEach(name => {
+                const timeStr = sholatTimings[name];
+                const isNext = name === nextPrayerKey;
+                const card = document.createElement('div');
+                card.className = `relative overflow-hidden p-4 rounded-2xl text-center transition-all duration-300 transform ${
+                    isNext 
+                    ? 'bg-gradient-to-b from-amber-500 via-amber-400 to-amber-500 text-slate-950 shadow-xl shadow-amber-500/20 scale-105 ring-2 ring-amber-300 font-extrabold z-10' 
+                    : 'bg-emerald-900/50 hover:bg-emerald-800/60 text-white border border-emerald-800/50 backdrop-blur-sm'
+                }`;
+
+                card.innerHTML = `
+                    ${isNext ? '<span class="absolute top-0 right-0 bg-slate-950 text-amber-300 text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-bl-lg border-l border-b border-amber-400/40">Selanjutnya</span>' : ''}
+                    <div class="text-xs font-bold uppercase tracking-wider mb-2 flex items-center justify-center space-x-1.5 ${isNext ? 'text-slate-950' : 'text-emerald-300'}">
+                        <i class="${icons[name] || 'fa-solid fa-clock'} ${isNext ? 'text-slate-950' : 'text-amber-400'}"></i>
+                        <span>${name}</span>
+                    </div>
+                    <div class="text-xl sm:text-2xl font-black font-mono tracking-tight ${isNext ? 'text-slate-950' : 'text-white'}">${timeStr}</div>
+                `;
+                gridEl.appendChild(card);
+            });
+        }
+
         function startSholatCountdown() {
             if (sholatTimerInterval) clearInterval(sholatTimerInterval);
 
@@ -1939,7 +2419,6 @@
                 const currentMinutes = now.getHours() * 60 + now.getMinutes();
                 const currentSeconds = now.getSeconds();
 
-                // Order of prayers during the day
                 const prayerOrder = ['Imsak', 'Subuh', 'Terbit', 'Dzuhur', 'Ashar', 'Maghrib', 'Isya'];
                 let nextPrayer = null;
                 let targetMinutes = 0;
@@ -1957,7 +2436,6 @@
                     }
                 }
 
-                // If all prayers for today have passed, next is Imsak/Subuh tomorrow
                 if (!nextPrayer) {
                     nextPrayer = 'Imsak';
                     const [h, m] = sholatTimings['Imsak'].split(':').map(Number);
@@ -1968,9 +2446,7 @@
                 const currentTotalSeconds = currentMinutes * 60 + currentSeconds;
                 let diffSeconds = targetTotalSeconds - currentTotalSeconds;
 
-                if (diffSeconds < 0) {
-                    diffSeconds = 0;
-                }
+                if (diffSeconds < 0) diffSeconds = 0;
 
                 const hrs = Math.floor(diffSeconds / 3600);
                 const mins = Math.floor((diffSeconds % 3600) / 60);
@@ -1989,6 +2465,7 @@
         }
 
         window.onload = async function() {
+            checkWeeklyReset();
             window.renderMasterSantriTable(masterSantriData);
             window.renderHafalanTable();
             window.renderPaymentTable();
