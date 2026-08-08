@@ -1926,66 +1926,66 @@
                 tanggal: new Date().toLocaleDateString('id-ID'),
                 jenis: document.getElementById('inputJenis').value,
                 surah, juz,
-                nilai: document.getElementById('inputNilai').value,
-                ustadz: 'Ust. Pengampu'
-            });
-            if (juz > (targetSantri.hafalanJuz || 0)) {
-                targetSantri.hafalanJuz = juz;
-                targetSantri.hafalanSurah = surah;
+        function startSholatCountdown() {
+            if (sholatTimerInterval) clearInterval(sholatTimerInterval);
+
+            const nextNameEl = document.getElementById('nextPrayerName');
+            const timerEl = document.getElementById('nextPrayerTimer');
+
+            function updateTimer() {
+                if (!sholatTimings) return;
+
+                const now = new Date();
+                const currentMinutes = now.getHours() * 60 + now.getMinutes();
+                const currentSeconds = now.getSeconds();
+
+                // Order of prayers during the day
+                const prayerOrder = ['Imsak', 'Subuh', 'Terbit', 'Dzuhur', 'Ashar', 'Maghrib', 'Isya'];
+                let nextPrayer = null;
+                let targetMinutes = 0;
+
+                for (let name of prayerOrder) {
+                    const timeVal = sholatTimings[name];
+                    if (!timeVal) continue;
+                    const [h, m] = timeVal.split(':').map(Number);
+                    const prayerMin = h * 60 + m;
+
+                    if (prayerMin > currentMinutes || (prayerMin === currentMinutes && currentSeconds === 0)) {
+                        nextPrayer = name;
+                        targetMinutes = prayerMin;
+                        break;
+                    }
+                }
+
+                // If all prayers for today have passed, next is Imsak/Subuh tomorrow
+                if (!nextPrayer) {
+                    nextPrayer = 'Imsak';
+                    const [h, m] = sholatTimings['Imsak'].split(':').map(Number);
+                    targetMinutes = (24 * 60) + (h * 60 + m);
+                }
+
+                const targetTotalSeconds = targetMinutes * 60;
+                const currentTotalSeconds = currentMinutes * 60 + currentSeconds;
+                let diffSeconds = targetTotalSeconds - currentTotalSeconds;
+
+                if (diffSeconds < 0) {
+                    diffSeconds = 0;
+                }
+
+                const hrs = Math.floor(diffSeconds / 3600);
+                const mins = Math.floor((diffSeconds % 3600) / 60);
+                const secs = diffSeconds % 60;
+
+                const pad = n => String(n).padStart(2, '0');
+
+                if (nextNameEl) nextNameEl.innerText = nextPrayer;
+                if (timerEl) timerEl.innerText = `${pad(hrs)}:${pad(mins)}:${pad(secs)}`;
+
+                renderJadwalSholatGrid(nextPrayer);
             }
 
-            saveToLocal();
-            window.renderHafalanTable();
-            window.updateAllSummaries();
-            await saveSantriToNeon(targetSantri);
-            window.showToast("Setoran hafalan dicatat!", "success");
-            window.closeModalAddHafalan();
-            event.target.reset();
-        };
-
-        window.simulasikanBayarLunas = function() {
-            window.showToast("Konfirmasi transfer telah dikirim ke Bendahara.", "success");
-            window.closePaymentModal();
-        };
-
-        window.handleLogout = function() {
-            isLoggedIn = false;
-            currentActiveSantri = null;
-            currentRole = 'santri';
-            clearSession();
-            updateUIPermissions();
-            window.showPublicView('beranda');
-            window.showToast("Anda telah keluar.", "info");
-        };
-
-        let sholatTimings = null;
-        async function fetchJadwalSholat() {
-            const dateEl = document.getElementById('sholatDateDisplay');
-            const defaultTimings = { 'Imsak': '04:12', 'Subuh': '04:22', 'Terbit': '05:37', 'Dzuhur': '11:41', 'Ashar': '15:01', 'Maghrib': '17:36', 'Isya': '18:47' };
-            try {
-                const response = await fetch('https://api.aladhan.com/v1/timingsByCity?city=Jember&country=Indonesia&method=20');
-                const data = await response.json();
-                if (data && data.code === 200) {
-                    const raw = data.data.timings;
-                    sholatTimings = { 'Imsak': raw.Imsak, 'Subuh': raw.Fajr, 'Terbit': raw.Sunrise, 'Dzuhur': raw.Dhuhr, 'Ashar': raw.Asr, 'Maghrib': raw.Maghrib, 'Isya': raw.Isha };
-                    if (dateEl) dateEl.innerText = `${new Date().toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}`;
-                } else { sholatTimings = defaultTimings; }
-            } catch (err) {
-                sholatTimings = defaultTimings;
-            }
-            renderJadwalSholatGrid();
-        }
-
-        function renderJadwalSholatGrid() {
-            const gridEl = document.getElementById('prayerTimesGrid');
-            if (!gridEl || !sholatTimings) return;
-            gridEl.innerHTML = '';
-            Object.keys(sholatTimings).forEach(name => {
-                const card = document.createElement('div');
-                card.className = "relative overflow-hidden p-4 rounded-2xl text-center bg-emerald-900/50 text-white border border-emerald-800/50 backdrop-blur-sm";
-                card.innerHTML = `<div class="text-xs font-bold uppercase tracking-wider mb-2 text-emerald-300">${name}</div><div class="text-xl sm:text-2xl font-black font-mono tracking-tight text-white">${sholatTimings[name]}</div>`;
-                gridEl.appendChild(card);
-            });
+            updateTimer();
+            sholatTimerInterval = setInterval(updateTimer, 1000);
         }
 
         window.onload = async function() {
