@@ -2098,7 +2098,10 @@
         window.closeMobileMenu = function() { document.getElementById('mobileMenu')?.classList.add('hidden'); };
 
         window.openEditSantriModal = function(nis) {
-            if (!isManagementRole()) return;
+            if (!isManagementRole()) {
+                window.showToast("Akses ditolak: Hanya pengurus yang dapat mengedit.", "error");
+                return;
+            }
             const santri = masterSantriData.find(s => s.nis === nis);
             if (!santri) return;
             document.getElementById('editSantriNis').value = santri.nis;
