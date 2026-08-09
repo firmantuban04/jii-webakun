@@ -907,23 +907,30 @@
                 </div>
                 <div>
                     <label class="block font-bold text-slate-700 mb-2">Capaian Hafalan (Juz)</label>
-                    <input type="number" id="newHafalanJuz" value="1" min="0" max="30" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none transition" />
+                    <input type="number" id="newHafalanJuz" value="0" min="0" max="30" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none transition" />
                 </div>
                 <div>
                     <label class="block font-bold text-slate-700 mb-2">Surah Terakhir Disetorkan</label>
                     <input type="text" id="newHafalanSurah" placeholder="Contoh: Al-Baqarah" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none transition" />
                 </div>
                 <div>
-                    <label class="block font-bold text-slate-700 mb-2">Biaya SPP / Bulan (Rp)</label>
-                    <input type="number" id="newSpp" value="350000" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none transition" />
+                    <label class="block font-bold text-slate-700 mb-2">Nominal SPP (Rp)</label>
+                    <input type="number" id="newSpp" value="0" min="0" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none transition" />
                 </div>
                 <div>
-                    <label class="block font-bold text-slate-700 mb-2">Biaya Makan / Bulan (Rp)</label>
-                    <input type="number" id="newUangMakan" value="100000" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none transition" />
+                    <label class="block font-bold text-slate-700 mb-2">Status SPP</label>
+                    <select id="newStatusSpp" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none transition">
+                        <option value="Belum Lunas">Belum Lunas</option>
+                        <option value="Lunas">Lunas</option>
+                    </select>
                 </div>
                 <div>
-                    <label class="block font-bold text-slate-700 mb-2">Status Pembayaran</label>
-                    <select id="newStatusBayar" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none transition">
+                    <label class="block font-bold text-slate-700 mb-2">Nominal Uang Makan (Rp)</label>
+                    <input type="number" id="newUangMakan" value="0" min="0" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none transition" />
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-700 mb-2">Status Uang Makan</label>
+                    <select id="newStatusMakan" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none transition">
                         <option value="Belum Lunas">Belum Lunas</option>
                         <option value="Lunas">Lunas</option>
                     </select>
@@ -979,16 +986,23 @@
                     <input type="text" id="editHafalanSurah" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none transition" />
                 </div>
                 <div>
-                    <label class="block font-bold text-slate-700 mb-2">SPP (Rp)</label>
-                    <input type="number" id="editSpp" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none transition" />
+                    <label class="block font-bold text-slate-700 mb-2">Nominal SPP (Rp)</label>
+                    <input type="number" id="editSpp" min="0" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none transition" />
                 </div>
                 <div>
-                    <label class="block font-bold text-slate-700 mb-2">Uang Makan (Rp)</label>
-                    <input type="number" id="editUangMakan" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none transition" />
+                    <label class="block font-bold text-slate-700 mb-2">Status SPP</label>
+                    <select id="editStatusSpp" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none transition">
+                        <option value="Belum Lunas">Belum Lunas</option>
+                        <option value="Lunas">Lunas</option>
+                    </select>
                 </div>
                 <div>
-                    <label class="block font-bold text-slate-700 mb-2">Status Pembayaran</label>
-                    <select id="editStatusBayar" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none transition">
+                    <label class="block font-bold text-slate-700 mb-2">Nominal Uang Makan (Rp)</label>
+                    <input type="number" id="editUangMakan" min="0" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none transition" />
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-700 mb-2">Status Uang Makan</label>
+                    <select id="editStatusMakan" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none transition">
                         <option value="Belum Lunas">Belum Lunas</option>
                         <option value="Lunas">Lunas</option>
                     </select>
@@ -1099,9 +1113,9 @@
         const DEFAULT_NEON_CONN = "postgresql://neondb_owner:npg_EXJTxs4q2heD@ep-dry-bonus-axcu6ybn-pooler.c-4.us-east-2.aws.neon.tech/neondb?sslmode=require";
         
         const NEON_STORAGE_KEY = 'jii_neon_connection_string_v3';
-        const LOCAL_SANTRI_KEY = 'jii_master_santri_local_v4';
-        const SESSION_STORAGE_KEY = 'jii_user_session_v3';
-        const LAST_RESET_WEEK_KEY = 'jii_last_reset_week_v4';
+        const LOCAL_SANTRI_KEY = 'jii_master_santri_local_v8';
+        const SESSION_STORAGE_KEY = 'jii_user_session_v7';
+        const LAST_RESET_WEEK_KEY = 'jii_last_reset_week_v8';
 
         let neonConnectionString = localStorage.getItem(NEON_STORAGE_KEY) || DEFAULT_NEON_CONN;
         let sql = null;
@@ -1133,9 +1147,10 @@
                 status: 'AKTIFF',
                 hafalanJuz: 10,
                 hafalanSurah: 'At-Tawbah',
-                spp: 350000,
-                uangMakan: 100000,
-                statusBayar: 'Lunas',
+                spp: 0,
+                statusSpp: 'Belum Lunas',
+                uangMakan: 0,
+                statusMakan: 'Belum Lunas',
                 mutabaahAbsensi: {
                     "Qiyamul Lail": ['Hadir', 'Hadir', 'Hadir', 'Izin', 'Hadir', 'Hadir', 'Hadir'],
                     "Sholat Subuh": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
@@ -1147,7 +1162,7 @@
                     { tanggal: '05/08/2026', jenis: 'Ziyadah (Baru)', surah: 'Surah At-Tawbah 1-30', juz: 10, nilai: 'A (Sangat Mutqin)', ustadz: 'Ust. Abdullah' }
                 ],
                 paymentData: [
-                    { id: 'TRX-88219', tanggal: '10/07/2026', uraian: 'Syahriyah Bulan Juli 2026', nominal: 450000, status: 'Lunas' }
+                    { id: 'TRX-88219', tanggal: '10/07/2026', uraian: 'Syahriyah Bulan Juli 2026', nominal: 0, status: 'Belum Lunas' }
                 ]
             },
             {
@@ -1162,9 +1177,10 @@
                 status: 'AKTIFF',
                 hafalanJuz: 18,
                 hafalanSurah: 'Al-Kahf',
-                spp: 350000,
-                uangMakan: 100000,
-                statusBayar: 'Lunas',
+                spp: 0,
+                statusSpp: 'Belum Lunas',
+                uangMakan: 0,
+                statusMakan: 'Belum Lunas',
                 mutabaahAbsensi: {
                     "Qiyamul Lail": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
                     "Sholat Subuh": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
@@ -1176,7 +1192,7 @@
                     { tanggal: '06/08/2026', jenis: 'Ziyadah (Baru)', surah: 'Surah Al-Kahf 1-110', juz: 18, nilai: 'A (Sangat Mutqin)', ustadz: 'Ustadzah Maryam' }
                 ],
                 paymentData: [
-                    { id: 'TRX-90112', tanggal: '01/08/2026', uraian: 'Syahriyah Bulan Agustus 2026', nominal: 450000, status: 'Lunas' }
+                    { id: 'TRX-90112', tanggal: '01/08/2026', uraian: 'Syahriyah Bulan Agustus 2026', nominal: 0, status: 'Belum Lunas' }
                 ]
             }
         ];
@@ -1201,6 +1217,32 @@
         let currentRole = 'santri';
         let isLoggedIn = false;
         let pollingTimer = null;
+
+        window.isManagementRole = function() {
+            if (['ketua', 'bendahara', 'sekretaris'].includes(currentRole)) return true;
+            try {
+                const stored = localStorage.getItem(SESSION_STORAGE_KEY);
+                if (stored) {
+                    const session = JSON.parse(stored);
+                    if (session.role && ['ketua', 'bendahara', 'sekretaris'].includes(session.role)) {
+                        return true;
+                    }
+                }
+            } catch (e) {}
+            return false;
+        };
+
+        window.isKetuaUmum = function() {
+            if (currentRole === 'ketua') return true;
+            try {
+                const stored = localStorage.getItem(SESSION_STORAGE_KEY);
+                if (stored) {
+                    const session = JSON.parse(stored);
+                    if (session.role === 'ketua') return true;
+                }
+            } catch (e) {}
+            return false;
+        };
 
         function checkWeeklyReset() {
             try {
@@ -1235,9 +1277,7 @@
                     window.showToast("Absensi mingguan telah di-reset otomatis!", "success");
                     window.initAbsensiTab();
                 }
-            } catch (e) {
-                console.error("Reset check error:", e);
-            }
+            } catch (e) {}
         }
 
         window.openSettingsModal = function() {
@@ -1304,32 +1344,6 @@
             } catch (e) {}
         }
 
-        function isManagementRole() {
-            if (currentRole && ['ketua', 'bendahara', 'sekretaris'].includes(currentRole)) return true;
-            try {
-                const stored = localStorage.getItem(SESSION_STORAGE_KEY);
-                if (stored) {
-                    const session = JSON.parse(stored);
-                    if (session.role && ['ketua', 'bendahara', 'sekretaris'].includes(session.role)) {
-                        return true;
-                    }
-                }
-            } catch (e) {}
-            return false;
-        }
-
-        function isKetuaUmum() {
-            if (currentRole === 'ketua') return true;
-            try {
-                const stored = localStorage.getItem(SESSION_STORAGE_KEY);
-                if (stored) {
-                    const session = JSON.parse(stored);
-                    if (session.role === 'ketua') return true;
-                }
-            } catch (e) {}
-            return false;
-        }
-
         window.showToast = function(message, type = 'success') {
             const container = document.getElementById('toastContainer');
             if (!container) return;
@@ -1390,9 +1404,10 @@
                         status TEXT DEFAULT 'AKTIFF',
                         hafalan_juz INT DEFAULT 0,
                         hafalan_surah TEXT,
-                        spp INT DEFAULT 350000,
-                        uang_makan INT DEFAULT 100000,
-                        status_bayar TEXT DEFAULT 'Belum Lunas',
+                        spp INT DEFAULT 0,
+                        status_spp TEXT DEFAULT 'Belum Lunas',
+                        uang_makan INT DEFAULT 0,
+                        status_makan TEXT DEFAULT 'Belum Lunas',
                         mutabaah_absensi JSONB DEFAULT '{}'::jsonb,
                         hafalan_data JSONB DEFAULT '[]'::jsonb,
                         payment_data JSONB DEFAULT '[]'::jsonb,
@@ -1432,9 +1447,10 @@
                                 status: r.status,
                                 hafalanJuz: r.hafalan_juz,
                                 hafalanSurah: r.hafalan_surah,
-                                spp: r.spp,
-                                uangMakan: r.uang_makan,
-                                statusBayar: r.status_bayar,
+                                spp: r.spp || 0,
+                                statusSpp: r.status_spp || 'Belum Lunas',
+                                uangMakan: r.uang_makan || 0,
+                                statusMakan: r.status_makan || 'Belum Lunas',
                                 mutabaahAbsensi: remoteAbsensi,
                                 hafalanData: typeof r.hafalan_data === 'string' ? JSON.parse(r.hafalan_data) : (r.hafalan_data || []),
                                 paymentData: typeof r.payment_data === 'string' ? JSON.parse(r.payment_data) : (r.payment_data || [])
@@ -1462,11 +1478,11 @@
                 await sql`
                     INSERT INTO santri (
                         nis, password, nama, kelas, kamar, wa, wali, alamat, status,
-                        hafalan_juz, hafalan_surah, spp, uang_makan, status_bayar,
+                        hafalan_juz, hafalan_surah, spp, status_spp, uang_makan, status_makan,
                         mutabaah_absensi, hafalan_data, payment_data
                     ) VALUES (
                         ${santriObj.nis}, ${santriObj.password || '123456'}, ${santriObj.nama}, ${santriObj.kelas}, ${santriObj.kamar}, ${santriObj.wa || ''}, ${santriObj.wali || ''}, ${santriObj.alamat || ''}, ${santriObj.status},
-                        ${Number(santriObj.hafalanJuz || 0)}, ${santriObj.hafalanSurah || ''}, ${Number(santriObj.spp || 350000)}, ${Number(santriObj.uangMakan || 100000)}, ${santriObj.statusBayar || 'Belum Lunas'},
+                        ${Number(santriObj.hafalanJuz || 0)}, ${santriObj.hafalanSurah || ''}, ${Number(santriObj.spp || 0)}, ${santriObj.statusSpp || 'Belum Lunas'}, ${Number(santriObj.uangMakan || 0)}, ${santriObj.statusMakan || 'Belum Lunas'},
                         ${mAbsJson}::jsonb, ${hDataJson}::jsonb, ${pDataJson}::jsonb
                     )
                     ON CONFLICT (nis) DO UPDATE SET
@@ -1481,8 +1497,9 @@
                         hafalan_juz = EXCLUDED.hafalan_juz,
                         hafalan_surah = EXCLUDED.hafalan_surah,
                         spp = EXCLUDED.spp,
+                        status_spp = EXCLUDED.status_spp,
                         uang_makan = EXCLUDED.uang_makan,
-                        status_bayar = EXCLUDED.status_bayar,
+                        status_makan = EXCLUDED.status_makan,
                         mutabaah_absensi = EXCLUDED.mutabaah_absensi,
                         hafalan_data = EXCLUDED.hafalan_data,
                         payment_data = EXCLUDED.payment_data,
@@ -1515,10 +1532,11 @@
                 return;
             }
 
-            const canManage = isManagementRole();
+            const canManage = window.isManagementRole();
             data.forEach(santri => {
-                const isLunas = santri.statusBayar === 'Lunas';
-                const totalTagihan = isLunas ? 0 : (Number(santri.spp || 350000) + Number(santri.uangMakan || 100000));
+                const sppLunas = santri.statusSpp === 'Lunas';
+                const makanLunas = santri.statusMakan === 'Lunas';
+
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-slate-50 transition border-b border-slate-100";
                 
@@ -1548,7 +1566,10 @@
                     <td class="p-4"><div class="text-sm">${santri.kelas}</div><div class="text-[11px] text-slate-400">${santri.kamar}</div></td>
                     <td class="p-4"><span class="px-2.5 py-0.5 text-[10px] font-bold rounded-full ${santri.status === 'AKTIFF' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">${santri.status || 'AKTIFF'}</span></td>
                     <td class="p-4"><div class="font-bold text-emerald-700">${santri.hafalanJuz || 0} Juz</div><div class="text-[11px] text-slate-400">${santri.hafalanSurah || '-'}</div></td>
-                    <td class="p-4"><div class="font-bold ${isLunas ? 'text-emerald-600' : 'text-rose-600'}">${isLunas ? 'Rp 0' : 'Rp ' + totalTagihan.toLocaleString('id-ID')}</div></td>
+                    <td class="p-4">
+                        <div class="text-[11px] font-semibold text-slate-700">SPP: Rp ${Number(santri.spp || 0).toLocaleString('id-ID')} (<span class="${sppLunas ? 'text-emerald-600 font-bold' : 'text-rose-600 font-bold'}">${santri.statusSpp || 'Belum Lunas'}</span>)</div>
+                        <div class="text-[11px] font-semibold text-slate-700 mt-0.5">Makan: Rp ${Number(santri.uangMakan || 0).toLocaleString('id-ID')} (<span class="${makanLunas ? 'text-emerald-600 font-bold' : 'text-rose-600 font-bold'}">${santri.statusMakan || 'Belum Lunas'}</span>)</div>
+                    </td>
                     <td class="p-4 text-center space-x-1 flex justify-center gap-1">${actionButtons}</td>
                 `;
                 tbody.appendChild(tr);
@@ -1578,7 +1599,7 @@
             const selectEl = document.getElementById('absensiSantriSelect');
             if (!selectEl) return;
 
-            const isKetua = isKetuaUmum();
+            const isKetua = window.isKetuaUmum();
             const selectWrapper = document.getElementById('absensiSelectWrapper');
             const downloadBtnWrapper = document.getElementById('absensiDownloadBtnWrapper');
             const roleBadge = document.getElementById('absensiRoleBadge');
@@ -1647,7 +1668,7 @@
 
             tbody.innerHTML = '';
             let totalH = 0, totalI = 0, totalP = 0, totalTH = 0;
-            const isKetua = isKetuaUmum();
+            const isKetua = window.isKetuaUmum();
 
             defaultActivitiesList.forEach((act) => {
                 const arr = santri.mutabaahAbsensi[act];
@@ -1712,7 +1733,6 @@
             if (!santri.mutabaahAbsensi[act]) santri.mutabaahAbsensi[act] = ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'];
 
             santri.mutabaahAbsensi[act][dayIndex] = val;
-            
             saveToLocal();
             
             let totalH = 0, totalI = 0, totalP = 0, totalTH = 0;
@@ -1731,13 +1751,12 @@
             document.getElementById('rekapTidakHadirCount').innerText = totalTH;
 
             window.renderAbsensiTableForSantri(santri);
-
             await saveSantriToNeon(santri);
             window.showToast("Absensi otomatis tersimpan", "success");
         };
 
         window.exportAbsensiToExcel = function() {
-            if (!isKetuaUmum()) return;
+            if (!window.isKetuaUmum()) return;
 
             const weeklyDates = getWeeklyCalendarDates();
             const startStr = weeklyDates[0] ? `${weeklyDates[0].rawDate.getDate()} ${weeklyDates[0].rawDate.toLocaleString('id-ID', { month: 'long' })} ${weeklyDates[0].rawDate.getFullYear()}` : '';
@@ -1793,9 +1812,11 @@
             let totalUnpaidSpp = 0;
             let totalUnpaidMakan = 0;
             masterSantriData.forEach(s => {
-                if (s.statusBayar !== 'Lunas') {
-                    totalUnpaidSpp += Number(s.spp || 350000);
-                    totalUnpaidMakan += Number(s.uangMakan || 100000);
+                if (s.statusSpp !== 'Lunas') {
+                    totalUnpaidSpp += Number(s.spp || 0);
+                }
+                if (s.statusMakan !== 'Lunas') {
+                    totalUnpaidMakan += Number(s.uangMakan || 0);
                 }
             });
             const uncollectedTotal = totalUnpaidSpp + totalUnpaidMakan;
@@ -1805,7 +1826,7 @@
             if (elTotal) elTotal.innerText = totalCount;
             if (elAvg) elAvg.innerText = `${avgJuz} Juz`;
 
-            if (isManagementRole()) {
+            if (window.isManagementRole()) {
                 const dashHafalan = document.getElementById('dashHafalanSummary');
                 if (dashHafalan) dashHafalan.innerText = `Rata2 ${avgJuz} Juz`;
 
@@ -1836,7 +1857,7 @@
             tbody.innerHTML = '';
 
             let list = [];
-            if (isManagementRole()) {
+            if (window.isManagementRole()) {
                 if (currentActiveSantri) list = currentActiveSantri.hafalanData || [];
                 else list = masterSantriData.flatMap(s => (s.hafalanData || []).map(h => ({ ...h, santriNama: s.nama })));
             } else {
@@ -1869,7 +1890,7 @@
             tbody.innerHTML = '';
             
             let list = [];
-            if (isManagementRole() && !currentActiveSantri) {
+            if (window.isManagementRole() && !currentActiveSantri) {
                 list = masterSantriData.flatMap(s => (s.paymentData || []).map(p => ({ ...p, santriNama: s.nama })));
             } else {
                 list = paymentData || [];
@@ -1927,7 +1948,7 @@
         };
 
         window.switchDashTab = function(tabName) {
-            const isMgmt = isManagementRole();
+            const isMgmt = window.isManagementRole();
             if (tabName === 'master-santri' && !isMgmt) tabName = 'absensi';
 
             const tabs = ['master-santri', 'absensi', 'hafalan', 'tanggungan', 'detail-santri'];
@@ -2014,7 +2035,7 @@
             const btnOpenAddSantri = document.getElementById('btnOpenAddSantri');
             const btnAddHafalanNav = document.getElementById('btnAddHafalanNav');
 
-            const isMgmt = isManagementRole();
+            const isMgmt = window.isManagementRole();
 
             if (isLoggedIn) {
                 if (btnNavDashboard) btnNavDashboard.classList.remove('hidden');
@@ -2052,6 +2073,8 @@
                 else btnAddHafalanNav.classList.add('hidden');
             }
 
+            window.renderMasterSantriTable(masterSantriData);
+
             if (isMgmt) {
                 window.switchDashTab('master-santri');
             } else {
@@ -2085,13 +2108,13 @@
         window.closeChangePasswordModal = function() { document.getElementById('changePasswordModal')?.classList.add('hidden'); };
         
         window.openAddSantriModal = function() {
-            if (!isManagementRole()) { window.showToast("Hanya Pengurus yang dapat menambah santri.", "error"); return; }
+            if (!window.isManagementRole()) { window.showToast("Hanya Pengurus yang dapat menambah santri.", "error"); return; }
             document.getElementById('addSantriModal')?.classList.remove('hidden');
         };
         window.closeAddSantriModal = function() { document.getElementById('addSantriModal')?.classList.add('hidden'); };
         
         window.openModalAddHafalan = function() {
-            if (!isManagementRole()) { window.showToast("Hanya Pengurus yang dapat input setoran.", "error"); return; }
+            if (!window.isManagementRole()) { window.showToast("Hanya Pengurus yang dapat input setoran.", "error"); return; }
             const selectEl = document.getElementById('inputSantriNisForHafalan');
             if (selectEl) {
                 document.getElementById('hafalanSantriSelectorContainer')?.classList.remove('hidden');
@@ -2104,9 +2127,11 @@
         window.openPaymentModal = function() {
             const payTotal = document.getElementById('payModalTotalAmount');
             if (currentActiveSantri) {
-                const totalPayable = currentActiveSantri.statusBayar === 'Lunas' ? 0 : (Number(currentActiveSantri.spp || 350000) + Number(currentActiveSantri.uangMakan || 100000));
+                const unpaidSpp = currentActiveSantri.statusSpp === 'Lunas' ? 0 : Number(currentActiveSantri.spp || 0);
+                const unpaidMakan = currentActiveSantri.statusMakan === 'Lunas' ? 0 : Number(currentActiveSantri.uangMakan || 0);
+                const totalPayable = unpaidSpp + unpaidMakan;
                 if (payTotal) {
-                    payTotal.innerText = currentActiveSantri.statusBayar === 'Lunas' ? 'Rp 0 (LUNAS)' : `Rp ${totalPayable.toLocaleString('id-ID')}`;
+                    payTotal.innerText = totalPayable === 0 ? 'Rp 0 (LUNAS)' : `Rp ${totalPayable.toLocaleString('id-ID')}`;
                 }
             }
             document.getElementById('paymentModal')?.classList.remove('hidden');
@@ -2116,15 +2141,9 @@
         window.closeMobileMenu = function() { document.getElementById('mobileMenu')?.classList.add('hidden'); };
 
         window.openEditSantriModal = function(nis) {
-            if (!isManagementRole()) {
-                window.showToast("Akses ditolak: Hanya pengurus yang dapat mengedit.", "error");
-                return;
-            }
+            if (!window.isManagementRole()) return;
             const santri = masterSantriData.find(s => s.nis === nis);
-            if (!santri) {
-                window.showToast("Data santri tidak ditemukan.", "error");
-                return;
-            }
+            if (!santri) return;
             document.getElementById('editSantriNis').value = santri.nis;
             document.getElementById('editNisDisplay').innerText = `NIS: ${santri.nis}`;
             document.getElementById('editNama').value = santri.nama || '';
@@ -2133,9 +2152,10 @@
             document.getElementById('editStatus').value = santri.status || 'AKTIFF';
             document.getElementById('editHafalanJuz').value = santri.hafalanJuz || 0;
             document.getElementById('editHafalanSurah').value = santri.hafalanSurah || '';
-            document.getElementById('editSpp').value = santri.spp || 350000;
-            document.getElementById('editUangMakan').value = santri.uangMakan || 100000;
-            document.getElementById('editStatusBayar').value = santri.statusBayar || 'Belum Lunas';
+            document.getElementById('editSpp').value = santri.spp || 0;
+            document.getElementById('editStatusSpp').value = santri.statusSpp || 'Belum Lunas';
+            document.getElementById('editUangMakan').value = santri.uangMakan || 0;
+            document.getElementById('editStatusMakan').value = santri.statusMakan || 'Belum Lunas';
             document.getElementById('editSantriModal')?.classList.remove('hidden');
         };
         window.closeEditSantriModal = function() { document.getElementById('editSantriModal')?.classList.add('hidden'); };
@@ -2154,6 +2174,17 @@
             if (!santri) return;
             setLoggedInUser(santri.nama, 'Santri Tahfidz', 'ST', santri.nis, santri.kelas, santri.kamar);
             document.getElementById('dashHafalanSummary').innerText = `${santri.hafalanJuz || 0} Juz (${santri.hafalanSurah || '-'})`;
+            
+            const sppLunas = santri.statusSpp === 'Lunas';
+            const makanLunas = santri.statusMakan === 'Lunas';
+            const unpaidSpp = sppLunas ? 0 : Number(santri.spp || 0);
+            const unpaidMakan = makanLunas ? 0 : Number(santri.uangMakan || 0);
+            const total = unpaidSpp + unpaidMakan;
+            const dashTanggungan = document.getElementById('dashTanggunganSummary');
+            if (dashTanggungan) {
+                dashTanggungan.innerText = total === 0 ? "Rp 0 (LUNAS)" : `Rp ${total.toLocaleString('id-ID')}`;
+                dashTanggungan.className = total === 0 ? "text-2xl font-bold text-emerald-600 mt-2" : "text-2xl font-bold text-rose-600 mt-2";
+            }
         }
 
         window.handleLoginSubmit = function(event) {
@@ -2196,7 +2227,6 @@
             document.getElementById('publicContainer')?.classList.add('hidden');
             document.getElementById('dashboardContainer')?.classList.remove('hidden');
             updateUIPermissions();
-            window.renderMasterSantriTable(masterSantriData);
             window.updateAllSummaries();
             window.closeLoginModal();
             window.showToast(`Selamat datang, ${matchedRole ? managementAccounts[matchedRole].name : matchedSantri.nama}!`, 'success');
@@ -2205,7 +2235,7 @@
         window.handleSaveBiodataSubmit = async function(event) {
             event.preventDefault();
             const nis = document.getElementById('bioNisInput').value.trim();
-            const targetSantri = isManagementRole() ? masterSantriData.find(s => s.nis === nis) : currentActiveSantri;
+            const targetSantri = window.isManagementRole() ? masterSantriData.find(s => s.nis === nis) : currentActiveSantri;
 
             if (targetSantri) {
                 targetSantri.nama = document.getElementById('bioNamaInput').value.trim();
@@ -2227,7 +2257,7 @@
             event.preventDefault();
             const newPass = document.getElementById('newPasswordInput').value.trim();
 
-            if (isManagementRole()) {
+            if (window.isManagementRole()) {
                 managementAccounts[currentRole].password = newPass;
                 window.showToast("Password pengurus diubah!", "success");
             } else if (currentActiveSantri) {
@@ -2242,7 +2272,7 @@
 
         window.handleAddSantriSubmit = async function(event) {
             event.preventDefault();
-            if (!isManagementRole()) return;
+            if (!window.isManagementRole()) return;
 
             const nis = document.getElementById('newNis').value.trim();
             const newSantriObj = {
@@ -2254,9 +2284,10 @@
                 status: document.getElementById('newStatus').value || 'AKTIFF',
                 hafalanJuz: Number(document.getElementById('newHafalanJuz').value) || 0,
                 hafalanSurah: document.getElementById('newHafalanSurah').value.trim() || 'An-Nas',
-                spp: Number(document.getElementById('newSpp').value) || 350000,
-                uangMakan: Number(document.getElementById('newUangMakan').value) || 100000,
-                statusBayar: document.getElementById('newStatusBayar').value || 'Belum Lunas',
+                spp: Number(document.getElementById('newSpp').value) || 0,
+                statusSpp: document.getElementById('newStatusSpp').value || 'Belum Lunas',
+                uangMakan: Number(document.getElementById('newUangMakan').value) || 0,
+                statusMakan: document.getElementById('newStatusMakan').value || 'Belum Lunas',
                 mutabaahAbsensi: {
                     "Qiyamul Lail": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
                     "Sholat Subuh": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
@@ -2281,7 +2312,7 @@
 
         window.handleEditSantriSubmit = async function(event) {
             event.preventDefault();
-            if (!isManagementRole()) return;
+            if (!window.isManagementRole()) return;
             const santri = masterSantriData.find(s => s.nis === document.getElementById('editSantriNis').value);
             if (!santri) return;
 
@@ -2292,8 +2323,9 @@
             santri.hafalanJuz = Number(document.getElementById('editHafalanJuz').value);
             santri.hafalanSurah = document.getElementById('editHafalanSurah').value.trim();
             santri.spp = Number(document.getElementById('editSpp').value);
+            santri.statusSpp = document.getElementById('editStatusSpp').value;
             santri.uangMakan = Number(document.getElementById('editUangMakan').value);
-            santri.statusBayar = document.getElementById('editStatusBayar').value;
+            santri.statusMakan = document.getElementById('editStatusMakan').value;
 
             saveToLocal();
             window.filterMasterSantri();
@@ -2304,7 +2336,7 @@
         };
 
         window.deleteSantri = function(nis) {
-            if (!isManagementRole()) return;
+            if (!window.isManagementRole()) return;
             window.showConfirmDialog("Hapus Santri", "Hapus santri ini dari sistem?", async () => {
                 masterSantriData = masterSantriData.filter(s => s.nis !== nis);
                 saveToLocal();
@@ -2317,7 +2349,7 @@
 
         window.handleAddHafalanSubmit = async function(event) {
             event.preventDefault();
-            if (!isManagementRole()) return;
+            if (!window.isManagementRole()) return;
             const targetSantri = masterSantriData.find(s => s.nis === document.getElementById('inputSantriNisForHafalan').value);
             if (!targetSantri) return;
 
@@ -2348,7 +2380,7 @@
         };
 
         window.simulasikanBayarLunas = async function() {
-            if (isManagementRole()) { window.showToast("Gunakan menu Edit Santri pada tabel.", "info"); return; }
+            if (window.isManagementRole()) { window.showToast("Gunakan menu Edit Santri pada tabel.", "info"); return; }
             if (!currentActiveSantri) return;
             window.showToast("Konfirmasi transfer telah dikirim ke Bendahara.", "success");
             window.closePaymentModal();
@@ -2508,11 +2540,6 @@
         window.onload = async function() {
             checkWeeklyReset();
             await initNeonDatabase();
-            window.renderMasterSantriTable(masterSantriData);
-            window.renderHafalanTable();
-            window.renderPaymentTable();
-            window.initHafalanChart();
-            window.updateAllSummaries();
             if (restoreSession()) {
                 updateUIPermissions();
                 window.updateAllSummaries();
@@ -2520,6 +2547,11 @@
             } else {
                 updateUIPermissions();
             }
+            window.renderMasterSantriTable(masterSantriData);
+            window.renderHafalanTable();
+            window.renderPaymentTable();
+            window.initHafalanChart();
+            window.updateAllSummaries();
             fetchJadwalSholat();
         };
     </script>
