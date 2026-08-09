@@ -1305,11 +1305,29 @@
         }
 
         function isManagementRole() {
-            return currentRole === 'ketua' || currentRole === 'bendahara' || currentRole === 'sekretaris' || ['ketua', 'bendahara', 'sekretaris'].includes(currentRole);
+            if (currentRole && ['ketua', 'bendahara', 'sekretaris'].includes(currentRole)) return true;
+            try {
+                const stored = localStorage.getItem(SESSION_STORAGE_KEY);
+                if (stored) {
+                    const session = JSON.parse(stored);
+                    if (session.role && ['ketua', 'bendahara', 'sekretaris'].includes(session.role)) {
+                        return true;
+                    }
+                }
+            } catch (e) {}
+            return false;
         }
 
         function isKetuaUmum() {
-            return currentRole === 'ketua';
+            if (currentRole === 'ketua') return true;
+            try {
+                const stored = localStorage.getItem(SESSION_STORAGE_KEY);
+                if (stored) {
+                    const session = JSON.parse(stored);
+                    if (session.role === 'ketua') return true;
+                }
+            } catch (e) {}
+            return false;
         }
 
         window.showToast = function(message, type = 'success') {
