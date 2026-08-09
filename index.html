@@ -438,8 +438,8 @@
                     <div id="tabMasterSantri" class="dash-tab-content space-y-6 hidden">
                         <div class="bg-gradient-to-r from-emerald-900 via-emerald-800 to-slate-900 text-white p-6 rounded-2xl shadow-lg flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border border-emerald-700/30">
                             <div>
-                                <span class="inline-block px-3 py-1 bg-amber-400/20 text-amber-200 font-bold text-[10px] rounded-full uppercase tracking-wider border border-amber-400/30 mb-2">Khusus Pengurus Utama</span>
-                                <h3 class="text-xl font-extrabold" id="masterPanelTitle">Kelola & Buat Akun Santri</h3>
+                                <span class="inline-block px-3 py-1 bg-amber-400/20 text-amber-200 font-bold text-[10px] rounded-full uppercase tracking-wider border border-amber-400/30 mb-2" id="masterPanelRoleBadge">Kelola Data & Hak Akses Santri</span>
+                                <h3 class="text-xl font-extrabold" id="masterPanelTitle">Kelola Data & Peran Santri</h3>
                                 <p class="text-xs text-emerald-200 mt-1">Data tersimpan di perangkat lokal & Neon PostgreSQL Database Server.</p>
                             </div>
                             <div class="flex items-center space-x-4 bg-white/10 backdrop-blur p-4 rounded-xl border border-white/20 shrink-0">
@@ -471,7 +471,7 @@
                                 <thead>
                                     <tr class="bg-gradient-to-r from-slate-100 to-slate-50 text-slate-700 text-xs uppercase font-bold border-b border-slate-200">
                                         <th class="p-4">NIS & Password</th>
-                                        <th class="p-4">Nama Santri</th>
+                                        <th class="p-4">Nama Santri & Peran</th>
                                         <th class="p-4">Kelas & Kamar</th>
                                         <th class="p-4">Status</th>
                                         <th class="p-4">Hafalan</th>
@@ -594,12 +594,18 @@
                         <div class="flex justify-between items-center border-b pb-4">
                             <div>
                                 <h3 class="text-lg font-bold text-slate-900">Rincian Tanggungan & Tagihan Keuangan</h3>
-                                <p class="text-xs text-slate-500">Status Syahriyah & Uang Makan Pondok Pesantren.</p>
+                                <p class="text-xs text-slate-500">Status Syahriyah & Uang Makan Mahasantri.</p>
                             </div>
                             <button id="btnPayConfirmNav" onclick="openPaymentModal()" class="bg-gradient-to-r from-emerald-700 to-emerald-800 hover:from-emerald-600 hover:to-emerald-700 text-white font-bold px-5 py-2.5 rounded-xl text-xs shadow-lg transition transform hover:scale-105 flex items-center space-x-1.5">
                                 <i class="fa-solid fa-credit-card"></i>
                                 <span>Konfirmasi Transfer</span>
                             </button>
+                        </div>
+
+                        <!-- Selector Santri untuk Management jika melihat tab tanggungan -->
+                        <div id="tanggunganSantriSelectorContainer" class="hidden bg-gradient-to-r from-amber-50 to-amber-50/50 p-4 rounded-xl border border-amber-200/60 space-y-2">
+                            <label class="block font-bold text-amber-900 text-xs"><i class="fa-solid fa-users text-amber-600 mr-1"></i> Pilih Santri untuk Melihat Rincian Keuangan & Tanggungannya:</label>
+                            <select id="tanggunganSantriSelect" onchange="onSelectTanggunganSantri(this.value)" class="w-full px-3 py-2.5 rounded-xl border border-amber-300 text-xs font-semibold focus:ring-2 focus:ring-emerald-600 focus:outline-none bg-white text-slate-800"></select>
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -819,17 +825,20 @@
             <form onsubmit="handleLoginSubmit(event)" class="p-6 space-y-4">
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-2">Nomor Induk Santri (NIS) / ID Pengurus</label>
-                    <input type="text" id="loginNis" required placeholder="Contoh: KETUA-UMUM atau 202601001" class="w-full px-4 py-3 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-emerald-600 focus:outline-none transition" />
+                    <input type="text" id="loginNis" required placeholder="Contoh: KETUA-UMUM, MENTOR-01, KAMAR-01, atau 202601001" class="w-full px-4 py-3 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-emerald-600 focus:outline-none transition" />
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-2">Kata Sandi / Password</label>
                     <input type="password" id="loginPassword" required placeholder="••••••••" class="w-full px-4 py-3 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-emerald-600 focus:outline-none transition" />
                 </div>
 
-                <div class="p-4 bg-gradient-to-r from-amber-50 to-amber-50/50 rounded-xl border border-amber-200/60 text-[11px] text-amber-900 space-y-2">
-                    <p class="font-bold"><i class="fa-solid fa-info-circle mr-1 text-amber-600"></i> Data Akun Demo:</p>
-                    <p>• <strong>Pengurus:</strong> KETUA-UMUM / SEKRETARIS / BENDAHARA (Pass: 123456)</p>
-                    <p>• <strong>Santri:</strong> NIS 202601001 (Pass: 123456)</p>
+                <div class="p-4 bg-gradient-to-r from-amber-50 to-amber-50/50 rounded-xl border border-amber-200/60 text-[11px] text-amber-900 space-y-1.5">
+                    <p class="font-bold"><i class="fa-solid fa-info-circle mr-1 text-amber-600"></i> Akun Demo Sistem 5 Peran:</p>
+                    <p>• <strong>Ketua Umum:</strong> `KETUA-UMUM` (Pass: 123456)</p>
+                    <p>• <strong>Mentor:</strong> `MENTOR-01` (Pass: 123456)</p>
+                    <p>• <strong>Pengurus:</strong> `PENGURUS-01` (Pass: 123456)</p>
+                    <p>• <strong>Ketua Kamar:</strong> `KAMAR-01` (Pass: 123456)</p>
+                    <p>• <strong>Santri Tahfidz:</strong> `202601001` (Pass: 123456)</p>
                 </div>
 
                 <button type="submit" class="w-full btn-modern gradient-emerald hover:opacity-95 text-white font-bold py-3 rounded-xl shadow-lg transition transform hover:scale-105 text-sm">
@@ -870,8 +879,8 @@
         <div class="bg-white w-full max-w-xl rounded-3xl shadow-2xl overflow-hidden my-8 animate-slide-up">
             <div class="gradient-emerald text-white p-6 flex justify-between items-center">
                 <div>
-                    <h3 class="font-extrabold text-base">+ Tambah Santri & Terbitkan Akun</h3>
-                    <p class="text-xs text-emerald-200">Hak Akses: Ketua Umum, Sekretaris & Bendahara</p>
+                    <h3 class="font-extrabold text-base">+ Tambah Santri & Atur Peran</h3>
+                    <p class="text-xs text-emerald-200">Hak Akses: Ketua Umum, Mentor & Pengurus</p>
                 </div>
                 <button onclick="closeAddSantriModal()" class="text-emerald-200 hover:text-white transition text-2xl">
                     <i class="fa-solid fa-xmark"></i>
@@ -891,12 +900,14 @@
                     <input type="text" id="newNama" required placeholder="Nama lengkap sesuai dokumen" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none transition" />
                 </div>
                 <div>
-                    <label class="block font-bold text-slate-700 mb-2">Kelas Formal / Diniyah</label>
-                    <input type="text" id="newKelas" placeholder="Contoh: 10 MA Tahfidz" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none transition" />
-                </div>
-                <div>
-                    <label class="block font-bold text-slate-700 mb-2">Kamar / Asrama</label>
-                    <input type="text" id="newKamar" placeholder="Contoh: Al-Farabi Room 02" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none transition" />
+                    <label class="block font-bold text-slate-700 mb-2">Peran Akun (Role)</label>
+                    <select id="newRole" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none transition font-semibold text-emerald-800">
+                        <option value="santri">Santri Tahfidz (Biasa)</option>
+                        <option value="ketua_kamar">Ketua Kamar (Isi Absensi)</option>
+                        <option value="pengurus">Pengurus (Data & Tanggungan)</option>
+                        <option value="mentor">Mentor (Full Edit)</option>
+                        <option value="ketua">Ketua Umum (Full Edit)</option>
+                    </select>
                 </div>
                 <div>
                     <label class="block font-bold text-slate-700 mb-2">Status Disiplin</label>
@@ -904,6 +915,14 @@
                         <option value="AKTIFF">AKTIFF DISIPLIN</option>
                         <option value="IZIN">IZIN / CUTI</option>
                     </select>
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-700 mb-2">Kelas Formal / Diniyah</label>
+                    <input type="text" id="newKelas" placeholder="Contoh: 10 MA Tahfidz" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none transition" />
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-700 mb-2">Kamar / Asrama</label>
+                    <input type="text" id="newKamar" placeholder="Contoh: Al-Farabi Room 02" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none transition" />
                 </div>
                 <div>
                     <label class="block font-bold text-slate-700 mb-2">Capaian Hafalan (Juz)</label>
@@ -937,7 +956,7 @@
                 </div>
                 <div class="md:col-span-2 pt-4">
                     <button type="submit" class="w-full btn-modern gradient-emerald hover:opacity-95 text-white font-bold py-3 rounded-xl shadow-lg transition transform hover:scale-105">
-                        <i class="fa-solid fa-user-plus mr-2"></i> Simpan & Terbitkan Akun
+                        <i class="fa-solid fa-user-plus mr-2"></i> Simpan & Terbitkan Akun Santri
                     </button>
                 </div>
             </form>
@@ -949,7 +968,7 @@
         <div class="bg-white w-full max-w-xl rounded-3xl shadow-2xl overflow-hidden my-8 animate-slide-up">
             <div class="gradient-emerald text-white p-6 flex justify-between items-center">
                 <div>
-                    <h3 class="font-extrabold text-base">Edit Data Santri & Pembayaran</h3>
+                    <h3 class="font-extrabold text-base">Edit Data Santri, Tanggungan & Peran</h3>
                     <p class="text-xs text-emerald-200" id="editNisDisplay">NIS: -</p>
                 </div>
                 <button onclick="closeEditSantriModal()" class="text-emerald-200 hover:text-white transition text-2xl">
@@ -963,12 +982,14 @@
                     <input type="text" id="editNama" required class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none transition" />
                 </div>
                 <div>
-                    <label class="block font-bold text-slate-700 mb-2">Kelas Formal</label>
-                    <input type="text" id="editKelas" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none transition" />
-                </div>
-                <div>
-                    <label class="block font-bold text-slate-700 mb-2">Kamar Asrama</label>
-                    <input type="text" id="editKamar" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none transition" />
+                    <label class="block font-bold text-slate-700 mb-2">Peran Akun (Role)</label>
+                    <select id="editRole" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none transition font-semibold text-emerald-800">
+                        <option value="santri">Santri Tahfidz (Biasa)</option>
+                        <option value="ketua_kamar">Ketua Kamar (Isi Absensi)</option>
+                        <option value="pengurus">Pengurus (Data & Tanggungan)</option>
+                        <option value="mentor">Mentor (Full Edit)</option>
+                        <option value="ketua">Ketua Umum (Full Edit)</option>
+                    </select>
                 </div>
                 <div>
                     <label class="block font-bold text-slate-700 mb-2">Status Disiplin</label>
@@ -976,6 +997,14 @@
                         <option value="AKTIFF">AKTIFF DISIPLIN</option>
                         <option value="IZIN">IZIN / CUTI</option>
                     </select>
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-700 mb-2">Kelas Formal</label>
+                    <input type="text" id="editKelas" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none transition" />
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-700 mb-2">Kamar Asrama</label>
+                    <input type="text" id="editKamar" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none transition" />
                 </div>
                 <div>
                     <label class="block font-bold text-slate-700 mb-2">Capaian Hafalan (Juz)</label>
@@ -1112,19 +1141,13 @@
 
         const DEFAULT_NEON_CONN = "postgresql://neondb_owner:npg_EXJTxs4q2heD@ep-dry-bonus-axcu6ybn-pooler.c-4.us-east-2.aws.neon.tech/neondb?sslmode=require";
         
-        const NEON_STORAGE_KEY = 'jii_neon_connection_string_v3';
-        const LOCAL_SANTRI_KEY = 'jii_master_santri_local_v8';
-        const SESSION_STORAGE_KEY = 'jii_user_session_v7';
-        const LAST_RESET_WEEK_KEY = 'jii_last_reset_week_v8';
+        const NEON_STORAGE_KEY = 'jii_neon_connection_string_v4';
+        const LOCAL_SANTRI_KEY = 'jii_master_santri_local_v9';
+        const SESSION_STORAGE_KEY = 'jii_user_session_v8';
+        const LAST_RESET_WEEK_KEY = 'jii_last_reset_week_v9';
 
         let neonConnectionString = localStorage.getItem(NEON_STORAGE_KEY) || DEFAULT_NEON_CONN;
         let sql = null;
-
-        const managementAccounts = {
-            'ketua': { id: 'KETUA-UMUM', password: '123456', name: 'K.H. Ahmad Dahlan, M.A.', role: 'Ketua Umum', avatar: 'KU' },
-            'bendahara': { id: 'BENDAHARA', password: '123456', name: 'H. Ridwan, S.E.', role: 'Bendahara Pondok', avatar: 'BD' },
-            'sekretaris': { id: 'SEKRETARIS', password: '123456', name: 'Ust. M. Hidayat, S.Pd.', role: 'Sekretaris Pondok', avatar: 'SK' }
-        };
 
         const defaultActivitiesList = [
             "Qiyamul Lail",
@@ -1136,20 +1159,129 @@
 
         const initialSampleSantri = [
             {
+                nis: 'KETUA-UMUM',
+                password: '123456',
+                nama: 'K.H. Ahmad Dahlan, M.A.',
+                role: 'ketua',
+                kelas: 'Dewan Pimpinan',
+                kamar: 'Kantor Utama',
+                wa: '08111111111',
+                wali: '-',
+                alamat: 'Jember',
+                status: 'AKTIFF',
+                hafalanJuz: 30,
+                hafalanSurah: 'An-Nas',
+                spp: 0,
+                statusSpp: 'Lunas',
+                uangMakan: 0,
+                statusMakan: 'Lunas',
+                mutabaahAbsensi: {
+                    "Qiyamul Lail": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
+                    "Sholat Subuh": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
+                    "Sholat Dhuha": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
+                    "Sholat Maghrib + Isya’": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
+                    "Jam Malam": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir']
+                },
+                hafalanData: [],
+                paymentData: []
+            },
+            {
+                nis: 'MENTOR-01',
+                password: '123456',
+                nama: 'Ust. Abdullah, Al-Hafidz',
+                role: 'mentor',
+                kelas: 'Dewan Mentor',
+                kamar: 'Asrama Mentor',
+                wa: '08222222222',
+                wali: '-',
+                alamat: 'Jember',
+                status: 'AKTIFF',
+                hafalanJuz: 30,
+                hafalanSurah: 'An-Nas',
+                spp: 0,
+                statusSpp: 'Lunas',
+                uangMakan: 0,
+                statusMakan: 'Lunas',
+                mutabaahAbsensi: {
+                    "Qiyamul Lail": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
+                    "Sholat Subuh": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
+                    "Sholat Dhuha": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
+                    "Sholat Maghrib + Isya’": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
+                    "Jam Malam": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir']
+                },
+                hafalanData: [],
+                paymentData: []
+            },
+            {
+                nis: 'PENGURUS-01',
+                password: '123456',
+                nama: 'H. Ridwan, S.E.',
+                role: 'pengurus',
+                kelas: 'Biro Administrasi',
+                kamar: 'Kantor Staf',
+                wa: '08333333333',
+                wali: '-',
+                alamat: 'Jember',
+                status: 'AKTIFF',
+                hafalanJuz: 5,
+                hafalanSurah: 'An-Nisa',
+                spp: 0,
+                statusSpp: 'Lunas',
+                uangMakan: 0,
+                statusMakan: 'Lunas',
+                mutabaahAbsensi: {
+                    "Qiyamul Lail": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
+                    "Sholat Subuh": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
+                    "Sholat Dhuha": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
+                    "Sholat Maghrib + Isya’": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
+                    "Jam Malam": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir']
+                },
+                hafalanData: [],
+                paymentData: []
+            },
+            {
+                nis: 'KAMAR-01',
+                password: '123456',
+                nama: 'M. Farhan (Ketua Kamar)',
+                role: 'ketua_kamar',
+                kelas: '12 MA Tahfidz',
+                kamar: 'Al-Farabi Room 01',
+                wa: '08444444444',
+                wali: 'Bapak Umar',
+                alamat: 'Bondowoso',
+                status: 'AKTIFF',
+                hafalanJuz: 15,
+                hafalanSurah: 'Al-Isra',
+                spp: 0,
+                statusSpp: 'Lunas',
+                uangMakan: 0,
+                statusMakan: 'Lunas',
+                mutabaahAbsensi: {
+                    "Qiyamul Lail": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
+                    "Sholat Subuh": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
+                    "Sholat Dhuha": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
+                    "Sholat Maghrib + Isya’": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
+                    "Jam Malam": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir']
+                },
+                hafalanData: [],
+                paymentData: []
+            },
+            {
                 nis: '202601001',
                 password: '123456',
                 nama: 'Ahmad Fauzi',
+                role: 'santri',
                 kelas: '10 MA Tahfidz',
                 kamar: 'Al-Farabi Room 01',
                 wa: '081234567890',
                 wali: 'H. Sulaiman',
-                alamat: 'Jl. Pemuda No. 45, Jember, Jawa Timur',
+                alamat: 'Jl. Pemuda No. 45, Jember',
                 status: 'AKTIFF',
                 hafalanJuz: 10,
                 hafalanSurah: 'At-Tawbah',
-                spp: 0,
+                spp: 150000,
                 statusSpp: 'Belum Lunas',
-                uangMakan: 0,
+                uangMakan: 300000,
                 statusMakan: 'Belum Lunas',
                 mutabaahAbsensi: {
                     "Qiyamul Lail": ['Hadir', 'Hadir', 'Hadir', 'Izin', 'Hadir', 'Hadir', 'Hadir'],
@@ -1162,37 +1294,7 @@
                     { tanggal: '05/08/2026', jenis: 'Ziyadah (Baru)', surah: 'Surah At-Tawbah 1-30', juz: 10, nilai: 'A (Sangat Mutqin)', ustadz: 'Ust. Abdullah' }
                 ],
                 paymentData: [
-                    { id: 'TRX-88219', tanggal: '10/07/2026', uraian: 'Syahriyah Bulan Juli 2026', nominal: 0, status: 'Belum Lunas' }
-                ]
-            },
-            {
-                nis: '202601002',
-                password: '123456',
-                nama: 'Fatimah Az-Zahra',
-                kelas: '11 MA Tahfidz',
-                kamar: 'Aisyah Room 03',
-                wa: '085678901234',
-                wali: 'Dr. Ahmad Rivaldi',
-                alamat: 'Jl. Merdeka No. 12, Banyuwangi, Jawa Timur',
-                status: 'AKTIFF',
-                hafalanJuz: 18,
-                hafalanSurah: 'Al-Kahf',
-                spp: 0,
-                statusSpp: 'Belum Lunas',
-                uangMakan: 0,
-                statusMakan: 'Belum Lunas',
-                mutabaahAbsensi: {
-                    "Qiyamul Lail": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
-                    "Sholat Subuh": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
-                    "Sholat Dhuha": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
-                    "Sholat Maghrib + Isya’": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
-                    "Jam Malam": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir']
-                },
-                hafalanData: [
-                    { tanggal: '06/08/2026', jenis: 'Ziyadah (Baru)', surah: 'Surah Al-Kahf 1-110', juz: 18, nilai: 'A (Sangat Mutqin)', ustadz: 'Ustadzah Maryam' }
-                ],
-                paymentData: [
-                    { id: 'TRX-90112', tanggal: '01/08/2026', uraian: 'Syahriyah Bulan Agustus 2026', nominal: 0, status: 'Belum Lunas' }
+                    { id: 'TRX-88219', tanggal: '10/07/2026', uraian: 'Syahriyah Bulan Juli 2026', nominal: 150000, status: 'Belum Lunas' }
                 ]
             }
         ];
@@ -1210,38 +1312,36 @@
             masterSantriData = [...initialSampleSantri];
         }
 
-        let currentActiveSantri = null;
-        let hafalanData = [];
-        let paymentData = [];
-        let chartInstance = null;
-        let currentRole = 'santri';
+        let currentUser = null; // Contains current logged-in santri object or user session
+        let activeFinancialSantri = null; // Target santri whose finances are currently viewed/managed
         let isLoggedIn = false;
+        let chartInstance = null;
         let pollingTimer = null;
 
-        window.isManagementRole = function() {
-            if (['ketua', 'bendahara', 'sekretaris'].includes(currentRole)) return true;
-            try {
-                const stored = localStorage.getItem(SESSION_STORAGE_KEY);
-                if (stored) {
-                    const session = JSON.parse(stored);
-                    if (session.role && ['ketua', 'bendahara', 'sekretaris'].includes(session.role)) {
-                        return true;
-                    }
-                }
-            } catch (e) {}
-            return false;
+        // Role Permission Helper Functions
+        window.getRoleDisplayName = function(role) {
+            switch(role) {
+                case 'ketua': return 'Ketua Umum';
+                case 'mentor': return 'Mentor';
+                case 'pengurus': return 'Pengurus';
+                case 'ketua_kamar': return 'Ketua Kamar';
+                case 'santri': default: return 'Santri Tahfidz';
+            }
         };
 
-        window.isKetuaUmum = function() {
-            if (currentRole === 'ketua') return true;
-            try {
-                const stored = localStorage.getItem(SESSION_STORAGE_KEY);
-                if (stored) {
-                    const session = JSON.parse(stored);
-                    if (session.role === 'ketua') return true;
-                }
-            } catch (e) {}
-            return false;
+        window.canManageSantriAndTanggungan = function() {
+            if (!currentUser) return false;
+            return ['ketua', 'mentor', 'pengurus'].includes(currentUser.role);
+        };
+
+        window.canEditEverything = function() {
+            if (!currentUser) return false;
+            return ['ketua', 'mentor'].includes(currentUser.role);
+        };
+
+        window.canFillAbsensi = function() {
+            if (!currentUser) return false;
+            return ['ketua', 'mentor', 'ketua_kamar'].includes(currentUser.role);
         };
 
         function checkWeeklyReset() {
@@ -1294,9 +1394,9 @@
             window.showToast("Fitur edit profil aktif", "info");
         };
 
-        function saveSession(role, nis = null) {
+        function saveSession(nis) {
             try {
-                localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify({ role, nis }));
+                localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify({ nis }));
             } catch (e) {}
         }
 
@@ -1311,24 +1411,13 @@
                 const stored = localStorage.getItem(SESSION_STORAGE_KEY);
                 if (!stored) return false;
                 const session = JSON.parse(stored);
-                if (session.role && ['ketua', 'bendahara', 'sekretaris'].includes(session.role)) {
-                    const mgmtAcc = managementAccounts[session.role];
-                    if (mgmtAcc) {
-                        currentRole = session.role;
-                        currentActiveSantri = null;
+                if (session.nis) {
+                    const matched = masterSantriData.find(s => s.nis === session.nis);
+                    if (matched) {
+                        currentUser = matched;
+                        activeFinancialSantri = matched;
                         isLoggedIn = true;
-                        setLoggedInUser(mgmtAcc.name, mgmtAcc.role, mgmtAcc.avatar, mgmtAcc.id, 'Pengurus Utama', 'Kantor Pusat');
-                        return true;
-                    }
-                } else if (session.nis) {
-                    const matchedSantri = masterSantriData.find(s => s.nis === session.nis);
-                    if (matchedSantri) {
-                        currentRole = 'santri';
-                        currentActiveSantri = matchedSantri;
-                        hafalanData = matchedSantri.hafalanData || [];
-                        paymentData = matchedSantri.paymentData || [];
-                        isLoggedIn = true;
-                        loadSantriIntoHeader(matchedSantri);
+                        loadUserIntoHeader(matched);
                         window.renderHafalanTable();
                         window.renderPaymentTable();
                         return true;
@@ -1396,6 +1485,7 @@
                         nis VARCHAR(50) PRIMARY KEY,
                         password TEXT DEFAULT '123456',
                         nama TEXT NOT NULL,
+                        role TEXT DEFAULT 'santri',
                         kelas TEXT,
                         kamar TEXT,
                         wa TEXT,
@@ -1431,6 +1521,7 @@
                         const remoteAbsensi = typeof r.mutabaah_absensi === 'string' ? JSON.parse(r.mutabaah_absensi) : (r.mutabaah_absensi || {});
                         
                         if (existingSantri) {
+                            existingSantri.role = r.role || existingSantri.role || 'santri';
                             if (!existingSantri.mutabaahAbsensi) {
                                 existingSantri.mutabaahAbsensi = remoteAbsensi;
                             }
@@ -1439,6 +1530,7 @@
                                 nis: r.nis,
                                 password: r.password || '123456',
                                 nama: r.nama,
+                                role: r.role || 'santri',
                                 kelas: r.kelas,
                                 kamar: r.kamar,
                                 wa: r.wa || '',
@@ -1477,17 +1569,18 @@
                 const pDataJson = JSON.stringify(santriObj.paymentData || []);
                 await sql`
                     INSERT INTO santri (
-                        nis, password, nama, kelas, kamar, wa, wali, alamat, status,
+                        nis, password, nama, role, kelas, kamar, wa, wali, alamat, status,
                         hafalan_juz, hafalan_surah, spp, status_spp, uang_makan, status_makan,
                         mutabaah_absensi, hafalan_data, payment_data
                     ) VALUES (
-                        ${santriObj.nis}, ${santriObj.password || '123456'}, ${santriObj.nama}, ${santriObj.kelas}, ${santriObj.kamar}, ${santriObj.wa || ''}, ${santriObj.wali || ''}, ${santriObj.alamat || ''}, ${santriObj.status},
+                        ${santriObj.nis}, ${santriObj.password || '123456'}, ${santriObj.nama}, ${santriObj.role || 'santri'}, ${santriObj.kelas}, ${santriObj.kamar}, ${santriObj.wa || ''}, ${santriObj.wali || ''}, ${santriObj.alamat || ''}, ${santriObj.status},
                         ${Number(santriObj.hafalanJuz || 0)}, ${santriObj.hafalanSurah || ''}, ${Number(santriObj.spp || 0)}, ${santriObj.statusSpp || 'Belum Lunas'}, ${Number(santriObj.uangMakan || 0)}, ${santriObj.statusMakan || 'Belum Lunas'},
                         ${mAbsJson}::jsonb, ${hDataJson}::jsonb, ${pDataJson}::jsonb
                     )
                     ON CONFLICT (nis) DO UPDATE SET
                         password = EXCLUDED.password,
                         nama = EXCLUDED.nama,
+                        role = EXCLUDED.role,
                         kelas = EXCLUDED.kelas,
                         kamar = EXCLUDED.kamar,
                         wa = EXCLUDED.wa,
@@ -1532,10 +1625,13 @@
                 return;
             }
 
-            const canManage = window.isManagementRole();
+            const canManage = window.canManageSantriAndTanggungan();
+            const canEditAll = window.canEditEverything();
+
             data.forEach(santri => {
                 const sppLunas = santri.statusSpp === 'Lunas';
                 const makanLunas = santri.statusMakan === 'Lunas';
+                const roleName = getRoleDisplayName(santri.role || 'santri');
 
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-slate-50 transition border-b border-slate-100";
@@ -1546,24 +1642,31 @@
                         <button onclick="viewSantriBiodata('${santri.nis}')" title="Lihat & Kelola Biodata" class="bg-blue-600 hover:bg-blue-700 text-white px-2.5 py-1.5 rounded-lg text-xs font-bold transition">
                             <i class="fa-solid fa-address-card"></i>
                         </button>
-                        <button onclick="openEditSantriModal('${santri.nis}')" title="Edit Data" class="bg-amber-500 hover:bg-amber-600 text-slate-950 px-2.5 py-1.5 rounded-lg text-xs font-bold transition">
+                        <button onclick="openEditSantriModal('${santri.nis}')" title="Edit Data & Peran" class="bg-amber-500 hover:bg-amber-600 text-slate-950 px-2.5 py-1.5 rounded-lg text-xs font-bold transition">
                             <i class="fa-solid fa-pen-to-square"></i>
                         </button>
-                        <button onclick="deleteSantri('${santri.nis}')" title="Hapus" class="bg-rose-600 hover:bg-rose-700 text-white px-2.5 py-1.5 rounded-lg text-xs font-bold transition">
-                            <i class="fa-solid fa-trash"></i>
-                        </button>
                     `;
+                    if (canEditAll) {
+                        actionButtons += `
+                            <button onclick="deleteSantri('${santri.nis}')" title="Hapus" class="bg-rose-600 hover:bg-rose-700 text-white px-2.5 py-1.5 rounded-lg text-xs font-bold transition">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        `;
+                    }
                 } else {
-                    actionButtons = `<span class="text-xs text-slate-400">Hanya Pengurus</span>`;
+                    actionButtons = `<span class="text-xs text-slate-400">Akses Terbatas</span>`;
                 }
 
                 tr.innerHTML = `
                     <td class="p-4">
                         <span class="font-mono font-bold text-slate-900 block text-sm">${santri.nis}</span>
-                        <span class="text-[10px] text-slate-400">Pass: ${canManage ? (santri.password || '123456') : '••••••'}</span>
+                        <span class="text-[10px] text-slate-400">Pass: ${canEditAll ? (santri.password || '123456') : '••••••'}</span>
                     </td>
-                    <td class="p-4"><div class="font-bold text-slate-900">${santri.nama}</div></td>
-                    <td class="p-4"><div class="text-sm">${santri.kelas}</div><div class="text-[11px] text-slate-400">${santri.kamar}</div></td>
+                    <td class="p-4">
+                        <div class="font-bold text-slate-900">${santri.nama}</div>
+                        <span class="inline-block mt-1 px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800 uppercase">${roleName}</span>
+                    </td>
+                    <td class="p-4"><div class="text-sm">${santri.kelas || '-'}</div><div class="text-[11px] text-slate-400">${santri.kamar || '-'}</div></td>
                     <td class="p-4"><span class="px-2.5 py-0.5 text-[10px] font-bold rounded-full ${santri.status === 'AKTIFF' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">${santri.status || 'AKTIFF'}</span></td>
                     <td class="p-4"><div class="font-bold text-emerald-700">${santri.hafalanJuz || 0} Juz</div><div class="text-[11px] text-slate-400">${santri.hafalanSurah || '-'}</div></td>
                     <td class="p-4">
@@ -1599,28 +1702,28 @@
             const selectEl = document.getElementById('absensiSantriSelect');
             if (!selectEl) return;
 
-            const isKetua = window.isKetuaUmum();
+            const canFill = window.canFillAbsensi();
             const selectWrapper = document.getElementById('absensiSelectWrapper');
             const downloadBtnWrapper = document.getElementById('absensiDownloadBtnWrapper');
             const roleBadge = document.getElementById('absensiRoleBadge');
 
-            if (!isKetua) {
+            if (!canFill) {
                 if (selectWrapper) selectWrapper.classList.add('hidden');
                 if (downloadBtnWrapper) downloadBtnWrapper.classList.add('hidden');
                 if (roleBadge) roleBadge.innerText = "Mode Lihat Absensi Mandiri (Read-Only)";
                 
-                if (currentActiveSantri) {
-                    renderAbsensiTableForSantri(currentActiveSantri);
+                if (currentUser) {
+                    renderAbsensiTableForSantri(currentUser);
                 }
                 return;
             } else {
                 if (selectWrapper) selectWrapper.classList.remove('hidden');
                 if (downloadBtnWrapper) downloadBtnWrapper.classList.remove('hidden');
-                if (roleBadge) roleBadge.innerText = "Eksklusif Ketua Umum (Auto-Save Aktif)";
+                if (roleBadge) roleBadge.innerText = `Hak Akses Absensi (${getRoleDisplayName(currentUser.role)}) - Auto-Save Aktif`;
             }
 
             const currentSelected = selectEl.value;
-            selectEl.innerHTML = masterSantriData.map(s => `<option value="${s.nis}">${s.nama} (NIS: ${s.nis})</option>`).join('');
+            selectEl.innerHTML = masterSantriData.map(s => `<option value="${s.nis}">${s.nama} (${getRoleDisplayName(s.role)})</option>`).join('');
             if (currentSelected && masterSantriData.some(s => s.nis === currentSelected)) {
                 selectEl.value = currentSelected;
             } else if (masterSantriData.length > 0) {
@@ -1668,7 +1771,7 @@
 
             tbody.innerHTML = '';
             let totalH = 0, totalI = 0, totalP = 0, totalTH = 0;
-            const isKetua = window.isKetuaUmum();
+            const canFill = window.canFillAbsensi();
 
             defaultActivitiesList.forEach((act) => {
                 const arr = santri.mutabaahAbsensi[act];
@@ -1692,7 +1795,7 @@
                         selectColorClass = 'text-rose-700 bg-rose-50 border-rose-300 font-bold';
                     }
 
-                    if (isKetua) {
+                    if (canFill) {
                         cells += `
                             <td class="p-2 text-center">
                                 <select onchange="updateAbsensiCell('${santri.nis}', '${act}', ${d}, this.value)" class="px-2.5 py-1.5 rounded-lg border text-[11px] transition shadow-sm focus:ring-2 focus:ring-emerald-600 focus:outline-none ${selectColorClass}">
@@ -1756,7 +1859,7 @@
         };
 
         window.exportAbsensiToExcel = function() {
-            if (!window.isKetuaUmum()) return;
+            if (!window.canFillAbsensi()) return;
 
             const weeklyDates = getWeeklyCalendarDates();
             const startStr = weeklyDates[0] ? `${weeklyDates[0].rawDate.getDate()} ${weeklyDates[0].rawDate.toLocaleString('id-ID', { month: 'long' })} ${weeklyDates[0].rawDate.getFullYear()}` : '';
@@ -1804,50 +1907,122 @@
             window.renderMasterSantriTable(filtered);
         };
 
+        window.loadUserIntoHeader = function(user) {
+            if (!user) return;
+            const roleName = getRoleDisplayName(user.role || 'santri');
+            document.getElementById('navUserName').innerText = user.nama;
+            document.getElementById('navUserRole').innerText = roleName;
+            document.getElementById('navUserGreeting').innerText = user.nama.split(' ')[0];
+
+            document.getElementById('dashSantriName').innerText = user.nama;
+            document.getElementById('dashSantriNis').innerText = user.nis;
+            document.getElementById('dashSantriClass').innerText = `${user.kelas || '-'} (${roleName})`;
+            document.getElementById('dashHafalanSummary').innerText = `${user.hafalanJuz || 0} Juz (${user.hafalanSurah || '-'})`;
+            
+            const sppLunas = user.statusSpp === 'Lunas';
+            const makanLunas = user.statusMakan === 'Lunas';
+            const unpaidSpp = sppLunas ? 0 : Number(user.spp || 0);
+            const unpaidMakan = makanLunas ? 0 : Number(user.uangMakan || 0);
+            const total = unpaidSpp + unpaidMakan;
+            const dashTanggungan = document.getElementById('dashTanggunganSummary');
+            if (dashTanggungan) {
+                dashTanggungan.innerText = total === 0 ? "Rp 0 (LUNAS)" : `Rp ${total.toLocaleString('id-ID')}`;
+                dashTanggungan.className = total === 0 ? "text-2xl font-bold text-emerald-600 mt-2" : "text-2xl font-bold text-rose-600 mt-2";
+            }
+        };
+
+        window.renderFinancialSummaryForSantri = function(santri) {
+            if (!santri) return;
+            const sppLunas = santri.statusSpp === 'Lunas';
+            const makanLunas = santri.statusMakan === 'Lunas';
+            const unpaidSpp = sppLunas ? 0 : Number(santri.spp || 0);
+            const unpaidMakan = makanLunas ? 0 : Number(santri.uangMakan || 0);
+            const total = unpaidSpp + unpaidMakan;
+
+            const dashSppDisplay = document.getElementById('dashSppDisplay');
+            const dashMakanDisplay = document.getElementById('dashMakanDisplay');
+            const dashTotalPayableDisplay = document.getElementById('dashTotalPayableDisplay');
+
+            if (dashSppDisplay) {
+                dashSppDisplay.innerText = `Rp ${Number(santri.spp || 0).toLocaleString('id-ID')} (${santri.statusSpp || 'Belum Lunas'})`;
+                dashSppDisplay.className = sppLunas ? "text-2xl font-extrabold text-emerald-600" : "text-2xl font-extrabold text-rose-600";
+            }
+            if (dashMakanDisplay) {
+                dashMakanDisplay.innerText = `Rp ${Number(santri.uangMakan || 0).toLocaleString('id-ID')} (${santri.statusMakan || 'Belum Lunas'})`;
+                dashMakanDisplay.className = makanLunas ? "text-2xl font-extrabold text-emerald-600" : "text-2xl font-extrabold text-rose-600";
+            }
+            if (dashTotalPayableDisplay) {
+                dashTotalPayableDisplay.innerText = total === 0 ? "Rp 0 (LUNAS)" : `Rp ${total.toLocaleString('id-ID')}`;
+                dashTotalPayableDisplay.className = total === 0 ? "text-2xl font-extrabold text-emerald-600" : "text-2xl font-extrabold text-rose-600";
+            }
+        };
+
+        window.renderPaymentTable = function() {
+            const tbody = document.getElementById('paymentTableBody');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+            
+            let list = [];
+            const targetSantri = (window.canManageSantriAndTanggungan() && activeFinancialSantri) ? activeFinancialSantri : currentUser;
+            if (targetSantri) {
+                list = targetSantri.paymentData || [];
+            }
+
+            if (list.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-slate-400">Belum ada histori pembayaran untuk santri ini.</td></tr>`;
+                return;
+            }
+
+            list.forEach(item => {
+                const isLunas = item.status === 'Lunas';
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50 border-b border-slate-100";
+                tr.innerHTML = `
+                    <td class="p-3 font-mono font-bold text-slate-700 text-sm">${item.id}</td>
+                    <td class="p-3 font-mono text-slate-500 text-sm">${item.tanggal}</td>
+                    <td class="p-3 text-slate-800">${item.uraian}</td>
+                    <td class="p-3 font-bold text-slate-900">Rp ${Number(item.nominal).toLocaleString('id-ID')}</td>
+                    <td class="p-3"><span class="px-2.5 py-0.5 rounded text-[10px] font-bold ${isLunas ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">${item.status}</span></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        };
+
+        window.onSelectTanggunganSantri = function(nis) {
+            const santri = masterSantriData.find(s => s.nis === nis);
+            if (santri) {
+                activeFinancialSantri = santri;
+                window.renderFinancialSummaryForSantri(santri);
+                window.renderPaymentTable();
+            }
+        };
+
         window.updateAllSummaries = function() {
             const totalCount = masterSantriData.length;
             const totalJuz = masterSantriData.reduce((acc, curr) => acc + Number(curr.hafalanJuz || 0), 0);
             const avgJuz = totalCount > 0 ? (totalJuz / totalCount).toFixed(1) : 0;
-            
-            let totalUnpaidSpp = 0;
-            let totalUnpaidMakan = 0;
-            masterSantriData.forEach(s => {
-                if (s.statusSpp !== 'Lunas') {
-                    totalUnpaidSpp += Number(s.spp || 0);
-                }
-                if (s.statusMakan !== 'Lunas') {
-                    totalUnpaidMakan += Number(s.uangMakan || 0);
-                }
-            });
-            const uncollectedTotal = totalUnpaidSpp + totalUnpaidMakan;
 
             const elTotal = document.getElementById('totalSantriCount');
             const elAvg = document.getElementById('avgJuzCount');
             if (elTotal) elTotal.innerText = totalCount;
             if (elAvg) elAvg.innerText = `${avgJuz} Juz`;
 
-            if (window.isManagementRole()) {
+            if (currentUser && currentUser.role === 'santri') {
+                loadUserIntoHeader(currentUser);
+                window.renderFinancialSummaryForSantri(currentUser);
+            } else if (window.canManageSantriAndTanggungan()) {
                 const dashHafalan = document.getElementById('dashHafalanSummary');
                 if (dashHafalan) dashHafalan.innerText = `Rata2 ${avgJuz} Juz`;
 
-                const dashTanggungan = document.getElementById('dashTanggunganSummary');
-                const dashSppDisplay = document.getElementById('dashSppDisplay');
-                const dashMakanDisplay = document.getElementById('dashMakanDisplay');
-                const dashTotalPayableDisplay = document.getElementById('dashTotalPayableDisplay');
-
-                if (uncollectedTotal === 0) {
-                    if (dashTanggungan) { dashTanggungan.innerText = "Rp 0 (LUNAS)"; dashTanggungan.className = "text-2xl font-extrabold text-emerald-600 mt-2"; }
-                    if (dashSppDisplay) { dashSppDisplay.innerText = "Rp 0 (LUNAS)"; dashSppDisplay.className = "text-2xl font-extrabold text-emerald-600"; }
-                    if (dashMakanDisplay) { dashMakanDisplay.innerText = "Rp 0 (LUNAS)"; dashMakanDisplay.className = "text-2xl font-extrabold text-emerald-600"; }
-                    if (dashTotalPayableDisplay) { dashTotalPayableDisplay.innerText = "Rp 0 (LUNAS)"; dashTotalPayableDisplay.className = "text-2xl font-extrabold text-emerald-600"; }
-                } else {
-                    if (dashTanggungan) { dashTanggungan.innerText = `Rp ${uncollectedTotal.toLocaleString('id-ID')}`; dashTanggungan.className = "text-2xl font-extrabold text-rose-600 mt-2"; }
-                    if (dashSppDisplay) { dashSppDisplay.innerText = `Rp ${totalUnpaidSpp.toLocaleString('id-ID')}`; dashSppDisplay.className = "text-2xl font-extrabold text-slate-900"; }
-                    if (dashMakanDisplay) { dashMakanDisplay.innerText = `Rp ${totalUnpaidMakan.toLocaleString('id-ID')}`; dashMakanDisplay.className = "text-2xl font-extrabold text-slate-900"; }
-                    if (dashTotalPayableDisplay) { dashTotalPayableDisplay.innerText = `Rp ${uncollectedTotal.toLocaleString('id-ID')}`; dashTotalPayableDisplay.className = "text-2xl font-extrabold text-rose-600"; }
+                if (!activeFinancialSantri && masterSantriData.length > 0) {
+                    activeFinancialSantri = masterSantriData[0];
                 }
-            } else if (currentActiveSantri) {
-                loadSantriIntoHeader(currentActiveSantri);
+                if (activeFinancialSantri) {
+                    window.renderFinancialSummaryForSantri(activeFinancialSantri);
+                }
+            } else if (currentUser) {
+                loadUserIntoHeader(currentUser);
+                window.renderFinancialSummaryForSantri(currentUser);
             }
         };
 
@@ -1857,11 +2032,12 @@
             tbody.innerHTML = '';
 
             let list = [];
-            if (window.isManagementRole()) {
-                if (currentActiveSantri) list = currentActiveSantri.hafalanData || [];
+            const canManage = window.canManageSantriAndTanggungan();
+            if (canManage) {
+                if (activeFinancialSantri) list = activeFinancialSantri.hafalanData || [];
                 else list = masterSantriData.flatMap(s => (s.hafalanData || []).map(h => ({ ...h, santriNama: s.nama })));
-            } else {
-                list = hafalanData || [];
+            } else if (currentUser) {
+                list = currentUser.hafalanData || [];
             }
 
             if (list.length === 0) {
@@ -1879,38 +2055,6 @@
                     <td class="p-3 font-bold text-slate-700">Juz ${item.juz}</td>
                     <td class="p-3 font-bold text-amber-700">${item.nilai}</td>
                     <td class="p-3 text-slate-600">${item.ustadz}</td>
-                `;
-                tbody.appendChild(tr);
-            });
-        };
-
-        window.renderPaymentTable = function() {
-            const tbody = document.getElementById('paymentTableBody');
-            if (!tbody) return;
-            tbody.innerHTML = '';
-            
-            let list = [];
-            if (window.isManagementRole() && !currentActiveSantri) {
-                list = masterSantriData.flatMap(s => (s.paymentData || []).map(p => ({ ...p, santriNama: s.nama })));
-            } else {
-                list = paymentData || [];
-            }
-
-            if (list.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-slate-400">Belum ada histori pembayaran.</td></tr>`;
-                return;
-            }
-
-            list.forEach(item => {
-                const isLunas = item.status === 'Lunas';
-                const tr = document.createElement('tr');
-                tr.className = "hover:bg-slate-50 border-b border-slate-100";
-                tr.innerHTML = `
-                    <td class="p-3 font-mono font-bold text-slate-700 text-sm">${item.id}</td>
-                    <td class="p-3 font-mono text-slate-500 text-sm">${item.tanggal}</td>
-                    <td class="p-3 text-slate-800">${item.uraian}</td>
-                    <td class="p-3 font-bold text-slate-900">Rp ${Number(item.nominal).toLocaleString('id-ID')}</td>
-                    <td class="p-3"><span class="px-2.5 py-0.5 rounded text-[10px] font-bold ${isLunas ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">${item.status}</span></td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -1948,8 +2092,8 @@
         };
 
         window.switchDashTab = function(tabName) {
-            const isMgmt = window.isManagementRole();
-            if (tabName === 'master-santri' && !isMgmt) tabName = 'absensi';
+            const canManage = window.canManageSantriAndTanggungan();
+            if (tabName === 'master-santri' && !canManage) tabName = 'absensi';
 
             const tabs = ['master-santri', 'absensi', 'hafalan', 'tanggungan', 'detail-santri'];
             tabs.forEach(t => {
@@ -1980,20 +2124,44 @@
                 window.initAbsensiTab();
             }
 
-            if (tabName === 'detail-santri' && isMgmt) {
+            if (tabName === 'tanggungan') {
+                const tanggunganSelectorContainer = document.getElementById('tanggunganSantriSelectorContainer');
+                const tanggunganSelect = document.getElementById('tanggunganSantriSelect');
+                if (canManage) {
+                    if (tanggunganSelectorContainer && tanggunganSelect) {
+                        tanggunganSelectorContainer.classList.remove('hidden');
+                        tanggunganSelect.innerHTML = masterSantriData.map(s => `<option value="${s.nis}">${s.nama} (${s.nis})</option>`).join('');
+                        if (!activeFinancialSantri && masterSantriData.length > 0) {
+                            activeFinancialSantri = masterSantriData[0];
+                        }
+                        if (activeFinancialSantri) {
+                            tanggunganSelect.value = activeFinancialSantri.nis;
+                            window.renderFinancialSummaryForSantri(activeFinancialSantri);
+                        }
+                    }
+                } else {
+                    if (tanggunganSelectorContainer) tanggunganSelectorContainer.classList.add('hidden');
+                    if (currentUser) {
+                        window.renderFinancialSummaryForSantri(currentUser);
+                    }
+                }
+                window.renderPaymentTable();
+            }
+
+            if (tabName === 'detail-santri' && canManage) {
                 const selectorContainer = document.getElementById('bioSantriSelectorContainer');
                 const selectEl = document.getElementById('bioSantriSelect');
                 if (selectorContainer && selectEl) {
                     selectorContainer.classList.remove('hidden');
-                    selectEl.innerHTML = masterSantriData.map(s => `<option value="${s.nis}">${s.nama} (NIS: ${s.nis})</option>`).join('');
+                    selectEl.innerHTML = masterSantriData.map(s => `<option value="${s.nis}">${s.nama} (${getRoleDisplayName(s.role)})</option>`).join('');
                     if (masterSantriData.length > 0 && !selectEl.value) {
                         selectEl.value = masterSantriData[0].nis;
                         populateBiodataForm(masterSantriData[0]);
                     }
                 }
-            } else if (tabName === 'detail-santri' && !isMgmt && currentActiveSantri) {
+            } else if (tabName === 'detail-santri' && !canManage && currentUser) {
                 document.getElementById('bioSantriSelectorContainer')?.classList.add('hidden');
-                populateBiodataForm(currentActiveSantri);
+                populateBiodataForm(currentUser);
             }
         };
 
@@ -2035,7 +2203,8 @@
             const btnOpenAddSantri = document.getElementById('btnOpenAddSantri');
             const btnAddHafalanNav = document.getElementById('btnAddHafalanNav');
 
-            const isMgmt = window.isManagementRole();
+            const canManage = window.canManageSantriAndTanggungan();
+            const canFill = window.canFillAbsensi();
 
             if (isLoggedIn) {
                 if (btnNavDashboard) btnNavDashboard.classList.remove('hidden');
@@ -2056,7 +2225,7 @@
             }
 
             if (tabBtnMaster) {
-                if (isMgmt) tabBtnMaster.classList.remove('hidden');
+                if (canManage) tabBtnMaster.classList.remove('hidden');
                 else tabBtnMaster.classList.add('hidden');
             }
 
@@ -2065,17 +2234,17 @@
             }
 
             if (btnOpenAddSantri) {
-                if (isMgmt) btnOpenAddSantri.classList.remove('hidden');
+                if (canManage) btnOpenAddSantri.classList.remove('hidden');
                 else btnOpenAddSantri.classList.add('hidden');
             }
             if (btnAddHafalanNav) {
-                if (isMgmt) btnAddHafalanNav.classList.remove('hidden');
+                if (canManage) btnAddHafalanNav.classList.remove('hidden');
                 else btnAddHafalanNav.classList.add('hidden');
             }
 
             window.renderMasterSantriTable(masterSantriData);
 
-            if (isMgmt) {
+            if (canManage) {
                 window.switchDashTab('master-santri');
             } else {
                 window.switchDashTab('absensi');
@@ -2108,13 +2277,13 @@
         window.closeChangePasswordModal = function() { document.getElementById('changePasswordModal')?.classList.add('hidden'); };
         
         window.openAddSantriModal = function() {
-            if (!window.isManagementRole()) { window.showToast("Hanya Pengurus yang dapat menambah santri.", "error"); return; }
+            if (!window.canManageSantriAndTanggungan()) { window.showToast("Akses ditolak.", "error"); return; }
             document.getElementById('addSantriModal')?.classList.remove('hidden');
         };
         window.closeAddSantriModal = function() { document.getElementById('addSantriModal')?.classList.add('hidden'); };
         
         window.openModalAddHafalan = function() {
-            if (!window.isManagementRole()) { window.showToast("Hanya Pengurus yang dapat input setoran.", "error"); return; }
+            if (!window.canManageSantriAndTanggungan()) { window.showToast("Akses ditolak.", "error"); return; }
             const selectEl = document.getElementById('inputSantriNisForHafalan');
             if (selectEl) {
                 document.getElementById('hafalanSantriSelectorContainer')?.classList.remove('hidden');
@@ -2126,9 +2295,10 @@
         
         window.openPaymentModal = function() {
             const payTotal = document.getElementById('payModalTotalAmount');
-            if (currentActiveSantri) {
-                const unpaidSpp = currentActiveSantri.statusSpp === 'Lunas' ? 0 : Number(currentActiveSantri.spp || 0);
-                const unpaidMakan = currentActiveSantri.statusMakan === 'Lunas' ? 0 : Number(currentActiveSantri.uangMakan || 0);
+            const target = (window.canManageSantriAndTanggungan() && activeFinancialSantri) ? activeFinancialSantri : currentUser;
+            if (target) {
+                const unpaidSpp = target.statusSpp === 'Lunas' ? 0 : Number(target.spp || 0);
+                const unpaidMakan = target.statusMakan === 'Lunas' ? 0 : Number(target.uangMakan || 0);
                 const totalPayable = unpaidSpp + unpaidMakan;
                 if (payTotal) {
                     payTotal.innerText = totalPayable === 0 ? 'Rp 0 (LUNAS)' : `Rp ${totalPayable.toLocaleString('id-ID')}`;
@@ -2141,12 +2311,13 @@
         window.closeMobileMenu = function() { document.getElementById('mobileMenu')?.classList.add('hidden'); };
 
         window.openEditSantriModal = function(nis) {
-            if (!window.isManagementRole()) return;
+            if (!window.canManageSantriAndTanggungan()) return;
             const santri = masterSantriData.find(s => s.nis === nis);
             if (!santri) return;
             document.getElementById('editSantriNis').value = santri.nis;
             document.getElementById('editNisDisplay').innerText = `NIS: ${santri.nis}`;
             document.getElementById('editNama').value = santri.nama || '';
+            document.getElementById('editRole').value = santri.role || 'santri';
             document.getElementById('editKelas').value = santri.kelas || '';
             document.getElementById('editKamar').value = santri.kamar || '';
             document.getElementById('editStatus').value = santri.status || 'AKTIFF';
@@ -2160,82 +2331,42 @@
         };
         window.closeEditSantriModal = function() { document.getElementById('editSantriModal')?.classList.add('hidden'); };
 
-        function setLoggedInUser(name, role, avatar, nis, kelas, kamar) {
-            document.getElementById('navUserName').innerText = name;
-            document.getElementById('navUserRole').innerText = role;
-            document.getElementById('navUserGreeting').innerText = name.split(' ')[0];
-
-            document.getElementById('dashSantriName').innerText = name;
-            document.getElementById('dashSantriNis').innerText = nis;
-            document.getElementById('dashSantriClass').innerText = kelas;
-        }
-
-        function loadSantriIntoHeader(santri) {
-            if (!santri) return;
-            setLoggedInUser(santri.nama, 'Santri Tahfidz', 'ST', santri.nis, santri.kelas, santri.kamar);
-            document.getElementById('dashHafalanSummary').innerText = `${santri.hafalanJuz || 0} Juz (${santri.hafalanSurah || '-'})`;
-            
-            const sppLunas = santri.statusSpp === 'Lunas';
-            const makanLunas = santri.statusMakan === 'Lunas';
-            const unpaidSpp = sppLunas ? 0 : Number(santri.spp || 0);
-            const unpaidMakan = makanLunas ? 0 : Number(santri.uangMakan || 0);
-            const total = unpaidSpp + unpaidMakan;
-            const dashTanggungan = document.getElementById('dashTanggunganSummary');
-            if (dashTanggungan) {
-                dashTanggungan.innerText = total === 0 ? "Rp 0 (LUNAS)" : `Rp ${total.toLocaleString('id-ID')}`;
-                dashTanggungan.className = total === 0 ? "text-2xl font-bold text-emerald-600 mt-2" : "text-2xl font-bold text-rose-600 mt-2";
-            }
-        }
-
         window.handleLoginSubmit = function(event) {
             event.preventDefault();
             const nisInput = document.getElementById('loginNis').value.trim();
             const passwordInput = document.getElementById('loginPassword').value.trim();
-            const normalizedInput = nisInput.toUpperCase();
 
-            let matchedRole = null;
-            let matchedSantri = null;
+            const matched = masterSantriData.find(s => s.nis.toUpperCase() === nisInput.toUpperCase());
 
-            if (normalizedInput === 'KETUA-UMUM' || normalizedInput === 'KETUA') matchedRole = 'ketua';
-            else if (normalizedInput === 'BENDAHARA') matchedRole = 'bendahara';
-            else if (normalizedInput === 'SEKRETARIS') matchedRole = 'sekretaris';
-            else matchedSantri = masterSantriData.find(s => s.nis === nisInput);
-
-            if (matchedRole) {
-                const mgmtAcc = managementAccounts[matchedRole];
-                if (passwordInput !== mgmtAcc.password) { window.showToast('Password salah!', 'error'); return; }
-                currentRole = matchedRole;
-                currentActiveSantri = null;
-                setLoggedInUser(mgmtAcc.name, mgmtAcc.role, mgmtAcc.avatar, mgmtAcc.id, 'Pengurus Utama', 'Kantor Pusat');
-                saveSession(matchedRole, null);
-            } else if (matchedSantri) {
-                if (passwordInput !== (matchedSantri.password || '123456')) { window.showToast('Password salah!', 'error'); return; }
-                currentRole = 'santri';
-                currentActiveSantri = matchedSantri;
-                hafalanData = matchedSantri.hafalanData || [];
-                paymentData = matchedSantri.paymentData || [];
-                loadSantriIntoHeader(matchedSantri);
+            if (matched) {
+                if (passwordInput !== (matched.password || '123456')) { 
+                    window.showToast('Password salah!', 'error'); 
+                    return; 
+                }
+                currentUser = matched;
+                activeFinancialSantri = matched;
+                isLoggedIn = true;
+                loadUserIntoHeader(matched);
                 window.renderHafalanTable();
                 window.renderPaymentTable();
-                saveSession('santri', matchedSantri.nis);
+                saveSession(matched.nis);
             } else {
-                window.showToast('Akun tidak ditemukan!', 'error');
+                window.showToast('Akun dengan NIS / ID tersebut tidak ditemukan!', 'error');
                 return;
             }
 
-            isLoggedIn = true;
             document.getElementById('publicContainer')?.classList.add('hidden');
             document.getElementById('dashboardContainer')?.classList.remove('hidden');
             updateUIPermissions();
             window.updateAllSummaries();
             window.closeLoginModal();
-            window.showToast(`Selamat datang, ${matchedRole ? managementAccounts[matchedRole].name : matchedSantri.nama}!`, 'success');
+            window.showToast(`Selamat datang, ${currentUser.nama} (${getRoleDisplayName(currentUser.role)})!`, 'success');
         };
 
         window.handleSaveBiodataSubmit = async function(event) {
             event.preventDefault();
             const nis = document.getElementById('bioNisInput').value.trim();
-            const targetSantri = window.isManagementRole() ? masterSantriData.find(s => s.nis === nis) : currentActiveSantri;
+            const targetSantri = window.canManageSantriAndTanggungan() ? masterSantriData.find(s => s.nis === nis) : currentUser;
 
             if (targetSantri) {
                 targetSantri.nama = document.getElementById('bioNamaInput').value.trim();
@@ -2257,14 +2388,11 @@
             event.preventDefault();
             const newPass = document.getElementById('newPasswordInput').value.trim();
 
-            if (window.isManagementRole()) {
-                managementAccounts[currentRole].password = newPass;
-                window.showToast("Password pengurus diubah!", "success");
-            } else if (currentActiveSantri) {
-                currentActiveSantri.password = newPass;
+            if (currentUser) {
+                currentUser.password = newPass;
                 saveToLocal();
-                await saveSantriToNeon(currentActiveSantri);
-                window.showToast("Password santri diubah!", "success");
+                await saveSantriToNeon(currentUser);
+                window.showToast("Password akun berhasil diubah!", "success");
             }
             window.closeChangePasswordModal();
             event.target.reset();
@@ -2272,13 +2400,14 @@
 
         window.handleAddSantriSubmit = async function(event) {
             event.preventDefault();
-            if (!window.isManagementRole()) return;
+            if (!window.canManageSantriAndTanggungan()) return;
 
             const nis = document.getElementById('newNis').value.trim();
             const newSantriObj = {
                 nis,
                 password: document.getElementById('newPassword').value.trim() || '123456',
                 nama: document.getElementById('newNama').value.trim(),
+                role: document.getElementById('newRole').value || 'santri',
                 kelas: document.getElementById('newKelas').value.trim() || '10 MA Tahfidz',
                 kamar: document.getElementById('newKamar').value.trim() || 'Al-Farabi 01',
                 status: document.getElementById('newStatus').value || 'AKTIFF',
@@ -2312,11 +2441,12 @@
 
         window.handleEditSantriSubmit = async function(event) {
             event.preventDefault();
-            if (!window.isManagementRole()) return;
+            if (!window.canManageSantriAndTanggungan()) return;
             const santri = masterSantriData.find(s => s.nis === document.getElementById('editSantriNis').value);
             if (!santri) return;
 
             santri.nama = document.getElementById('editNama').value.trim();
+            santri.role = document.getElementById('editRole').value || 'santri';
             santri.kelas = document.getElementById('editKelas').value.trim();
             santri.kamar = document.getElementById('editKamar').value.trim();
             santri.status = document.getElementById('editStatus').value;
@@ -2336,7 +2466,7 @@
         };
 
         window.deleteSantri = function(nis) {
-            if (!window.isManagementRole()) return;
+            if (!window.canEditEverything()) { window.showToast("Hanya Ketua Umum & Mentor yang dapat menghapus data santri.", "error"); return; }
             window.showConfirmDialog("Hapus Santri", "Hapus santri ini dari sistem?", async () => {
                 masterSantriData = masterSantriData.filter(s => s.nis !== nis);
                 saveToLocal();
@@ -2349,7 +2479,7 @@
 
         window.handleAddHafalanSubmit = async function(event) {
             event.preventDefault();
-            if (!window.isManagementRole()) return;
+            if (!window.canManageSantriAndTanggungan()) return;
             const targetSantri = masterSantriData.find(s => s.nis === document.getElementById('inputSantriNisForHafalan').value);
             if (!targetSantri) return;
 
@@ -2361,7 +2491,7 @@
                 jenis: document.getElementById('inputJenis').value,
                 surah, juz,
                 nilai: document.getElementById('inputNilai').value,
-                ustadz: 'Ust. Pengampu'
+                ustadz: currentUser ? currentUser.nama : 'Ust. Pengampu'
             });
 
             if (juz > (targetSantri.hafalanJuz || 0)) {
@@ -2380,16 +2510,32 @@
         };
 
         window.simulasikanBayarLunas = async function() {
-            if (window.isManagementRole()) { window.showToast("Gunakan menu Edit Santri pada tabel.", "info"); return; }
-            if (!currentActiveSantri) return;
-            window.showToast("Konfirmasi transfer telah dikirim ke Bendahara.", "success");
+            const target = (window.canManageSantriAndTanggungan() && activeFinancialSantri) ? activeFinancialSantri : currentUser;
+            if (!target) return;
+            target.statusSpp = 'Lunas';
+            target.statusMakan = 'Lunas';
+            target.paymentData = target.paymentData || [];
+            target.paymentData.unshift({
+                id: 'TRX-' + Math.floor(10000 + Math.random() * 90000),
+                tanggal: new Date().toLocaleDateString('id-ID'),
+                uraian: 'Pembayaran Syahriyah & Uang Makan (Lunas)',
+                nominal: Number(target.spp || 0) + Number(target.uangMakan || 0),
+                status: 'Lunas'
+            });
+
+            saveToLocal();
+            window.renderFinancialSummaryForSantri(target);
+            window.renderPaymentTable();
+            window.updateAllSummaries();
+            await saveSantriToNeon(target);
+            window.showToast("Pembayaran berhasil dikonfirmasi dan lunas!", "success");
             window.closePaymentModal();
         };
 
         window.handleLogout = function() {
             isLoggedIn = false;
-            currentActiveSantri = null;
-            currentRole = 'santri';
+            currentUser = null;
+            activeFinancialSantri = null;
             clearSession();
             document.getElementById('navUserGreeting').innerText = 'Menu';
             updateUIPermissions();
