@@ -1305,7 +1305,7 @@
         }
 
         function isManagementRole() {
-            return ['ketua', 'bendahara', 'sekretaris'].includes(currentRole);
+            return currentRole === 'ketua' || currentRole === 'bendahara' || currentRole === 'sekretaris' || ['ketua', 'bendahara', 'sekretaris'].includes(currentRole);
         }
 
         function isKetuaUmum() {
@@ -2103,7 +2103,10 @@
                 return;
             }
             const santri = masterSantriData.find(s => s.nis === nis);
-            if (!santri) return;
+            if (!santri) {
+                window.showToast("Data santri tidak ditemukan.", "error");
+                return;
+            }
             document.getElementById('editSantriNis').value = santri.nis;
             document.getElementById('editNisDisplay').innerText = `NIS: ${santri.nis}`;
             document.getElementById('editNama').value = santri.nama || '';
