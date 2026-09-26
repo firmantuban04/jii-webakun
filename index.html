@@ -13,6 +13,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Chart.js for Hafalan Visualization -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- html2pdf.js for direct PDF downloads -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <script>
         tailwind.config = {
@@ -1889,97 +1891,76 @@
                 `;
             });
 
-            const pdfWindow = window.open('', '_blank');
-            if (!pdfWindow) {
-                window.showToast("Pop-up diblokir oleh browser. Izinkan pop-up untuk mengunduh PDF.", "error");
-                return;
-            }
+            // Create a temporary container for PDF generation
+            const element = document.createElement('div');
+            element.style.padding = '20px';
+            element.style.background = '#ffffff';
+            element.style.fontFamily = 'Inter, sans-serif';
+            element.style.color = '#1e293b';
+            element.style.width = '800px';
 
-            pdfWindow.document.write(`
-                <!DOCTYPE html>
-                <html lang="id">
-                <head>
-                    <meta charset="UTF-8">
-                    <title>Rekap Absensi Mutaba'ah - Jember Islamic Institute</title>
-                    <style>
-                        body { font-family: 'Inter', sans-serif; color: #1e293b; padding: 30px; margin: 0; background: #ffffff; }
-                        .header { text-align: center; border-bottom: 3px double #047857; padding-bottom: 15px; margin-bottom: 25px; }
-                        .header h1 { font-size: 22px; font-weight: 900; color: #064e3b; margin: 0; text-transform: uppercase; letter-spacing: 1px; }
-                        .header h2 { font-size: 14px; font-weight: 700; color: #d97706; margin: 5px 0 0 0; }
-                        .header p { font-size: 11px; color: #64748b; margin: 4px 0 0 0; }
-                        .meta-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 16px; margin-bottom: 20px; font-size: 12px; display: flex; justify-content: space-between; }
-                        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 11px; }
-                        th { background: #047857; color: #ffffff; border: 1px solid #047857; padding: 10px 8px; text-transform: uppercase; font-size: 10px; letter-spacing: 0.5px; }
-                        .footer { margin-top: 40px; display: flex; justify-content: flex-end; }
-                        .signature-box { text-align: center; font-size: 12px; }
-                        .signature-space { height: 60px; }
-                        @media print {
-                            body { padding: 10px; }
-                            button { display: none !important; }
-                        }
-                    </style>
-                </head>
-                <body>
-                    <div style="text-align: right; margin-bottom: 15px;">
-                        <button onclick="window.print()" style="background: #047857; color: white; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 12px;">Cetak / Simpan ke PDF</button>
+            element.innerHTML = `
+                <div style="text-align: center; border-bottom: 3px double #047857; padding-bottom: 15px; margin-bottom: 20px;">
+                    <h1 style="font-size: 20px; font-weight: 900; color: #064e3b; margin: 0; text-transform: uppercase;">Jember Islamic Institute</h1>
+                    <h2 style="font-size: 13px; font-weight: 700; color: #d97706; margin: 4px 0 0 0;">Pondok Pesantren Tahfidzul Qur'an Modern</h2>
+                    <p style="font-size: 10px; color: #64748b; margin: 3px 0 0 0;">Jl. Raya Pondok Pesantren No. 01, Kabupaten Jember, Jawa Timur | Telp: (0331) 8899-2121</p>
+                </div>
+
+                <div style="text-align: center; margin-bottom: 15px;">
+                    <h3 style="font-size: 14px; font-weight: 800; color: #0f172a; margin: 0;">REKAPITULASI ABSENSI MUTABAAH HARIAN MAHASANTRI</h3>
+                    <p style="font-size: 11px; color: #475569; margin: 3px 0 0 0;">Periode: <strong>${rangeText}</strong></p>
+                </div>
+
+                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 10px 14px; margin-bottom: 15px; font-size: 11px; display: flex; justify-content: space-between;">
+                    <div><strong>Lembaga:</strong> Jember Islamic Institute (JII)</div>
+                    <div><strong>Tanggal Cetak:</strong> ${printDateStr}</div>
+                    <div><strong>Status:</strong> Resmi & Terverifikasi</div>
+                </div>
+
+                <table style="width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 10px;">
+                    <thead>
+                        <tr>
+                            <th style="background: #047857; color: #ffffff; border: 1px solid #047857; padding: 8px 6px; text-align: center;">No</th>
+                            <th style="background: #047857; color: #ffffff; border: 1px solid #047857; padding: 8px 6px; text-align: left;">Nama Mahasantri</th>
+                            <th style="background: #047857; color: #ffffff; border: 1px solid #047857; padding: 8px 6px; text-align: center;">NIS</th>
+                            <th style="background: #047857; color: #ffffff; border: 1px solid #047857; padding: 8px 6px; text-align: center;">Kelas</th>
+                            <th style="background: #047857; color: #ffffff; border: 1px solid #047857; padding: 8px 6px; text-align: center;">Hadir</th>
+                            <th style="background: #047857; color: #ffffff; border: 1px solid #047857; padding: 8px 6px; text-align: center;">Izin</th>
+                            <th style="background: #047857; color: #ffffff; border: 1px solid #047857; padding: 8px 6px; text-align: center;">Pulang</th>
+                            <th style="background: #047857; color: #ffffff; border: 1px solid #047857; padding: 8px 6px; text-align: center;">Alpha</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${rowsHTML}
+                    </tbody>
+                </table>
+
+                <div style="margin-top: 30px; display: flex; justify-content: flex-end;">
+                    <div style="text-align: center; font-size: 11px;">
+                        <p style="margin: 0;">Jember, ${printDateStr}</p>
+                        <p style="font-weight: bold; margin: 2px 0;">Mengetahui,</p>
+                        <p style="font-weight: bold; margin: 0;">Dewan Pimpinan & Pengasuh Pesantren</p>
+                        <div style="height: 50px;"></div>
+                        <p style="font-weight: bold; text-decoration: underline; margin: 0;">K.H. Ahmad Dahlan, M.A.</p>
+                        <p style="font-size: 9px; color: #64748b; margin: 0;">Ketua Umum JII</p>
                     </div>
+                </div>
+            `;
 
-                    <div class="header">
-                        <h1>Jember Islamic Institute</h1>
-                        <h2>Pondok Pesantren Tahfidzul Qur'an Modern</h2>
-                        <p>Jl. Raya Pondok Pesantren No. 01, Kabupaten Jember, Jawa Timur | Telp: (0331) 8899-2121</p>
-                    </div>
+            const opt = {
+                margin:       10,
+                filename:     `Rekap_Absensi_Mutabaah_${startStr.replace(/ /g, '_')}.pdf`,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
 
-                    <div style="text-align: center; margin-bottom: 20px;">
-                        <h3 style="font-size: 15px; font-weight: 800; color: #0f172a; margin: 0;">REKAPITULASI ABSENSI MUTABAAH HARIAN MAHASANTRI</h3>
-                        <p style="font-size: 12px; color: #475569; margin: 4px 0 0 0;">Periode: <strong>${rangeText}</strong></p>
-                    </div>
-
-                    <div class="meta-box">
-                        <div><strong>Lembaga:</strong> Jember Islamic Institute (JII)</div>
-                        <div><strong>Tanggal Cetak:</strong> ${printDateStr}</div>
-                        <div><strong>Status Dokumen:</strong> Resmi & Terverifikasi</div>
-                    </div>
-
-                    <table>
-                        <thead>
-                            <tr>
-                                <th style="width: 5%;">No</th>
-                                <th style="width: 33%;">Nama Mahasantri</th>
-                                <th style="width: 15%;">NIS</th>
-                                <th style="width: 15%;">Kelas</th>
-                                <th style="width: 8%;">Hadir</th>
-                                <th style="width: 8%;">Izin</th>
-                                <th style="width: 8%;">Pulang</th>
-                                <th style="width: 8%;">Alpha</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${rowsHTML}
-                        </tbody>
-                    </table>
-
-                    <div class="footer">
-                        <div class="signature-box">
-                            <p>Jember, ${printDateStr}</p>
-                            <p style="font-weight: bold; margin: 2px 0;">Mengetahui,</p>
-                            <p style="font-weight: bold;">Dewan Pimpinan & Pengasuh Pesantren</p>
-                            <div class="signature-space"></div>
-                            <p style="font-weight: bold; text-decoration: underline;">K.H. Ahmad Dahlan, M.A.</p>
-                            <p style="font-size: 10px; color: #64748b; margin: 0;">Ketua Umum JII</p>
-                        </div>
-                    </div>
-
-                    <script>
-                        window.onload = function() {
-                            setTimeout(() => { window.print(); }, 500);
-                        };
-                    <\/script>
-                </body>
-                </html>
-            `);
-            pdfWindow.document.close();
-            window.showToast("Jendela cetak PDF profesional berhasil dibuka!", "success");
+            window.showToast("Sedang menghasilkan file PDF...", "info");
+            html2pdf().from(element).set(opt).save().then(() => {
+                window.showToast("File PDF berhasil diunduh!", "success");
+            }).catch(err => {
+                window.showToast("Gagal mengunduh PDF.", "error");
+            });
         };
 
         window.filterMasterSantri = function() {
