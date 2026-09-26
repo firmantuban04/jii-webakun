@@ -371,6 +371,7 @@
             </footer>
         </div>
 
+        <!-- DASHBOARD SIM VIEW -->
         <div id="dashboardContainer" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
             <div class="bg-white rounded-2xl shadow-lg border border-slate-200/60 p-6">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
@@ -486,22 +487,22 @@
                     </div>
 
                     <!-- TAB ABSENSI MUTABA'AH HARIAN -->
-        <div id="tabAbsensi" class="dash-tab-content space-y-6">
-            <div class="bg-gradient-to-r from-emerald-900 via-emerald-800 to-slate-900 text-white p-6 rounded-2xl shadow-lg flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border border-emerald-700/30">
-                <div>
-                    <span id="absensiRoleBadge" class="inline-block px-3 py-1 bg-amber-400/20 text-amber-200 font-bold text-[10px] rounded-full uppercase tracking-wider border border-amber-400/30 mb-2">Absensi Mutaba'ah Harian</span>
-                    <h3 class="text-xl font-extrabold">Absensi Mutaba'ah Harian Mahasantri (7 Hari - Mulai Minggu)</h3>
-                    <p id="absensiWeekRangeLabel" class="text-xs text-emerald-200 mt-1">Periode Minggu Ini: Memuat tanggal...</p>
-                </div>
-                <div id="absensiDownloadBtnWrapper">
-                    <button onclick="exportAbsensiToPDF()" class="bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 font-extrabold px-5 py-3 rounded-xl text-xs shadow-lg transition transform hover:scale-105 flex items-center space-x-2">
-                        <i class="fa-solid fa-file-pdf text-rose-700 text-sm"></i>
-                        <span>Download Rekap PDF Profesional</span>
-                    </button>
-                </div>
-            </div>
+                    <div id="tabAbsensi" class="dash-tab-content space-y-6">
+                        <div class="bg-gradient-to-r from-emerald-900 via-emerald-800 to-slate-900 text-white p-6 rounded-2xl shadow-lg flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border border-emerald-700/30">
+                            <div>
+                                <span id="absensiRoleBadge" class="inline-block px-3 py-1 bg-amber-400/20 text-amber-200 font-bold text-[10px] rounded-full uppercase tracking-wider border border-amber-400/30 mb-2">Absensi Mutaba'ah Harian</span>
+                                <h3 class="text-xl font-extrabold">Absensi Mutaba'ah Harian Mahasantri (7 Hari - Mulai Minggu)</h3>
+                                <p id="absensiWeekRangeLabel" class="text-xs text-emerald-200 mt-1">Periode Minggu Ini: Memuat tanggal...</p>
+                            </div>
+                            <div id="absensiDownloadBtnWrapper">
+                                <button onclick="exportAbsensiToPDF()" class="bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 font-extrabold px-5 py-3 rounded-xl text-xs shadow-lg transition transform hover:scale-105 flex items-center space-x-2">
+                                    <i class="fa-solid fa-file-pdf text-rose-700 text-sm"></i>
+                                    <span>Download Rekap PDF Profesional</span>
+                                </button>
+                            </div>
+                        </div>
 
-            <!-- Rekap Ringkasan -->
+                        <!-- Rekap Ringkasan -->
                         <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
                             <div class="bg-gradient-to-br from-emerald-50 to-emerald-50/50 p-4 rounded-xl border border-emerald-200">
                                 <span class="text-[11px] font-bold text-emerald-800 uppercase tracking-wider">Total Hadir</span>
@@ -697,6 +698,7 @@
         </div>
     </main>
 
+    <!-- SETTINGS MODAL -->
     <div id="settingsModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4 overflow-y-auto">
         <div class="bg-white w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden my-8 animate-slide-up">
             <div class="bg-gradient-to-r from-emerald-700 to-emerald-800 text-white p-6 flex justify-between items-center">
@@ -1859,13 +1861,14 @@
         window.exportAbsensiToPDF = function() {
             if (!window.canFillAbsensi()) return;
 
+            window.showToast("Menyiapkan dokumen PDF, mohon tunggu sebentar...", "info");
+
             const weeklyDates = getWeeklyCalendarDates();
             const startStr = weeklyDates[0] ? `${weeklyDates[0].rawDate.getDate()} ${weeklyDates[0].rawDate.toLocaleString('id-ID', { month: 'long' })} ${weeklyDates[0].rawDate.getFullYear()}` : '';
             const endStr = weeklyDates[6] ? `${weeklyDates[6].rawDate.getDate()} ${weeklyDates[6].rawDate.toLocaleString('id-ID', { month: 'long' })} ${weeklyDates[6].rawDate.getFullYear()}` : '';
             const rangeText = `${startStr} s.d. ${endStr}`;
-            const printDateStr = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
 
-            let rowsHTML = '';
+            let rowsHtml = '';
             masterSantriData.forEach((santri, idx) => {
                 let h = 0, i = 0, p = 0, th = 0;
                 defaultActivitiesList.forEach(act => {
@@ -1877,87 +1880,76 @@
                         else if (status === 'Tidak Hadir') th++;
                     });
                 });
-                rowsHTML += `
-                    <tr>
-                        <td style="border: 1px solid #cbd5e1; padding: 8px; text-align: center;">${idx + 1}</td>
-                        <td style="border: 1px solid #cbd5e1; padding: 8px; font-weight: bold;">${santri.nama}</td>
-                        <td style="border: 1px solid #cbd5e1; padding: 8px; font-family: monospace; text-align: center;">${santri.nis}</td>
-                        <td style="border: 1px solid #cbd5e1; padding: 8px; text-align: center;">${santri.kelas || '-'}</td>
-                        <td style="border: 1px solid #cbd5e1; padding: 8px; text-align: center; color: #047857; font-weight: bold;">${h}</td>
-                        <td style="border: 1px solid #cbd5e1; padding: 8px; text-align: center; color: #d97706; font-weight: bold;">${i}</td>
-                        <td style="border: 1px solid #cbd5e1; padding: 8px; text-align: center; color: #2563eb; font-weight: bold;">${p}</td>
-                        <td style="border: 1px solid #cbd5e1; padding: 8px; text-align: center; color: #e11d48; font-weight: bold;">${th}</td>
+                rowsHtml += `
+                    <tr style="border-bottom: 1px solid #cbd5e1; text-align: left;">
+                        <td style="padding: 8px; font-size: 10px;">${idx + 1}</td>
+                        <td style="padding: 8px; font-size: 10px; font-weight: bold;">${santri.nama}</td>
+                        <td style="padding: 8px; font-size: 10px; font-family: monospace;">${santri.nis}</td>
+                        <td style="padding: 8px; font-size: 10px;">${santri.kelas || '-'}</td>
+                        <td style="padding: 8px; font-size: 10px; text-align: center; color: #047857; font-weight: bold;">${h}</td>
+                        <td style="padding: 8px; font-size: 10px; text-align: center; color: #d97706; font-weight: bold;">${i}</td>
+                        <td style="padding: 8px; font-size: 10px; text-align: center; color: #2563eb; font-weight: bold;">${p}</td>
+                        <td style="padding: 8px; font-size: 10px; text-align: center; color: #e11d48; font-weight: bold;">${th}</td>
                     </tr>
                 `;
             });
 
-            // Create a temporary container for PDF generation
-            const element = document.createElement('div');
-            element.style.padding = '20px';
-            element.style.background = '#ffffff';
-            element.style.fontFamily = 'Inter, sans-serif';
-            element.style.color = '#1e293b';
-            element.style.width = '800px';
+            const container = document.createElement('div');
+            container.style.padding = '25px';
+            container.style.background = '#ffffff';
+            container.style.color = '#1e293b';
+            container.style.fontFamily = 'Inter, sans-serif';
+            container.style.width = '750px';
 
-            element.innerHTML = `
-                <div style="text-align: center; border-bottom: 3px double #047857; padding-bottom: 15px; margin-bottom: 20px;">
-                    <h1 style="font-size: 20px; font-weight: 900; color: #064e3b; margin: 0; text-transform: uppercase;">Jember Islamic Institute</h1>
-                    <h2 style="font-size: 13px; font-weight: 700; color: #d97706; margin: 4px 0 0 0;">Pondok Pesantren Tahfidzul Qur'an Modern</h2>
-                    <p style="font-size: 10px; color: #64748b; margin: 3px 0 0 0;">Jl. Raya Pondok Pesantren No. 01, Kabupaten Jember, Jawa Timur | Telp: (0331) 8899-2121</p>
+            container.innerHTML = `
+                <div style="border-bottom: 3px double #047857; padding-bottom: 12px; margin-bottom: 15px;">
+                    <h2 style="margin: 0; color: #047857; font-size: 18px; font-weight: 800; text-align: center;">PONDOK PESANTREN JEMBER ISLAMIC INSTITUTE</h2>
+                    <p style="margin: 3px 0 0; font-size: 10px; color: #64748b; font-weight: 600; text-align: center;">Jl. Raya Pondok Pesantren No. 01, Kabupaten Jember, Jawa Timur</p>
+                    <p style="margin: 2px 0 0; font-size: 9px; color: #d97706; font-weight: bold; text-align: center;">Tagline: "Excellent With Al-Qur'an"</p>
                 </div>
 
                 <div style="text-align: center; margin-bottom: 15px;">
-                    <h3 style="font-size: 14px; font-weight: 800; color: #0f172a; margin: 0;">REKAPITULASI ABSENSI MUTABAAH HARIAN MAHASANTRI</h3>
-                    <p style="font-size: 11px; color: #475569; margin: 3px 0 0 0;">Periode: <strong>${rangeText}</strong></p>
+                    <h3 style="margin: 0; font-size: 13px; color: #0f172a; text-transform: uppercase; font-weight: bold;">REKAPITULASI ABSENSI MUTABAAH HARIAN</h3>
+                    <p style="margin: 4px 0 0; font-size: 10px; color: #475569;">Periode: <strong>${rangeText}</strong></p>
                 </div>
 
-                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 10px 14px; margin-bottom: 15px; font-size: 11px; display: flex; justify-content: space-between;">
-                    <div><strong>Lembaga:</strong> Jember Islamic Institute (JII)</div>
-                    <div><strong>Tanggal Cetak:</strong> ${printDateStr}</div>
-                    <div><strong>Status:</strong> Resmi & Terverifikasi</div>
-                </div>
-
-                <table style="width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 10px;">
+                <table style="width: 100%; border-collapse: collapse; margin-bottom: 25px;">
                     <thead>
-                        <tr>
-                            <th style="background: #047857; color: #ffffff; border: 1px solid #047857; padding: 8px 6px; text-align: center;">No</th>
-                            <th style="background: #047857; color: #ffffff; border: 1px solid #047857; padding: 8px 6px; text-align: left;">Nama Mahasantri</th>
-                            <th style="background: #047857; color: #ffffff; border: 1px solid #047857; padding: 8px 6px; text-align: center;">NIS</th>
-                            <th style="background: #047857; color: #ffffff; border: 1px solid #047857; padding: 8px 6px; text-align: center;">Kelas</th>
-                            <th style="background: #047857; color: #ffffff; border: 1px solid #047857; padding: 8px 6px; text-align: center;">Hadir</th>
-                            <th style="background: #047857; color: #ffffff; border: 1px solid #047857; padding: 8px 6px; text-align: center;">Izin</th>
-                            <th style="background: #047857; color: #ffffff; border: 1px solid #047857; padding: 8px 6px; text-align: center;">Pulang</th>
-                            <th style="background: #047857; color: #ffffff; border: 1px solid #047857; padding: 8px 6px; text-align: center;">Alpha</th>
+                        <tr style="background: #047857; color: #ffffff; font-size: 10px; text-transform: uppercase;">
+                            <th style="padding: 8px; text-align: left;">No</th>
+                            <th style="padding: 8px; text-align: left;">Nama Mahasantri</th>
+                            <th style="padding: 8px; text-align: left;">NIS</th>
+                            <th style="padding: 8px; text-align: left;">Kelas</th>
+                            <th style="padding: 8px; text-align: center;">Hadir</th>
+                            <th style="padding: 8px; text-align: center;">Izin</th>
+                            <th style="padding: 8px; text-align: center;">Pulang</th>
+                            <th style="padding: 8px; text-align: center;">Absen</th>
                         </tr>
                     </thead>
                     <tbody>
-                        ${rowsHTML}
+                        ${rowsHtml}
                     </tbody>
                 </table>
 
-                <div style="margin-top: 30px; display: flex; justify-content: flex-end;">
-                    <div style="text-align: center; font-size: 11px;">
-                        <p style="margin: 0;">Jember, ${printDateStr}</p>
-                        <p style="font-weight: bold; margin: 2px 0;">Mengetahui,</p>
-                        <p style="font-weight: bold; margin: 0;">Dewan Pimpinan & Pengasuh Pesantren</p>
-                        <div style="height: 50px;"></div>
-                        <p style="font-weight: bold; text-decoration: underline; margin: 0;">K.H. Ahmad Dahlan, M.A.</p>
-                        <p style="font-size: 9px; color: #64748b; margin: 0;">Ketua Umum JII</p>
+                <div style="display: flex; justify-content: flex-end; margin-top: 30px;">
+                    <div style="text-align: center; font-size: 10px;">
+                        <p style="margin: 0;">Jember, ${new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
+                        <p style="margin: 2px 0 35px;">Ketua Umum / Pimpinan Pesantren,</p>
+                        <strong style="border-bottom: 1px solid #1e293b; padding-bottom: 2px;">K.H. Ahmad Dahlan, M.A.</strong>
                     </div>
                 </div>
             `;
 
             const opt = {
                 margin:       10,
-                filename:     `Rekap_Absensi_Mutabaah_${startStr.replace(/ /g, '_')}.pdf`,
+                filename:     `Rekap_Mutabaah_${startStr.replace(/ /g, '_')}_sampai_${endStr.replace(/ /g, '_')}.pdf`,
                 image:        { type: 'jpeg', quality: 0.98 },
                 html2canvas:  { scale: 2, useCORS: true },
                 jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
             };
 
-            window.showToast("Sedang menghasilkan file PDF...", "info");
-            html2pdf().from(element).set(opt).save().then(() => {
-                window.showToast("File PDF berhasil diunduh!", "success");
+            html2pdf().from(container).set(opt).save().then(() => {
+                window.showToast("File PDF berhasil diunduh secara instan!", "success");
             }).catch(err => {
                 window.showToast("Gagal mengunduh PDF.", "error");
             });
