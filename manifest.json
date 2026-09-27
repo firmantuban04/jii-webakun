@@ -2,8 +2,8 @@
   "name": "Jember Islamic Institute",
   "short_name": "JII SIM",
   "description": "Aplikasi Sistem Informasi Manajemen dan Tahfidz Pondok Pesantren Jember Islamic Institute - Excellent With Al-Qur'an",
-  "start_url": "/",
-  "display": "standalone",
+  "start_url": "https://jember-islamic-institute.vercel.app/",
+  "display": "fullscreen",
   "background_color": "#022c22",
   "theme_color": "#047857",
   "icons": [
@@ -19,5 +19,16 @@
       "type": "image/png",
       "purpose": "any maskable"
     }
+  ],
+  "lang": "id",
+  "dir": "auto",
+  "id": "https://jember-islamic-institute.vercel.app/",
+  "orientation": "any",
+  "display_override": [
+    "browser",
+    "fullscreen",
+    "window-controls-overlay",
+    "minimal-ui",
+    "standalone"
   ]
 }
