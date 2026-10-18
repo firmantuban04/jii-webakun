@@ -1155,12 +1155,17 @@
         let neonConnectionString = localStorage.getItem(NEON_STORAGE_KEY) || DEFAULT_NEON_CONN;
         let sql = null;
 
+        // Daftar kegiatan mutabaah harian & mentor sesuai dengan gambar
         const defaultActivitiesList = [
-            "Qiyamul Lail",
-            "Sholat Subuh",
-            "Sholat Dhuha",
-            "Sholat Maghrib + Isya’",
-            "Jam Malam"
+            "qiyamul lail",
+            "shalat shubuh",
+            "tilawah",
+            "shalat dhuha",
+            "shalat maghrib + isya",
+            "jam malam",
+            "setoran",
+            "1/4 binnadzor / 14 bilghoib / praktek tahsin",
+            "tahsin / kitab / murojaah / kegiatan pengurus"
         ];
 
         const initialSampleSantri = [
@@ -1182,11 +1187,15 @@
                 uangMakan: 0,
                 statusMakan: 'Lunas',
                 mutabaahAbsensi: {
-                    "Qiyamul Lail": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
-                    "Sholat Subuh": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
-                    "Sholat Dhuha": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
-                    "Sholat Maghrib + Isya’": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
-                    "Jam Malam": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir']
+                    "qiyamul lail": ['Libur', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
+                    "shalat shubuh": ['Libur', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
+                    "tilawah": ['Libur', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
+                    "shalat dhuha": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
+                    "shalat maghrib + isya": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Libur'],
+                    "jam malam": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
+                    "setoran": ['Libur', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
+                    "1/4 binnadzor / 14 bilghoib / praktek tahsin": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Libur'],
+                    "tahsin / kitab / murojaah / kegiatan pengurus": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Libur']
                 },
                 hafalanData: [],
                 paymentData: []
@@ -1209,11 +1218,15 @@
                 uangMakan: 0,
                 statusMakan: 'Lunas',
                 mutabaahAbsensi: {
-                    "Qiyamul Lail": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
-                    "Sholat Subuh": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
-                    "Sholat Dhuha": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
-                    "Sholat Maghrib + Isya’": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
-                    "Jam Malam": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir']
+                    "qiyamul lail": ['Libur', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
+                    "shalat shubuh": ['Libur', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
+                    "tilawah": ['Libur', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
+                    "shalat dhuha": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
+                    "shalat maghrib + isya": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Libur'],
+                    "jam malam": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
+                    "setoran": ['Libur', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
+                    "1/4 binnadzor / 14 bilghoib / praktek tahsin": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Libur'],
+                    "tahsin / kitab / murojaah / kegiatan pengurus": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Libur']
                 },
                 hafalanData: [],
                 paymentData: []
@@ -1236,11 +1249,15 @@
                 uangMakan: 0,
                 statusMakan: 'Lunas',
                 mutabaahAbsensi: {
-                    "Qiyamul Lail": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
-                    "Sholat Subuh": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
-                    "Sholat Dhuha": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
-                    "Sholat Maghrib + Isya’": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
-                    "Jam Malam": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir']
+                    "qiyamul lail": ['Libur', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
+                    "shalat shubuh": ['Libur', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
+                    "tilawah": ['Libur', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
+                    "shalat dhuha": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
+                    "shalat maghrib + isya": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Libur'],
+                    "jam malam": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
+                    "setoran": ['Libur', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
+                    "1/4 binnadzor / 14 bilghoib / praktek tahsin": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Libur'],
+                    "tahsin / kitab / murojaah / kegiatan pengurus": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Libur']
                 },
                 hafalanData: [],
                 paymentData: []
@@ -1263,11 +1280,15 @@
                 uangMakan: 0,
                 statusMakan: 'Lunas',
                 mutabaahAbsensi: {
-                    "Qiyamul Lail": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
-                    "Sholat Subuh": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
-                    "Sholat Dhuha": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
-                    "Sholat Maghrib + Isya’": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
-                    "Jam Malam": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir']
+                    "qiyamul lail": ['Libur', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
+                    "shalat shubuh": ['Libur', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
+                    "tilawah": ['Libur', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
+                    "shalat dhuha": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
+                    "shalat maghrib + isya": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Libur'],
+                    "jam malam": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
+                    "setoran": ['Libur', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
+                    "1/4 binnadzor / 14 bilghoib / praktek tahsin": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Libur'],
+                    "tahsin / kitab / murojaah / kegiatan pengurus": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Libur']
                 },
                 hafalanData: [],
                 paymentData: []
@@ -1290,11 +1311,15 @@
                 uangMakan: 300000,
                 statusMakan: 'Belum Lunas',
                 mutabaahAbsensi: {
-                    "Qiyamul Lail": ['Hadir', 'Hadir', 'Hadir', 'Izin', 'Hadir', 'Hadir', 'Hadir'],
-                    "Sholat Subuh": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
-                    "Sholat Dhuha": ['Hadir', 'Hadir', 'Izin', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
-                    "Sholat Maghrib + Isya’": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
-                    "Jam Malam": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Pulang', 'Hadir', 'Hadir']
+                    "qiyamul lail": ['Libur', 'Hadir', 'Hadir', 'Izin', 'Hadir', 'Hadir', 'Hadir'],
+                    "shalat shubuh": ['Libur', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
+                    "tilawah": ['Libur', 'Hadir', 'Izin', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
+                    "shalat dhuha": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
+                    "shalat maghrib + isya": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Pulang', 'Hadir', 'Libur'],
+                    "jam malam": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
+                    "setoran": ['Libur', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
+                    "1/4 binnadzor / 14 bilghoib / praktek tahsin": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Libur'],
+                    "tahsin / kitab / murojaah / kegiatan pengurus": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Libur']
                 },
                 hafalanData: [
                     { tanggal: '05/08/2026', jenis: 'Ziyadah (Baru)', surah: 'Surah At-Tawbah 1-30', juz: 10, nilai: 'A (Sangat Mutqin)', ustadz: 'Ust. Abdullah' }
@@ -1372,7 +1397,7 @@
                     masterSantriData.forEach(santri => {
                         if (santri.mutabaahAbsensi) {
                             defaultActivitiesList.forEach(act => {
-                                santri.mutabaahAbsensi[act] = ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'];
+                                santri.mutabaahAbsensi[act] = ['Libur', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'];
                             });
                             saveSantriToNeon(santri);
                         }
@@ -1770,7 +1795,7 @@
 
             defaultActivitiesList.forEach(act => {
                 if (!santri.mutabaahAbsensi[act] || santri.mutabaahAbsensi[act].length !== 7) {
-                    santri.mutabaahAbsensi[act] = ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'];
+                    santri.mutabaahAbsensi[act] = ['Libur', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'];
                 }
             });
 
@@ -1798,6 +1823,8 @@
                         selectColorClass = 'text-blue-700 bg-blue-50 border-blue-300 font-bold';
                     } else if (status === 'Tidak Hadir') {
                         selectColorClass = 'text-rose-700 bg-rose-50 border-rose-300 font-bold';
+                    } else if (status === 'Libur') {
+                        selectColorClass = 'text-purple-700 bg-purple-50 border-purple-300 font-bold';
                     }
 
                     if (canFill) {
@@ -1808,6 +1835,7 @@
                                     <option value="Izin" ${status === 'Izin' ? 'selected' : ''} class="text-amber-700 font-semibold bg-amber-50">Izin</option>
                                     <option value="Pulang" ${status === 'Pulang' ? 'selected' : ''} class="text-blue-700 font-semibold bg-blue-50">Pulang</option>
                                     <option value="Tidak Hadir" ${status === 'Tidak Hadir' ? 'selected' : ''} class="text-rose-700 font-semibold bg-rose-50">Tidak Hadir</option>
+                                    <option value="Libur" ${status === 'Libur' ? 'selected' : ''} class="text-purple-700 font-semibold bg-purple-50">Libur</option>
                                 </select>
                             </td>
                         `;
@@ -1816,6 +1844,7 @@
                         if (status === 'Izin') badgeColor = 'text-amber-700 bg-amber-50 border-amber-200';
                         else if (status === 'Pulang') badgeColor = 'text-blue-700 bg-blue-50 border-blue-200';
                         else if (status === 'Tidak Hadir') badgeColor = 'text-rose-700 bg-rose-50 border-rose-200';
+                        else if (status === 'Libur') badgeColor = 'text-purple-700 bg-purple-50 border-purple-200';
 
                         cells += `
                             <td class="p-2 text-center">
@@ -1838,7 +1867,7 @@
             const santri = masterSantriData.find(s => s.nis === nis);
             if (!santri) return;
             if (!santri.mutabaahAbsensi) santri.mutabaahAbsensi = {};
-            if (!santri.mutabaahAbsensi[act]) santri.mutabaahAbsensi[act] = ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'];
+            if (!santri.mutabaahAbsensi[act]) santri.mutabaahAbsensi[act] = ['Libur', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'];
 
             santri.mutabaahAbsensi[act][dayIndex] = val;
             saveToLocal();
@@ -1877,7 +1906,7 @@
             masterSantriData.forEach((santri, idx) => {
                 let h = 0, i = 0, p = 0, th = 0;
                 defaultActivitiesList.forEach(act => {
-                    const arr = (santri.mutabaahAbsensi && santri.mutabaahAbsensi[act]) ? santri.mutabaahAbsensi[act] : ['Hadir','Hadir','Hadir','Hadir','Hadir','Hadir','Hadir'];
+                    const arr = (santri.mutabaahAbsensi && santri.mutabaahAbsensi[act]) ? santri.mutabaahAbsensi[act] : ['Libur','Hadir','Hadir','Hadir','Hadir','Hadir','Hadir'];
                     arr.forEach(status => {
                         if (status === 'Hadir') h++;
                         else if (status === 'Izin') i++;
@@ -2482,11 +2511,15 @@
                 uangMakan: Number(document.getElementById('newUangMakan').value) || 0,
                 statusMakan: document.getElementById('newStatusMakan').value || 'Belum Lunas',
                 mutabaahAbsensi: {
-                    "Qiyamul Lail": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
-                    "Sholat Subuh": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
-                    "Sholat Dhuha": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
-                    "Sholat Maghrib + Isya’": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
-                    "Jam Malam": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir']
+                    "qiyamul lail": ['Libur', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
+                    "shalat shubuh": ['Libur', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
+                    "tilawah": ['Libur', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
+                    "shalat dhuha": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
+                    "shalat maghrib + isya": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Libur'],
+                    "jam malam": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
+                    "setoran": ['Libur', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'],
+                    "1/4 binnadzor / 14 bilghoib / praktek tahsin": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Libur'],
+                    "tahsin / kitab / murojaah / kegiatan pengurus": ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Libur']
                 },
                 hafalanData: [],
                 paymentData: []
