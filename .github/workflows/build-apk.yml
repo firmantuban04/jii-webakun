@@ -22,9 +22,8 @@ jobs:
       - run: npx cap add android
       - name: Buat ikon aplikasi
         run: |
-          if [ -f resources/icon-only.png ]; then
-            npx capacitor-assets generate --android --iconBackgroundColor '#ffffff' --iconBackgroundColorDark '#ffffff'
-          fi
+          ls -la resources
+          npx capacitor-assets generate --android --assetPath resources --iconBackgroundColor '#ffffff' --iconBackgroundColorDark '#ffffff'
       - run: npx cap sync android
       - run: cd android && chmod +x gradlew && ./gradlew assembleDebug
       - uses: actions/upload-artifact@v4
