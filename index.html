@@ -112,6 +112,35 @@
                         <span>Dashboard</span>
                     </button>
 
+                    <div id="deskUserMenu" class="hidden relative ml-3">
+                        <button type="button" id="btnDeskUser" onclick="toggleDeskUserMenu(event)" class="flex items-center space-x-2 bg-white/10 hover:bg-white/20 border border-white/10 rounded-xl px-3 py-2 text-xs font-bold text-amber-200 transition cursor-pointer">
+                            <i class="fa-solid fa-circle-user text-lg"></i>
+                            <span id="deskUserGreeting">Akun</span>
+                            <i class="fa-solid fa-chevron-down text-[10px]"></i>
+                        </button>
+                        <div id="deskUserDropdown" class="hidden absolute right-0 mt-2 w-64 bg-emerald-950 border border-emerald-700/50 rounded-2xl shadow-2xl p-2 z-50">
+                            <div class="px-3 py-2 border-b border-emerald-800 mb-2">
+                                <span class="text-emerald-400 block text-[10px] font-medium">Terhubung sebagai:</span>
+                                <span id="deskUserName" class="text-sm font-bold text-white block truncate">-</span>
+                                <span id="deskUserRole" class="text-[10px] text-amber-300 font-semibold uppercase block mt-0.5">-</span>
+                            </div>
+                            <div class="space-y-1">
+                                <button type="button" onclick="closeDeskUserMenu(); openSettingsModal();" class="w-full text-left py-2.5 px-3 rounded-xl bg-emerald-800/50 hover:bg-emerald-700 text-emerald-100 font-bold transition flex items-center space-x-2 border border-emerald-600/30">
+                                    <i class="fa-solid fa-sliders text-amber-400 w-5"></i>
+                                    <span>Pengaturan</span>
+                                </button>
+                                <button type="button" onclick="closeDeskUserMenu(); openChangePasswordModal();" class="w-full text-left py-2.5 px-3 rounded-xl bg-emerald-800/50 hover:bg-emerald-700 text-amber-300 font-bold transition flex items-center space-x-2 border border-emerald-600/30">
+                                    <i class="fa-solid fa-key text-amber-400 w-5"></i>
+                                    <span>Ganti Password</span>
+                                </button>
+                                <button type="button" onclick="closeDeskUserMenu(); handleLogout();" class="w-full text-left py-2.5 px-3 rounded-xl bg-rose-600/80 hover:bg-rose-700 text-white font-bold transition flex items-center space-x-2 border border-rose-500/30">
+                                    <i class="fa-solid fa-power-off text-white w-5"></i>
+                                    <span>Keluar dari Sistem</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
                     <button id="btnNavLogin" onclick="openLoginModal()" class="bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-900 font-extrabold px-5 py-2.5 rounded-xl shadow-lg hover:shadow-amber-500/30 transition transform hover:scale-105 flex items-center space-x-2 ml-3">
                         <i class="fa-solid fa-right-to-bracket"></i>
                         <span>Masuk</span>
@@ -1926,6 +1955,12 @@
             document.getElementById('navUserName').innerText = user.nama;
             document.getElementById('navUserRole').innerText = roleName;
             document.getElementById('navUserGreeting').innerText = user.nama.split(' ')[0];
+            const deskName = document.getElementById('deskUserName');
+            const deskRole = document.getElementById('deskUserRole');
+            const deskGreeting = document.getElementById('deskUserGreeting');
+            if (deskName) deskName.innerText = user.nama;
+            if (deskRole) deskRole.innerText = roleName;
+            if (deskGreeting) deskGreeting.innerText = user.nama.split(' ')[0];
 
             document.getElementById('dashSantriName').innerText = user.nama;
             document.getElementById('dashSantriNis').innerText = user.nis;
@@ -2220,6 +2255,7 @@
 
             if (isLoggedIn) {
                 if (btnNavDashboard) btnNavDashboard.classList.remove('hidden');
+                document.getElementById('deskUserMenu')?.classList.remove('hidden');
                 if (btnNavLogin) btnNavLogin.classList.add('hidden');
                 if (menuUserInfo) menuUserInfo.classList.remove('hidden');
                 if (mobileUserLinks) mobileUserLinks.classList.remove('hidden');
@@ -2228,6 +2264,8 @@
                 if (footerUserLinks) footerUserLinks.classList.remove('hidden');
             } else {
                 if (btnNavDashboard) btnNavDashboard.classList.add('hidden');
+                document.getElementById('deskUserMenu')?.classList.add('hidden');
+                document.getElementById('deskUserDropdown')?.classList.add('hidden');
                 if (btnNavLogin) btnNavLogin.classList.remove('hidden');
                 if (menuUserInfo) menuUserInfo.classList.add('hidden');
                 if (mobileUserLinks) mobileUserLinks.classList.add('hidden');
@@ -2262,6 +2300,21 @@
                 window.switchDashTab('absensi');
             }
         }
+
+        window.toggleDeskUserMenu = function(e) {
+            if (e) e.stopPropagation();
+            document.getElementById('deskUserDropdown')?.classList.toggle('hidden');
+        };
+        window.closeDeskUserMenu = function() {
+            document.getElementById('deskUserDropdown')?.classList.add('hidden');
+        };
+        document.addEventListener('click', function(e) {
+            const menu = document.getElementById('deskUserMenu');
+            if (menu && !menu.contains(e.target)) window.closeDeskUserMenu();
+        });
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') window.closeDeskUserMenu();
+        });
 
         window.showPublicView = function(targetSection) {
             document.getElementById('publicContainer')?.classList.remove('hidden');
