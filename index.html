@@ -12,6 +12,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 
     <script>
         tailwind.config = {
@@ -1654,9 +1656,215 @@
             window.showToast("Absensi otomatis tersimpan", "success");
         };
 
-        window.exportAbsensiToPDF = function() {
+        window.exportAbsensiToPDF = async function() {
             if (!window.canFillAbsensi()) return;
-            window.showToast("Fitur download PDF aktif", "info");
+
+            const selectEl = document.getElementById('absensiSantriSelect');
+            const santri = masterSantriData.find(s => s.nis === (selectEl ? selectEl.value : ''));
+            if (!santri) {
+                window.showToast("Pilih santri terlebih dahulu", "error");
+                return;
+            }
+            if (!window.jspdf || !window.jspdf.jsPDF) {
+                window.showToast("Library PDF belum termuat. Pastikan internet aktif lalu coba lagi.", "error");
+                return;
+            }
+
+            try {
+                window.showToast("Menyiapkan PDF...", "info");
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
+                const pageW = doc.internal.pageSize.getWidth();
+                const pageH = doc.internal.pageSize.getHeight();
+                const weekly = getWeeklyCalendarDates();
+                const abs = santri.mutabaahAbsensi || {};
+                const defaultRow = ['Libur', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir'];
+
+                // Logo (opsional, dilewati jika gagal dimuat)
+                let textX = 14;
+                try {
+                    const logoData = await new Promise((resolve, reject) => {
+                        const img = new Image();
+                        const timer = setTimeout(() => reject(new Error('timeout')), 3000);
+                        img.onload = () => {
+                            clearTimeout(timer);
+                            const c = document.createElement('canvas');
+                            c.width = img.naturalWidth;
+                            c.height = img.naturalHeight;
+                            c.getContext('2d').drawImage(img, 0, 0);
+                            resolve(c.toDataURL('image/jpeg', 0.9));
+                        };
+                        img.onerror = () => { clearTimeout(timer); reject(new Error('logo')); };
+                        img.src = 'logo.jpg';
+                    });
+                    doc.addImage(logoData, 'JPEG', 14, 8, 20, 20);
+                    textX = 38;
+                } catch (e) { /* tanpa logo */ }
+
+                // Kop
+                doc.setFont('helvetica', 'bold');
+                doc.setFontSize(15);
+                doc.setTextColor(6, 78, 59);
+                doc.text('JEMBER ISLAMIC INSTITUTE', textX, 15);
+                doc.setFont('helvetica', 'normal');
+                doc.setFontSize(9);
+                doc.setTextColor(100, 116, 139);
+                doc.text("Excellent With Al-Qur'an", textX, 20);
+                doc.setFont('helvetica', 'bold');
+                doc.setFontSize(12);
+                doc.setTextColor(15, 23, 42);
+                doc.text("REKAP ABSENSI MUTABA'AH MINGGUAN", textX, 27);
+                doc.setDrawColor(6, 78, 59);
+                doc.setLineWidth(0.6);
+                doc.line(14, 31, pageW - 14, 31);
+
+                // Identitas santri
+                const periode = `${weekly[0].dayName} (${weekly[0].dateFormatted}) s.d. ${weekly[6].dayName} (${weekly[6].dateFormatted})`;
+                const dicetak = new Date().toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' });
+                doc.setFontSize(10);
+                const info = [
+                    [14, 37, 'Nama', santri.nama || '-'],
+                    [14, 43, 'NIS / ID', santri.nis || '-'],
+                    [150, 37, 'Kelas / Kamar', `${santri.kelas || '-'} / ${santri.kamar || '-'}`],
+                    [150, 43, 'Periode', periode]
+                ];
+                info.forEach(([x, y, label, value]) => {
+                    doc.setFont('helvetica', 'bold');
+                    doc.setTextColor(71, 85, 105);
+                    doc.text(label, x, y);
+                    doc.setFont('helvetica', 'normal');
+                    doc.setTextColor(15, 23, 42);
+                    doc.text(': ' + String(value), x + 27, y);
+                });
+
+                // Tabel absensi + hitung rekap
+                let totalH = 0, totalI = 0, totalP = 0, totalTH = 0, totalL = 0;
+                const body = [];
+                defaultActivitiesList.forEach(act => {
+                    if (act === "ABSEN MENTOR") {
+                        body.push([{
+                            content: '--- ABSEN MENTOR ---',
+                            colSpan: 8,
+                            styles: { halign: 'center', fillColor: [6, 78, 59], textColor: [252, 211, 77], fontStyle: 'bold' }
+                        }]);
+                        return;
+                    }
+                    const arr = (abs[act] && abs[act].length === 7) ? abs[act] : defaultRow;
+                    arr.forEach(s => {
+                        if (s === 'Hadir') totalH++;
+                        else if (s === 'Izin') totalI++;
+                        else if (s === 'Pulang') totalP++;
+                        else if (s === 'Tidak Hadir') totalTH++;
+                        else if (s === 'Libur') totalL++;
+                    });
+                    body.push([act, ...arr]);
+                });
+
+                const statusStyle = {
+                    'Hadir': { text: [4, 120, 87], fill: [236, 253, 245] },
+                    'Izin': { text: [180, 83, 9], fill: [255, 251, 235] },
+                    'Pulang': { text: [29, 78, 216], fill: [239, 246, 255] },
+                    'Tidak Hadir': { text: [190, 18, 60], fill: [255, 241, 242] },
+                    'Libur': { text: [126, 34, 206], fill: [250, 245, 255] }
+                };
+
+                doc.autoTable({
+                    startY: 48,
+                    head: [['Rincian Kegiatan', ...weekly.map(w => `${w.dayName}\n(${w.dateFormatted})`)]],
+                    body: body,
+                    theme: 'grid',
+                    styles: { fontSize: 8.5, cellPadding: 2.2, valign: 'middle', lineColor: [226, 232, 240], lineWidth: 0.2 },
+                    headStyles: { fillColor: [6, 78, 59], textColor: [252, 211, 77], halign: 'center', fontStyle: 'bold' },
+                    columnStyles: { 0: { cellWidth: 70, fontStyle: 'bold' } },
+                    didParseCell: function (data) {
+                        if (data.section === 'body' && data.column.index > 0 && typeof data.cell.raw === 'string') {
+                            const st = statusStyle[data.cell.raw];
+                            data.cell.styles.halign = 'center';
+                            if (st) {
+                                data.cell.styles.textColor = st.text;
+                                data.cell.styles.fillColor = st.fill;
+                                data.cell.styles.fontStyle = 'bold';
+                            }
+                        }
+                    }
+                });
+
+                // Ringkasan
+                let y = doc.lastAutoTable.finalY + 8;
+                if (y + 28 > pageH - 14) {
+                    doc.addPage();
+                    y = 20;
+                }
+                doc.setFont('helvetica', 'bold');
+                doc.setFontSize(10);
+                doc.setTextColor(15, 23, 42);
+                doc.text('Ringkasan Mingguan', 14, y);
+                const boxes = [
+                    ['Hadir', totalH, statusStyle['Hadir']],
+                    ['Izin', totalI, statusStyle['Izin']],
+                    ['Pulang', totalP, statusStyle['Pulang']],
+                    ['Tidak Hadir', totalTH, statusStyle['Tidak Hadir']],
+                    ['Libur', totalL, statusStyle['Libur']]
+                ];
+                boxes.forEach(([label, value, st], i) => {
+                    const x = 14 + i * 42;
+                    doc.setFillColor(...st.fill);
+                    doc.setDrawColor(...st.text);
+                    doc.setLineWidth(0.3);
+                    doc.roundedRect(x, y + 3, 38, 16, 2, 2, 'FD');
+                    doc.setFont('helvetica', 'bold');
+                    doc.setFontSize(14);
+                    doc.setTextColor(...st.text);
+                    doc.text(String(value), x + 19, y + 11.5, { align: 'center' });
+                    doc.setFontSize(8);
+                    doc.text(label, x + 19, y + 16.5, { align: 'center' });
+                });
+
+                // Footer + nomor halaman
+                const totalPages = doc.internal.getNumberOfPages();
+                for (let p = 1; p <= totalPages; p++) {
+                    doc.setPage(p);
+                    doc.setFont('helvetica', 'normal');
+                    doc.setFontSize(8);
+                    doc.setTextColor(148, 163, 184);
+                    doc.text(`Dicetak: ${dicetak} | Jember Islamic Institute`, 14, pageH - 8);
+                    doc.text(`Halaman ${p} / ${totalPages}`, pageW - 14, pageH - 8, { align: 'right' });
+                }
+
+                const safeName = String(santri.nama || 'santri').replace(/[^a-zA-Z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+                const fileName = `Rekap-Absensi_${safeName}_${new Date().toISOString().slice(0, 10)}.pdf`;
+
+                const isNative = !!(window.Capacitor && typeof window.Capacitor.isNativePlatform === 'function' && window.Capacitor.isNativePlatform());
+                if (isNative) {
+                    // Aplikasi Android: simpan ke cache lalu buka menu Bagikan/Simpan
+                    const plugins = window.Capacitor.Plugins || {};
+                    if (!plugins.Filesystem || !plugins.Share) {
+                        throw new Error('Plugin file belum tersedia di aplikasi. Install APK versi terbaru.');
+                    }
+                    const base64 = doc.output('datauristring').split(',')[1];
+                    const saved = await plugins.Filesystem.writeFile({
+                        path: fileName,
+                        data: base64,
+                        directory: 'CACHE'
+                    });
+                    await plugins.Share.share({
+                        title: 'Rekap Absensi',
+                        text: fileName,
+                        url: saved.uri,
+                        dialogTitle: 'Simpan atau bagikan rekap absensi'
+                    });
+                    window.showToast("PDF siap. Pilih tujuan simpan atau bagikan.", "success");
+                } else {
+                    // Web biasa: unduh langsung
+                    doc.save(fileName);
+                    window.showToast("PDF rekap absensi berhasil diunduh", "success");
+                }
+            } catch (err) {
+                const msg = String((err && err.message) || err || '');
+                if (/cancel/i.test(msg)) return; // pengguna menutup menu bagikan
+                console.error(err);
+                window.showToast("Gagal membuat PDF: " + msg, "error");
+            }
         };
 
         window.filterMasterSantri = function() {
