@@ -1099,6 +1099,13 @@
         const LOCAL_SANTRI_KEY = 'jii_master_santri_local_v9';
         const SESSION_STORAGE_KEY = 'jii_user_session_v8';
 
+        // ====== SINKRONISASI SERVER (Neon lewat server.js) ======
+        // Isi SYNC_URL dengan alamat web aplikasimu di hosting agar semua perangkat memakai data yang sama.
+        // Jika dikosongkan, aplikasi tetap jalan seperti biasa (data hanya di perangkat ini).
+        const SYNC_URL = 'https://xxxx.supabase.co';   // contoh: https://jii-sim.onrender.com
+        const SYNC_KEY = 'sb_publishable_Y12VO917t06aq2BKxRXRvw_dSUkx4GH';   // opsional: sama dengan APP_API_KEY di hosting (jika kamu membuatnya)
+        const SYNC_META_KEY = 'jii_sync_meta_v1';
+
         const defaultActivitiesList = [
             "qiyamul lail",
             "shalat shubuh",
@@ -1368,6 +1375,184 @@
             try {
                 localStorage.setItem(LOCAL_SANTRI_KEY, JSON.stringify(masterSantriData));
             } catch (e) {}
+            syncMarkDirty();
+        }
+
+        // ====== MESIN SINKRONISASI ======
+        const SYNC_BASE = SYNC_URL.replace(/\/+$/, '');
+        const SYNC_ENABLED = !!SYNC_BASE;
+        let syncVersion = null;      // versi server terakhir yang diketahui perangkat ini
+        let syncBase = [];           // salinan data saat sinkron terakhir (untuk penggabungan)
+        let syncDirty = false;       // ada perubahan lokal yang belum terkirim
+        let syncBusy = false;
+        let syncTimer = null;
+        let syncLastErrorAt = 0;
+        let syncAnnounced = false;
+
+        try {
+            const meta = JSON.parse(localStorage.getItem(SYNC_META_KEY) || 'null');
+            if (meta && typeof meta.version === 'number' && Array.isArray(meta.base)) {
+                syncVersion = meta.version;
+                syncBase = meta.base;
+                syncDirty = !!meta.dirty;
+            }
+        } catch (e) {}
+
+        function syncSaveMeta() {
+            try {
+                localStorage.setItem(SYNC_META_KEY, JSON.stringify({ version: syncVersion, base: syncBase, dirty: syncDirty }));
+            } catch (e) {}
+        }
+
+        function syncHeaders() {
+            const h = { 'Content-Type': 'application/json' };
+            if (SYNC_KEY) h['x-app-key'] = SYNC_KEY;
+            return h;
+        }
+
+        function syncReportError(err) {
+            console.error('Sinkronisasi gagal:', err);
+            const now = Date.now();
+            if (now - syncLastErrorAt > 60000) {
+                syncLastErrorAt = now;
+                window.showToast('Belum tersambung ke server. Data aman di perangkat ini dan akan dikirim otomatis.', 'error');
+            }
+        }
+
+        async function syncFetchRemote() {
+            const res = await fetch(SYNC_BASE + '/api/state', { headers: syncHeaders() });
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            const j = await res.json();
+            return (j && j.data) ? { data: j.data, version: Number(j.version) } : null;
+        }
+
+        // Gabungkan per santri: perubahan lokal menang, selebihnya ikut server
+        function syncMerge(base, local, remote) {
+            const key = x => x.nis;
+            const baseJson = new Map(base.map(x => [key(x), JSON.stringify(x)]));
+            const localMap = new Map(local.map(x => [key(x), x]));
+            const seen = new Set();
+            const out = [];
+            remote.forEach(r => {
+                const k = key(r);
+                seen.add(k);
+                const l = localMap.get(k);
+                const b = baseJson.get(k);
+                if (!l) {
+                    if (b === undefined) out.push(r);                       // baru dari perangkat lain
+                    else if (JSON.stringify(r) !== b) out.push(r);          // dihapus di sini tapi diubah di sana
+                    // selain itu: dihapus di sini -> tetap terhapus
+                } else if (b !== undefined && JSON.stringify(l) !== b) {
+                    out.push(l);                                            // diubah di sini
+                } else {
+                    out.push(r);                                            // ikuti server
+                }
+            });
+            local.forEach(l => {
+                const k = key(l);
+                if (!seen.has(k) && !baseJson.has(k)) out.push(l);          // santri baru dari sini
+            });
+            return out;
+        }
+
+        function syncModalOpen() {
+            return ['addSantriModal', 'editSantriModal', 'paymentModal', 'addHafalanModal', 'settingsModal', 'changePasswordModal', 'customConfirmModal']
+                .some(id => { const el = document.getElementById(id); return el && !el.classList.contains('hidden'); });
+        }
+
+        function syncApplyData(newData) {
+            if (JSON.stringify(newData) === JSON.stringify(masterSantriData)) return;
+            masterSantriData = newData;
+            try { localStorage.setItem(LOCAL_SANTRI_KEY, JSON.stringify(masterSantriData)); } catch (e) {}
+            if (currentUser) currentUser = masterSantriData.find(x => x.nis === currentUser.nis) || currentUser;
+            if (activeFinancialSantri) activeFinancialSantri = masterSantriData.find(x => x.nis === activeFinancialSantri.nis) || activeFinancialSantri;
+            try {
+                window.renderMasterSantriTable(masterSantriData);
+                window.renderHafalanTable();
+                window.renderPaymentTable();
+                window.updateAllSummaries();
+                const tabIds = { 'master-santri': 'tabMasterSantri', 'absensi': 'tabAbsensi', 'hafalan': 'tabHafalan', 'tanggungan': 'tabTanggungan', 'detail-santri': 'tabDetail' };
+                const dash = document.getElementById('dashboardContainer');
+                if (isLoggedIn && dash && !dash.classList.contains('hidden')) {
+                    const active = Object.keys(tabIds).find(t => { const el = document.getElementById(tabIds[t]); return el && !el.classList.contains('hidden'); });
+                    if (active) window.switchDashTab(active);
+                }
+            } catch (e) { console.error(e); }
+        }
+
+        // Kirim perubahan lokal ke server (dengan penggabungan bila server sudah berubah)
+        async function syncPush() {
+            if (!SYNC_ENABLED || syncBusy) return;
+            syncBusy = true;
+            try {
+                for (let attempt = 0; attempt < 4; attempt++) {
+                    const remote = await syncFetchRemote();
+                    const sentJson = JSON.stringify(masterSantriData);
+                    syncDirty = false;
+
+                    let toSend = masterSantriData;
+                    if (remote && syncVersion !== remote.version) {
+                        toSend = syncVersion === null ? remote.data : syncMerge(syncBase, masterSantriData, remote.data);
+                    }
+                    const res = await fetch(SYNC_BASE + '/api/state', {
+                        method: 'PUT',
+                        headers: syncHeaders(),
+                        body: JSON.stringify({ expectedVersion: remote ? remote.version : null, data: toSend })
+                    });
+                    if (res.status === 409) { syncDirty = true; continue; }   // keduluan perangkat lain, ulangi
+                    if (!res.ok) throw new Error('HTTP ' + res.status);
+                    const result = await res.json();
+
+                    syncVersion = Number(result.version);
+                    syncBase = JSON.parse(JSON.stringify(toSend));
+                    syncSaveMeta();
+                    if (JSON.stringify(toSend) !== sentJson && !syncDirty) syncApplyData(toSend);
+                    break;
+                }
+                if (!syncAnnounced) { syncAnnounced = true; window.showToast('Tersambung ke server. Data tersinkron.', 'success'); }
+            } catch (err) {
+                syncDirty = true;
+                syncSaveMeta();
+                syncReportError(err);
+            } finally {
+                syncBusy = false;
+                if (syncDirty && !syncTimer) syncMarkDirty(true);
+            }
+        }
+
+        function syncMarkDirty(retry) {
+            if (!SYNC_ENABLED) return;
+            syncDirty = true;
+            syncSaveMeta();
+            if (syncTimer) clearTimeout(syncTimer);
+            syncTimer = setTimeout(() => { syncTimer = null; syncPush(); }, retry ? 15000 : 800);
+        }
+
+        // Ambil data terbaru dari server (hanya bila tidak ada perubahan lokal yang tertunda)
+        async function syncPull(force) {
+            if (!SYNC_ENABLED || syncBusy || syncTimer) return;
+            if (!force && syncModalOpen()) return;
+            try {
+                const remote = await syncFetchRemote();
+                if (!remote) { if (!syncDirty) { syncDirty = true; } await syncPush(); return; }
+                if (syncDirty) { await syncPush(); return; }
+                if (syncVersion === remote.version) return;
+                syncVersion = remote.version;
+                syncBase = JSON.parse(JSON.stringify(remote.data));
+                syncSaveMeta();
+                syncApplyData(remote.data);
+                if (!syncAnnounced) { syncAnnounced = true; window.showToast('Tersambung ke server. Data tersinkron.', 'success'); }
+            } catch (err) {
+                syncReportError(err);
+            }
+        }
+
+        function syncStart() {
+            if (!SYNC_ENABLED) return;
+            syncPull(true);
+            setInterval(() => { if (!document.hidden) syncPull(false); }, 15000);
+            document.addEventListener('visibilitychange', () => { if (!document.hidden) syncPull(false); });
+            window.addEventListener('online', () => syncPull(false));
         }
 
         window.showToast = function(message, type = 'success') {
@@ -2396,8 +2581,11 @@
         };
         window.closeEditSantriModal = function() { document.getElementById('editSantriModal')?.classList.add('hidden'); };
 
-        window.handleLoginSubmit = function(event) {
+        window.handleLoginSubmit = async function(event) {
             event.preventDefault();
+            if (SYNC_ENABLED) {
+                try { await Promise.race([syncPull(true), new Promise(r => setTimeout(r, 3000))]); } catch (e) {}
+            }
             const nisInput = document.getElementById('loginNis').value.trim();
             const passwordInput = document.getElementById('loginPassword').value.trim();
 
@@ -2759,6 +2947,7 @@
             window.initHafalanChart();
             window.updateAllSummaries();
             fetchJadwalSholat();
+            syncStart();
         };
     </script>
 </body>
