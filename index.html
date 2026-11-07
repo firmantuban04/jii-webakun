@@ -1727,13 +1727,14 @@
                 doc.text(': ' + periode, 30, 35);
                 doc.text(': ' + masterSantriData.length + ' orang', 135, 35);
 
-                // Hitung rekap tiap santri
-                let gH = 0, gI = 0, gP = 0, gTH = 0, gL = 0;
-                const body = masterSantriData.map((santri, idx) => {
-                    const abs = santri.mutabaahAbsensi || {};
+                // Pisahkan kegiatan (sebelum "ABSEN MENTOR") dan mentor (sesudahnya)
+                const divIdx = defaultActivitiesList.indexOf("ABSEN MENTOR");
+                const actsKegiatan = divIdx === -1 ? defaultActivitiesList.slice() : defaultActivitiesList.slice(0, divIdx);
+                const actsMentor = divIdx === -1 ? [] : defaultActivitiesList.slice(divIdx + 1);
+
+                const hitung = (abs, acts) => {
                     let h = 0, i = 0, p = 0, th = 0, l = 0;
-                    defaultActivitiesList.forEach(act => {
-                        if (act === "ABSEN MENTOR") return;
+                    acts.forEach(act => {
                         const arr = (abs[act] && abs[act].length === 7) ? abs[act] : defaultRow;
                         arr.forEach(s => {
                             if (s === 'Hadir') h++;
@@ -1743,70 +1744,133 @@
                             else if (s === 'Libur') l++;
                         });
                     });
-                    gH += h; gI += i; gP += p; gTH += th; gL += l;
-                    const dasar = h + i + p + th;
-                    const persen = dasar > 0 ? Math.round((h / dasar) * 100) : 0;
+                    return { h, i, p, th, l };
+                };
+                const persenDari = (r) => {
+                    const dasar = r.h + r.i + r.p + r.th;
+                    return dasar > 0 ? Math.round((r.h / dasar) * 100) : 0;
+                };
+                const tambah = (tot, r) => { tot.h += r.h; tot.i += r.i; tot.p += r.p; tot.th += r.th; tot.l += r.l; };
+
+                const totK = { h: 0, i: 0, p: 0, th: 0, l: 0 };
+                const totM = { h: 0, i: 0, p: 0, th: 0, l: 0 };
+                const body = masterSantriData.map((santri, idx) => {
+                    const abs = santri.mutabaahAbsensi || {};
+                    const k = hitung(abs, actsKegiatan);
+                    const m = hitung(abs, actsMentor);
+                    tambah(totK, k);
+                    tambah(totM, m);
                     return [
                         idx + 1,
                         santri.nama || '-',
-                        getRoleDisplayName(santri.role || 'santri'),
                         `${santri.kelas || '-'} / ${santri.kamar || '-'}`,
-                        h, i, p, th, l,
-                        persen + '%'
+                        k.h, k.i, k.p, k.th, k.l, persenDari(k) + '%',
+                        m.h, m.i, m.p, m.th, m.l, persenDari(m) + '%'
                     ];
                 });
-                const gDasar = gH + gI + gP + gTH;
-                const gPersen = gDasar > 0 ? Math.round((gH / gDasar) * 100) : 0;
 
                 doc.autoTable({
                     startY: 39,
-                    head: [['No', 'Nama Santri', 'Peran', 'Kelas / Kamar', 'Hadir', 'Izin', 'Pulang', 'Tdk\nHadir', 'Libur', '%\nHadir']],
+                    head: [
+                        [
+                            { content: 'No', rowSpan: 2 },
+                            { content: 'Nama Santri', rowSpan: 2 },
+                            { content: 'Kelas / Kamar', rowSpan: 2 },
+                            { content: 'ABSENSI KEGIATAN', colSpan: 6, styles: { fillColor: [6, 78, 59] } },
+                            { content: 'ABSENSI MENTOR', colSpan: 6, styles: { fillColor: [30, 58, 138] } }
+                        ],
+                        [
+                            { content: 'H', styles: { fillColor: [6, 78, 59] } }, { content: 'I', styles: { fillColor: [6, 78, 59] } },
+                            { content: 'P', styles: { fillColor: [6, 78, 59] } }, { content: 'TH', styles: { fillColor: [6, 78, 59] } },
+                            { content: 'L', styles: { fillColor: [6, 78, 59] } }, { content: '%', styles: { fillColor: [6, 78, 59] } },
+                            { content: 'H', styles: { fillColor: [30, 58, 138] } }, { content: 'I', styles: { fillColor: [30, 58, 138] } },
+                            { content: 'P', styles: { fillColor: [30, 58, 138] } }, { content: 'TH', styles: { fillColor: [30, 58, 138] } },
+                            { content: 'L', styles: { fillColor: [30, 58, 138] } }, { content: '%', styles: { fillColor: [30, 58, 138] } }
+                        ]
+                    ],
                     body: body,
                     foot: [[
-                        { content: 'TOTAL', colSpan: 4, styles: { halign: 'right' } },
-                        gH, gI, gP, gTH, gL, gPersen + '%'
+                        { content: 'TOTAL', colSpan: 3, styles: { halign: 'right' } },
+                        totK.h, totK.i, totK.p, totK.th, totK.l, persenDari(totK) + '%',
+                        totM.h, totM.i, totM.p, totM.th, totM.l, persenDari(totM) + '%'
                     ]],
                     showFoot: 'lastPage',
                     theme: 'grid',
-                    styles: { fontSize: 8, cellPadding: 1.6, valign: 'middle', lineColor: [226, 232, 240], lineWidth: 0.2 },
-                    headStyles: { fillColor: [6, 78, 59], textColor: [252, 211, 77], halign: 'center', fontStyle: 'bold', fontSize: 7.5 },
+                    styles: { fontSize: 8, cellPadding: 1.5, valign: 'middle', lineColor: [226, 232, 240], lineWidth: 0.2 },
+                    headStyles: { fillColor: [6, 78, 59], textColor: [252, 211, 77], halign: 'center', valign: 'middle', fontStyle: 'bold', fontSize: 7.5 },
                     footStyles: { fillColor: [241, 245, 249], textColor: [15, 23, 42], fontStyle: 'bold', halign: 'center' },
                     alternateRowStyles: { fillColor: [248, 250, 252] },
                     columnStyles: {
-                        0: { cellWidth: 9, halign: 'center' },
-                        1: { cellWidth: 44, fontStyle: 'bold' },
-                        2: { cellWidth: 22 },
-                        3: { cellWidth: 29 },
-                        4: { cellWidth: 12, halign: 'center' },
-                        5: { cellWidth: 10, halign: 'center' },
-                        6: { cellWidth: 12, halign: 'center' },
-                        7: { cellWidth: 14, halign: 'center' },
-                        8: { cellWidth: 10, halign: 'center' },
-                        9: { cellWidth: 15, halign: 'center' }
+                        0: { cellWidth: 8, halign: 'center' },
+                        1: { cellWidth: 40, fontStyle: 'bold' },
+                        2: { cellWidth: 26 },
+                        3: { cellWidth: 9, halign: 'center' }, 4: { cellWidth: 9, halign: 'center' },
+                        5: { cellWidth: 9, halign: 'center' }, 6: { cellWidth: 9, halign: 'center' },
+                        7: { cellWidth: 9, halign: 'center' }, 8: { cellWidth: 10, halign: 'center' },
+                        9: { cellWidth: 9, halign: 'center' }, 10: { cellWidth: 9, halign: 'center' },
+                        11: { cellWidth: 9, halign: 'center' }, 12: { cellWidth: 9, halign: 'center' },
+                        13: { cellWidth: 9, halign: 'center' }, 14: { cellWidth: 10, halign: 'center' }
                     },
                     didParseCell: function (data) {
-                        if (data.section !== 'body') return;
-                        const col = data.column.index;
-                        if (col === 4) { data.cell.styles.textColor = [4, 120, 87]; data.cell.styles.fontStyle = 'bold'; }
-                        if (col === 5 && Number(data.cell.raw) > 0) { data.cell.styles.textColor = [180, 83, 9]; data.cell.styles.fontStyle = 'bold'; }
-                        if (col === 6 && Number(data.cell.raw) > 0) { data.cell.styles.textColor = [29, 78, 216]; data.cell.styles.fontStyle = 'bold'; }
-                        if (col === 7 && Number(data.cell.raw) > 0) { data.cell.styles.textColor = [190, 18, 60]; data.cell.styles.fontStyle = 'bold'; }
-                        if (col === 8 && Number(data.cell.raw) > 0) { data.cell.styles.textColor = [126, 34, 206]; }
-                        if (col === 9) {
-                            const v = parseInt(data.cell.raw, 10);
+                        if (data.section !== 'body' || data.column.index < 3) return;
+                        const pos = (data.column.index - 3) % 6;
+                        const v = data.cell.raw;
+                        if (pos === 0) { data.cell.styles.textColor = [4, 120, 87]; data.cell.styles.fontStyle = 'bold'; }
+                        if (pos === 1 && Number(v) > 0) { data.cell.styles.textColor = [180, 83, 9]; data.cell.styles.fontStyle = 'bold'; }
+                        if (pos === 2 && Number(v) > 0) { data.cell.styles.textColor = [29, 78, 216]; data.cell.styles.fontStyle = 'bold'; }
+                        if (pos === 3 && Number(v) > 0) { data.cell.styles.textColor = [190, 18, 60]; data.cell.styles.fontStyle = 'bold'; }
+                        if (pos === 4 && Number(v) > 0) { data.cell.styles.textColor = [126, 34, 206]; }
+                        if (pos === 5) {
+                            const n = parseInt(v, 10);
                             data.cell.styles.fontStyle = 'bold';
-                            data.cell.styles.textColor = v >= 90 ? [4, 120, 87] : (v >= 75 ? [180, 83, 9] : [190, 18, 60]);
+                            data.cell.styles.textColor = n >= 90 ? [4, 120, 87] : (n >= 75 ? [180, 83, 9] : [190, 18, 60]);
+                        }
+                    },
+                    didDrawCell: function (data) {
+                        // Garis tebal pemisah antara blok Kegiatan dan Mentor
+                        if (data.column.index === 9) {
+                            doc.setDrawColor(51, 65, 85);
+                            doc.setLineWidth(0.5);
+                            doc.line(data.cell.x, data.cell.y, data.cell.x, data.cell.y + data.cell.height);
                         }
                     }
                 });
 
-                // Keterangan
-                let y = doc.lastAutoTable.finalY + 6;
-                if (y + 12 > pageH - 14) { doc.addPage(); y = 20; }
+                // Keterangan singkatan
+                let y = doc.lastAutoTable.finalY + 5;
+                if (y + 10 > pageH - 14) { doc.addPage(); y = 20; }
                 doc.setFont('helvetica', 'normal');
                 doc.setFontSize(7.5);
                 doc.setTextColor(100, 116, 139);
-                doc.text('Keterangan: angka menunjukkan jumlah centang kegiatan selama satu minggu. % Hadir = Hadir / (Hadir + Izin + Pulang + Tidak Hadir); hari Libur tidak dihitung.', 14, y, { maxWidth: pageW - 28 });
+                doc.text('Keterangan: H = Hadir, I = Izin, P = Pulang, TH = Tidak Hadir, L = Libur. Angka adalah jumlah centang kegiatan selama satu minggu. % = H / (H + I + P + TH); hari Libur tidak dihitung.', 14, y, { maxWidth: pageW - 28 });
+                y += 9;
+
+                // Kotak PUNISHMENT
+                const punishment = [
+                    'Poin 1: Membersihkan masjid',
+                    'Poin 2: Bayar 5 rb dan 1 juz / membersihkan KM masjid + 1 juz',
+                    'Poin 3: 5000 + 2 juz',
+                    'Poin 4: 5000 + membersihkan dapur',
+                    'Poin 5: 5000 + cuci piring & peralatan',
+                    'Poin 6-7: Beras 1 kg',
+                    'Poin 8-10: Beras 2 kg'
+                ];
+                const boxH = 12 + punishment.length * 5;
+                if (y + boxH > pageH - 14) { doc.addPage(); y = 20; }
+                doc.setFillColor(255, 241, 242);
+                doc.setDrawColor(190, 18, 60);
+                doc.setLineWidth(0.4);
+                doc.roundedRect(14, y, pageW - 28, boxH, 2, 2, 'FD');
+                doc.setFont('helvetica', 'bold');
+                doc.setFontSize(10);
+                doc.setTextColor(159, 18, 57);
+                doc.text('PUNISHMENT', 18, y + 7);
+                doc.setFont('helvetica', 'normal');
+                doc.setFontSize(9);
+                doc.setTextColor(15, 23, 42);
+                punishment.forEach((line, n) => {
+                    doc.text(line, 18, y + 13 + n * 5);
+                });
 
                 // Footer + nomor halaman
                 const totalPages = doc.internal.getNumberOfPages();
