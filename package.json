@@ -2,12 +2,12 @@
   "name": "jember-islamic-institute",
   "version": "1.0.0",
   "description": "Portal Resmi & SIM Santri Jember Islamic Institute",
-  "main": "index.html",
+  "main": "server.js",
   "scripts": {
-    "start": "npx serve -s . -l $PORT"
+    "start": "node server.js"
   },
   "dependencies": {
-    "serve": "^14.2.0",
+    "pg": "^8.11.0",
     "@capacitor/android": "^6.1.2",
     "@capacitor/cli": "^6.1.2",
     "@capacitor/core": "^6.1.2",
