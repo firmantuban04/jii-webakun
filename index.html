@@ -1791,6 +1791,21 @@
             const downloadBtnWrapper = document.getElementById('absensiDownloadBtnWrapper');
             const roleBadge = document.getElementById('absensiRoleBadge');
 
+            const weeklyDates = getWeeklyCalendarDates();
+            const rangeLabel = document.getElementById('absensiWeekRangeLabel');
+            if (rangeLabel && weeklyDates.length === 7) {
+                rangeLabel.innerText = `Periode Minggu Ini: ${weeklyDates[0].dayName} (${weeklyDates[0].dateFormatted}) s.d. ${weeklyDates[6].dayName} (${weeklyDates[6].dateFormatted})`;
+            }
+
+            const headRow = document.getElementById('absensiTableHeadRow');
+            if (headRow && weeklyDates.length === 7) {
+                let html = `<th class="p-3">Rincian Kegiatan</th>`;
+                weeklyDates.forEach((wd) => {
+                    html += `<th class="p-3 text-center">${wd.dayName}<br><span class="text-[10px] text-amber-300 font-normal">(${wd.dateFormatted})</span></th>`;
+                });
+                headRow.innerHTML = html;
+            }
+
             if (!canFill) {
                 if (selectWrapper) selectWrapper.classList.add('hidden');
                 if (downloadBtnWrapper) downloadBtnWrapper.classList.add('hidden');
@@ -1815,21 +1830,6 @@
                 selectEl.value = absensiList[0].nis;
             }
             
-            const weeklyDates = getWeeklyCalendarDates();
-            const rangeLabel = document.getElementById('absensiWeekRangeLabel');
-            if (rangeLabel && weeklyDates.length === 7) {
-                rangeLabel.innerText = `Periode Minggu Ini: ${weeklyDates[0].dayName} (${weeklyDates[0].dateFormatted}) s.d. ${weeklyDates[6].dayName} (${weeklyDates[6].dateFormatted})`;
-            }
-
-            const headRow = document.getElementById('absensiTableHeadRow');
-            if (headRow && weeklyDates.length === 7) {
-                let html = `<th class="p-3">Rincian Kegiatan</th>`;
-                weeklyDates.forEach((wd) => {
-                    html += `<th class="p-3 text-center">${wd.dayName}<br><span class="text-[10px] text-amber-300 font-normal">(${wd.dateFormatted})</span></th>`;
-                });
-                headRow.innerHTML = html;
-            }
-
             window.renderAbsensiTableForSelected();
         };
 
