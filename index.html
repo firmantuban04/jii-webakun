@@ -1777,6 +1777,11 @@
             return dates;
         }
 
+        // Akun berstatus mentor tidak ikut absensi & rekap absensi (data tetap tersimpan)
+        window.getAbsensiEligibleList = function() {
+            return (masterSantriData || []).filter(s => s.role !== 'mentor');
+        };
+
         window.initAbsensiTab = function() {
             const selectEl = document.getElementById('absensiSantriSelect');
             if (!selectEl) return;
@@ -1802,11 +1807,12 @@
             }
 
             const currentSelected = selectEl.value;
-            selectEl.innerHTML = masterSantriData.map(s => `<option value="${s.nis}">${s.nama} (${getRoleDisplayName(s.role)})</option>`).join('');
-            if (currentSelected && masterSantriData.some(s => s.nis === currentSelected)) {
+            const absensiList = window.getAbsensiEligibleList();
+            selectEl.innerHTML = absensiList.map(s => `<option value="${s.nis}">${s.nama} (${getRoleDisplayName(s.role)})</option>`).join('');
+            if (currentSelected && absensiList.some(s => s.nis === currentSelected)) {
                 selectEl.value = currentSelected;
-            } else if (masterSantriData.length > 0) {
-                selectEl.value = masterSantriData[0].nis;
+            } else if (absensiList.length > 0) {
+                selectEl.value = absensiList[0].nis;
             }
             
             const weeklyDates = getWeeklyCalendarDates();
@@ -1960,7 +1966,8 @@
         window.exportAbsensiToPDF = async function() {
             if (!window.canFillAbsensi()) return;
 
-            if (!masterSantriData || masterSantriData.length === 0) {
+            const rekapList = window.getAbsensiEligibleList();
+            if (!rekapList || rekapList.length === 0) {
                 window.showToast("Belum ada data santri untuk direkap", "error");
                 return;
             }
@@ -2026,7 +2033,7 @@
                 doc.setFont('helvetica', 'normal');
                 doc.setTextColor(15, 23, 42);
                 doc.text(': ' + periode, 30, 35);
-                doc.text(': ' + masterSantriData.length + ' orang', 135, 35);
+                doc.text(': ' + rekapList.length + ' orang', 135, 35);
 
                 // Pisahkan kegiatan (sebelum "ABSEN MENTOR") dan mentor (sesudahnya)
                 const divIdx = defaultActivitiesList.indexOf("ABSEN MENTOR");
@@ -2055,7 +2062,7 @@
 
                 const totK = { h: 0, i: 0, p: 0, th: 0, l: 0 };
                 const totM = { h: 0, i: 0, p: 0, th: 0, l: 0 };
-                const body = masterSantriData.map((santri, idx) => {
+                const body = rekapList.map((santri, idx) => {
                     const abs = santri.mutabaahAbsensi || {};
                     const k = hitung(abs, actsKegiatan);
                     const m = hitung(abs, actsMentor);
